@@ -5,6 +5,12 @@ import math
 
 class PositionalEncoding(nn.Module):
     '''
+    Adds information about the position of tokens within the sequence. Since
+    the transformer model lacks knowledge of the order of tokens due to it's 
+    self-attention this class helps the model to consider the position of 
+    tokens in sequence. Sine functions are used to allow the odel to learn to 
+    attend to relative positions, as they produce a unique and smooth encoding
+    for each position in the sequence.
     '''
     def __init__(self, model_dimension: int, max_seq_length: int):
         super(PositionalEncoding, self).__init__()
@@ -42,6 +48,11 @@ class PositionalEncoding(nn.Module):
         )
 
     def forward(self, input_tensor: Tensor) -> Tensor:
+        '''
+        Adds positional encodings to the input tensor.
+        Uses the first input_tensor.size(1) elements to ensure that the 
+        positional encodings match the actual sequence length of the input.
+        '''
         return (
             input_tensor + self.positional_encodings[:, :input_tensor.size(1)]
         )
