@@ -59,14 +59,14 @@ class MultiHeadAttention(nn.Module):
         output_tensor: Tensor = torch.matmul(attention_probs, value)
         return output_tensor
 
-    def split_heads(self, input_to_reshape: Tensor):
+    def split_heads(self, input_to_reshape: Tensor) -> Tensor:
         '''
         Reshape the input to have num_heads for multi-head attention.
         Enables the model to process multiple attention heads concurrently.
         '''
         batch_size: int
         seq_length: int
-        batch_size, seq_length, self.model_dimension = input_to_reshape.size()
+        batch_size, seq_length, _ = input_to_reshape.size()
 
         return (
                 input_to_reshape.view(
@@ -77,5 +77,21 @@ class MultiHeadAttention(nn.Module):
                 ).
                 transpose(1, 2)
                )
+    
+    def combine_heads(self, input_to_combine: Tensor) -> Tensor:
+        '''
+        To use after applying attention to each head separately. Combines
+        results back into a single tensor of shape
+        (batch_size, seq_length, model_dimension).
+        '''
+        batch_size: int
+        seq_length: int
+        batch_size, _, seq_length, _ = input_to_combine.size()
 
+        return (
+                input_to_combine.
+                transpose(1, 2).
+                contiguous().
+                view(batch_size, seq_length, self.model_dimension)
+               )
 
