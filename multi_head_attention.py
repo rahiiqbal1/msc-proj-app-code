@@ -30,14 +30,14 @@ class MultiHeadAttention(nn.Module):
         self.output_transform = nn.Linear(model_dimension, model_dimension)
 
     def scaled_dot_product_attention(
-            self, 
-            query: Tensor,
-            key: Tensor,
-            value: Tensor,
-            mask: Tensor | None = None
-            ) -> Tensor:
+        self, 
+        query: Tensor,
+        key: Tensor,
+        value: Tensor,
+        mask: Tensor | None = None
+        ) -> Tensor:
         '''
-        Calculates scaled dot product attention 
+        Performs scaled dot product attention.
         '''
         # Calculate attention scores:
         attention_scores: Tensor = (
@@ -94,4 +94,30 @@ class MultiHeadAttention(nn.Module):
                 contiguous().
                 view(batch_size, seq_length, self.model_dimension)
                )
+    
+    def forward(
+        self,
+        query: Tensor,
+        key: Tensor,
+        value: Tensor,
+        mask: Tensor | None = None
+        ) -> Tensor:
+        '''
+        Perform forward propagation.
+        '''
+        # Apply linear transformations and split heads:
+        query = self.split_heads(self.query_transform(query))
+        key = self.split_heads(self.key_transform(key))
+        value = self.split_heads(self.value_transform(value))
+
+        # Perform scaled dot-product attention:
+        attention_output: Tensor = self.scaled_dot_product_attention(
+            query,
+            key,
+            value,
+            mask
+        )
+
+        # Combine heads and apply output transformation:
+        return self.output_transform(self.combine_heads(attention_output))
 
