@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from transformer import Transformer
+from transformer_model import Transformer
 
 # Defining constants:
 SOURCE_VOCAB_SIZE = 5000
