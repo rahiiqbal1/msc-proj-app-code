@@ -130,7 +130,9 @@ class Transformer(nn.Module):
         # giving decoder's output:
         decoder_output: Tensor = target_embedding
         for decoder_layer in self.decoder_layers:
-            decoder_output = decoder_layer(encoder_output, source_mask)
+            decoder_output = decoder_layer(
+                decoder_output, encoder_output, source_mask, target_mask
+            )
 
         # Decoder's output is mapped to the target vocabulary size using a 
         # fully-connected layer:
