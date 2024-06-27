@@ -124,6 +124,15 @@ class Transformer(nn.Module):
         # Pass source sequence through encoder layers, with final encoder
         # output representing the processed source sequence:
         encoder_output: Tensor = source_embedding
-        encoder_layer: EncoderLayer
         for encoder_layer in self.encoder_layers:
-            encoder_output = encoder_layer(
+            encoder_output = encoder_layer(encoder_output, source_mask)
+
+        # Pass target sequence and encoder's output through decoder layers,
+        # giving decoder's output:
+        decoder_output: Tensor = target_embedding
+        for decoder_layer in self.decoder_layers:
+            decoder_output = decoder_layer(encoder_output, source_mask)
+
+        # Decoder's output is mapped to the target vocabulary size using a 
+        # fully-connected layer:
+        return self.fully_connected(decoder_output)
