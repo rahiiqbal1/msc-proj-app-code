@@ -21,10 +21,10 @@ class MultiHeadAttention(nn.Module):
         self.key_query_val_dimension: int = model_dimension // num_heads
 
         # Linear Layers for transforming inputs:
-        self.query_transform = nn.Linear(model_dimension, model_dimension)
-        self.key_transform = nn.Linear(model_dimension, model_dimension)
-        self.value_transform = nn.Linear(model_dimension, model_dimension)
-        self.output_transform = nn.Linear(model_dimension, model_dimension)
+        self.query_weights = nn.Linear(model_dimension, model_dimension)
+        self.key_weights = nn.Linear(model_dimension, model_dimension)
+        self.value_weights = nn.Linear(model_dimension, model_dimension)
+        self.output_weights = nn.Linear(model_dimension, model_dimension)
 
     def scaled_dot_product_attention(
         self, 
@@ -103,9 +103,9 @@ class MultiHeadAttention(nn.Module):
         Perform forward propagation.
         '''
         # Apply linear transformations and split heads:
-        query = self.split_heads(self.query_transform(query))
-        key = self.split_heads(self.key_transform(key))
-        value = self.split_heads(self.value_transform(value))
+        query = self.split_heads(self.query_weights(query))
+        key = self.split_heads(self.key_weights(key))
+        value = self.split_heads(self.value_weights(value))
 
         # Perform scaled dot-product attention:
         attention_output: Tensor = self.scaled_dot_product_attention(
@@ -116,5 +116,5 @@ class MultiHeadAttention(nn.Module):
         )
 
         # Combine heads and apply output transformation:
-        return self.output_transform(self.combine_heads(attention_output))
+        return self.output_weights(self.combine_heads(attention_output))
 
