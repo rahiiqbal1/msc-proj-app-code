@@ -1,7 +1,6 @@
 import torch
 from torch import Tensor
 import torch.nn as nn
-import math
 from positional_encoding import PositionalEncoding
 from encoder_layer import EncoderLayer
 from decoder_layer import DecoderLayer
