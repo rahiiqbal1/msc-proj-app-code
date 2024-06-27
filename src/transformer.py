@@ -101,3 +101,29 @@ class Transformer(nn.Module):
         target_mask: Tensor = target_mask & nopeek_mask
 
         return source_mask, target_mask
+
+    def forward(self, source: Tensor, target: Tensor) -> Tensor:
+        '''
+        Defines the forward pass for the transformer, taking source and target
+        sequences and producing output predictions.
+        '''
+        # Getting masks:
+        source_mask: Tensor
+        target_mask: Tensor
+        source_mask, target_mask = self.generate_mask(source, target)
+
+        # Getting embeddings for source and target sequences and adding to 
+        # their respective positional encodings:
+        source_embedding: Tensor = self.dropout(
+            self.positional_encoding(self.encoder_embedding(source))
+        )
+        target_embedding: Tensor = self.dropout(
+            self.positional_encoding(self.encoder_embedding(target))
+        )
+
+        # Pass source sequence through encoder layers, with final encoder
+        # output representing the processed source sequence:
+        encoder_output: Tensor = source_embedding
+        encoder_layer: EncoderLayer
+        for encoder_layer in self.encoder_layers:
+            encoder_output = encoder_layer(
