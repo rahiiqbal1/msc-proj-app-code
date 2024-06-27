@@ -1,14 +1,12 @@
-import torch
 from torch import Tensor
 import torch.nn as nn
-import math
 
 class PositionWiseFeedForward(nn.Module):
     '''
     Defines a position-wise feed forward network. For a transformer, this is
     applied to each position separately and identically. Helps in transforming
     the features learned by the attention mechanisms within the transformer,
-    acting as an addition processing step for the attention outputs.
+    acting as an additional processing step for the attention outputs.
     '''
     def __init__(self, model_dimension: int, feed_forward_dimension: int):
         super(PositionWiseFeedForward, self).__init__()
