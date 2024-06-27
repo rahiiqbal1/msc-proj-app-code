@@ -1,7 +1,5 @@
-import torch
 from torch import Tensor
 import torch.nn as nn
-import math
 from multi_head_attention import MultiHeadAttention
 from position_wise_feed_forward import PositionWiseFeedForward
 
