@@ -66,3 +66,38 @@ class Transformer(nn.Module):
 
         # Dropout layer:
         self.dropout = nn.Dropout(dropout)
+
+    def generate_mask(
+        self, source: Tensor, target: Tensor) -> tuple[Tensor, Tensor]:
+        '''
+        Used to create masks for the source and target sequences, ensuring that
+        padding tokens are ignored and that future tokens are not visible 
+        during training for the target sequence.
+        '''
+        # Source and target masks:
+        source_mask: Tensor = (
+            (source != 0).
+            unsqueeze(1).
+            unsqueeze(2)
+        )
+        target_mask: Tensor = (
+            (target != 0).
+            unsqueeze(1).
+            unsqueeze(3)
+        )
+
+        # Length of sequence:
+        seq_length: int = target.size(1)
+
+        # No-peek mask prevents from attending to subsequent positions in 
+        # sequence:
+        nopeek_mask: Tensor = (
+            (1 - 
+             torch.triu(torch.ones(1, seq_length, seq_length), diagonal = 1)
+            ).
+            bool()
+        )
+
+        target_mask: Tensor = target_mask & nopeek_mask
+
+        return source_mask, target_mask
