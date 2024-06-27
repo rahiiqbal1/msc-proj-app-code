@@ -7,6 +7,7 @@ from decoder_layer import DecoderLayer
 
 class Transformer(nn.Module):
     '''
+    Full transformer model following standard architecture.
     '''
     def __init__(
         self,
