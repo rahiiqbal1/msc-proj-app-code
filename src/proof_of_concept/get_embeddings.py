@@ -5,6 +5,7 @@ from txtai import Embeddings
 from tqdm import tqdm
 import joblib
 
+# Todo: read and save jsons in batches so that it stops crashing.
 def main() -> None:
     # Get path to where data is stored. Note that this uses a relative path
     # from the CWD.
@@ -30,7 +31,7 @@ def main() -> None:
         # sample has already been reduced from the full data to a more useable
         # format:
         wiki_jsons: list[dict[str, Any]] = load_all_jsons_from_ndjsons(
-            wiki_data_path, 30
+            wiki_data_path, 100
         )
         save_data(
             wiki_jsons,
