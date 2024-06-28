@@ -42,7 +42,7 @@ def main() -> None:
     else:
         wiki_jsons: list[dict[str, Any]] = load_data(
             os.path.join(
-                os.path.dirname(wiki_data_path), "wiki_jsons_list.bz2"
+                os.path.dirname(wiki_data_path), "wiki_jsons_list.tar.gz"
             )
         )
 
@@ -59,11 +59,19 @@ def main() -> None:
 
     print(page_titles)
 
-#    # Index page titles and save index:
-#    embeddings.index(page_titles)
-#    embeddings.save(
-#        os.path.join(data_store_path, "wikidata", "0_0_embeddings.tar.gz")
-#    )
+    # Index page titles and save index:
+    embeddings_path: str = os.path.join(
+        data_store_path, "wikidata", "embeddings.tar.gz"
+    )
+
+    if not os.path.isfile(embeddings_path):
+        embeddings.index(page_titles)
+        embeddings.save(
+            os.path.join(data_store_path, "wikidata", "embeddings.tar.gz")
+        )
+
+    else:
+        embeddings.load(embeddings_path)
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
