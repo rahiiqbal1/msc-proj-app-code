@@ -34,7 +34,6 @@ def main() -> None:
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
 
-
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
     Loads in json objects from a .ndjson file. Stores as python dictionaries in
@@ -76,6 +75,35 @@ def generate_jsons_from_ndjsons(
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
 
+def save_data(
+    data: Any,
+    data_save_name: str,
+    save_dir: str,
+    compression_level: int = 3
+    ) -> list[str]:
+    '''
+    Saves the given python object using joblib. Stores in given directory.
+
+    If compression_level is given, a supported file extension (.z, .gz, .bz2,
+    .xz, .lzma) must be given at the end of data_save_name.
+    '''
+    # Full path to save data at, including directory and filename:
+    data_store_path: str = os.path.join(save_dir, data_save_name)
+
+    return joblib.dump(
+        data,
+        data_store_path,
+        compress = compression_level
+    )
+
+def load_data(file_path: str) -> Any:
+    '''
+    Loads given object as python object using joblib.
+    '''
+    return joblib.load(file_path)
+
+if __name__ == "__main__":
+    main()
 
 if __name__ == "__main__":
     main()
