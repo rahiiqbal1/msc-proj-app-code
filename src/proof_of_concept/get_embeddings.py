@@ -86,5 +86,28 @@ def load_all_jsons_from_ndjsons(ndjsons_dir: str) -> list[dict[str, Any]]:
 
     return json_list_all
 
+def save_data(
+    data: Any,
+    data_save_name: str,
+    save_dir: str,
+    compression_level: int = 3
+    ) -> list[str]:
+    '''
+    Saves the given python object using joblib. Stores in given directory.
+
+    If compression_level is given, a supported file extension (.z, .gz, .bz2,
+    .xz, .lzma) must be given at the end of data_save_name.
+    '''
+    # Full path to save data at, including directory and filename:
+    data_store_path: str = os.path.join(save_dir, data_save_name)
+
+    return joblib.dump(
+        data,
+        data_store_path,
+        compress = compression_level
+    )
+        
+
+
 if __name__ == "__main__":
     main()
