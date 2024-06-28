@@ -108,6 +108,8 @@ def load_all_jsons_from_ndjsons(
         # Adding resulting list to list of all jsons:
         json_list_all += load_jsons_from_ndjson(ndjson_filepath)
         num_read += 1
+        if num_read == num_to_read:
+            break
 
     return json_list_all
 
