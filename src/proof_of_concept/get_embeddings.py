@@ -66,9 +66,7 @@ def main() -> None:
 
     if not os.path.isfile(embeddings_path):
         embeddings.index(page_titles)
-        embeddings.save(
-            os.path.join(data_store_path, "wikidata", "embeddings.tar.gz")
-        )
+        embeddings.save(embeddings_path)
 
     else:
         embeddings.load(embeddings_path)
