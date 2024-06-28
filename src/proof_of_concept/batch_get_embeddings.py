@@ -21,8 +21,19 @@ def main() -> None:
         "reduced-ndjsons"
     )
 
-    for test in generate_jsons_from_ndjsons(wiki_data_path):
-        pass
+    # Getting titles to use for indexing:
+    page_titles: list[str] = []
+    page_json_list: list[dict[str, Any]]
+    single_page_json: dict[str, Any]
+    for page_json_list in generate_jsons_from_ndjsons(wiki_data_path):
+        for single_page_json in page_json_list:
+            page_titles.append(single_page_json["name"])
+
+    # Want to generate word embeddings using specified hugging-face model:
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    )
+
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
