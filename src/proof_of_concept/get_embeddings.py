@@ -30,7 +30,7 @@ def main() -> None:
         # sample has already been reduced from the full data to a more useable
         # format:
         wiki_jsons: list[dict[str, Any]] = load_all_jsons_from_ndjsons(
-            wiki_data_path
+            wiki_data_path, 30
         )
         save_data(
             wiki_jsons,
@@ -86,7 +86,10 @@ def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
 
     return json_list
 
-def load_all_jsons_from_ndjsons(ndjsons_dir: str) -> list[dict[str, Any]]:
+def load_all_jsons_from_ndjsons(
+    ndjsons_dir: str,
+    num_to_read: int
+    ) -> list[dict[str, Any]]:
     '''
     Loads in all json objects from a directory of .ndjson files. Stores as 
     python dictionaries in a python list.
@@ -97,12 +100,14 @@ def load_all_jsons_from_ndjsons(ndjsons_dir: str) -> list[dict[str, Any]]:
     # Initialising list to store all deserialised jsons:
     json_list_all: list[dict[str, Any]] = []
 
+    num_read: int = 0
     ndjson_filename: str
     for ndjson_filename in tqdm(ndjson_filenames, "Reading .ndjsons"):
         # Getting full filepath as ndjson_filename is only the filename:
         ndjson_filepath: str = os.path.join(ndjsons_dir, ndjson_filename)
         # Adding resulting list to list of all jsons:
         json_list_all += load_jsons_from_ndjson(ndjson_filepath)
+        num_read += 1
 
     return json_list_all
 
