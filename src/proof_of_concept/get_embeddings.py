@@ -21,11 +21,26 @@ def main() -> None:
         "reduced-ndjsons"
     )
     
-    # Loading in json data into a list of dictionaries. The data in this sample
-    # has already been reduced from the full data to a more useable format:
-    wiki_jsons: list[dict[str, Any]] = load_all_jsons_from_ndjsons(
-        wiki_data_path
-    )
+    # If the jsons have not already been parsed and saved, do so:
+    if not os.path.isfile(
+        os.path.join(os.path.dirname(wiki_data_path), "wiki_jsons_list.bz2")
+        ):
+        # Loading in json data into a list of dictionaries. The data in this
+        # sample has already been reduced from the full data to a more useable
+        # format:
+        wiki_jsons: list[dict[str, Any]] = load_all_jsons_from_ndjsons(
+            wiki_data_path
+        )
+
+        save_data(
+            wiki_jsons,
+            "wiki_jsons.bz2",
+            os.path.dirname(wiki_data_path)
+        )
+
+    # Otherwise the file must already exist, so attempt to load it:
+    else:
+
 
     # Getting titles to use for indexing: 
     page_titles: list[str] = []
@@ -106,8 +121,12 @@ def save_data(
         data_store_path,
         compress = compression_level
     )
-        
 
+def load_data(file_path: str) -> Any:
+    '''
+    Loads given object as python object using joblib.
+    '''
+    return joblib.load(file_path)
 
 if __name__ == "__main__":
     main()
