@@ -40,7 +40,11 @@ def main() -> None:
 
     # Otherwise the file must already exist, so attempt to load it:
     else:
-
+        wiki_jsons: list[dict[str, Any]] = load_data(
+            os.path.join(
+                os.path.dirname(wiki_data_path), "wiki_jsons_list.bz2"
+            )
+        )
 
     # Getting titles to use for indexing: 
     page_titles: list[str] = []
