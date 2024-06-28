@@ -21,13 +21,22 @@ def main() -> None:
         "reduced-ndjsons"
     )
 
-    # Getting titles to use for indexing:
-    page_titles: list[str] = []
-    page_json_list: list[dict[str, Any]]
-    single_page_json: dict[str, Any]
-    for page_json_list in generate_jsons_from_ndjsons(wiki_data_path):
-        for single_page_json in page_json_list:
-            page_titles.append(single_page_json["name"])
+    # Only get titles if they have not already been saved:
+    title_save_path: str = os.path.join(
+        os.path.dirname(wiki_data_path), "page_titles.tar.gz"
+    )
+    if os.path.isfile(title_save_path) == False:
+        # Getting titles to use for indexing:
+        page_titles: list[str] = []
+        page_json_list: list[dict[str, Any]]
+        single_page_json: dict[str, Any]
+        for page_json_list in generate_jsons_from_ndjsons(wiki_data_path):
+            for single_page_json in page_json_list:
+                page_titles.append(single_page_json["name"])
+
+    # Otherwise, get the titles and save them:
+    else:
+        page_titles: list[str] = load_data(title_save_path)
 
     # Want to generate word embeddings using specified hugging-face model:
     embeddings = Embeddings(
