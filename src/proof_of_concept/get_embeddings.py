@@ -22,28 +22,25 @@ def main() -> None:
     )
     
     # If the jsons have not already been parsed and saved, do so:
-    if not os.path.isfile(
-        os.path.join(os.path.dirname(wiki_data_path), "wiki_jsons_list.bz2")
-        ):
+    wiki_jsons_list_path: str = os.path.join(
+        os.path.dirname(wiki_data_path), "wiki_jsons_list.tar.gz"
+    )
+    if not os.path.isfile(wiki_jsons_list_path):
         # Loading in json data into a list of dictionaries. The data in this
         # sample has already been reduced from the full data to a more useable
         # format:
         wiki_jsons: list[dict[str, Any]] = load_all_jsons_from_ndjsons(
             wiki_data_path
         )
-
         save_data(
             wiki_jsons,
             "wiki_jsons.bz2",
             os.path.dirname(wiki_data_path)
         )
-
     # Otherwise the file must already exist, so attempt to load it:
     else:
         wiki_jsons: list[dict[str, Any]] = load_data(
-            os.path.join(
-                os.path.dirname(wiki_data_path), "wiki_jsons_list.tar.gz"
-            )
+            os.path.join(wiki_jsons_list_path)
         )
 
     # Getting titles to use for indexing: 
@@ -63,11 +60,9 @@ def main() -> None:
     embeddings_path: str = os.path.join(
         data_store_path, "wikidata", "embeddings.tar.gz"
     )
-
     if not os.path.isfile(embeddings_path):
         embeddings.index(page_titles)
         embeddings.save(embeddings_path)
-
     else:
         embeddings.load(embeddings_path)
 
