@@ -34,7 +34,7 @@ def main() -> None:
         )
         save_data(
             wiki_jsons,
-            "wiki_jsons.bz2",
+            "wiki_jsons.tar.gz",
             os.path.dirname(wiki_data_path)
         )
     # Otherwise the file must already exist, so attempt to load it:
