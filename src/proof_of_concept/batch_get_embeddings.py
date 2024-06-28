@@ -34,6 +34,12 @@ def main() -> None:
             for single_page_json in page_json_list:
                 page_titles.append(single_page_json["name"])
 
+        save_data(
+            page_titles,
+            "page_titles.tar.gz",
+            os.path.dirname(title_save_path)
+        )
+
     # Otherwise, get the titles and save them:
     else:
         page_titles: list[str] = load_data(title_save_path)
