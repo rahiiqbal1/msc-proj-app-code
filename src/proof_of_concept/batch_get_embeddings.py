@@ -119,6 +119,3 @@ def load_data(file_path: str) -> Any:
 
 if __name__ == "__main__":
     main()
-
-if __name__ == "__main__":
-    main()
