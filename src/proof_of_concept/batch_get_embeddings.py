@@ -5,6 +5,8 @@ from txtai import Embeddings
 from tqdm import tqdm
 import joblib
 
+NUM_TITLES_TO_USE = 2**16
+
 def main() -> None:
     # Get path to where data is stored. Note that this uses a relative path
     # from the CWD.
@@ -23,7 +25,7 @@ def main() -> None:
 
     # Only get titles if they have not already been saved:
     title_save_path: str = os.path.join(
-        os.path.dirname(wiki_data_path), "page_titles.gz"
+        os.path.dirname(wiki_data_path), "page_titles"
     )
     if os.path.isfile(title_save_path) == False:
         # Getting titles to use for indexing:
@@ -44,13 +46,16 @@ def main() -> None:
     else:
         page_titles: list[str] = load_data(title_save_path)
 
+    # Using only NUM_TITLES_TO_USE titles to save computation time:
+    page_titles_subset: list[str] = page_titles[: NUM_TITLES_TO_USE]
+
     # Want to generate word embeddings using specified hugging-face model:
     embeddings = Embeddings(
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
 
     # Index page titles:
-    embeddings.index(tqdm(page_titles))
+    embeddings.index(tqdm(page_titles_subset))
 
     # Save index:
     embeddings.save("embeddings.gz")
