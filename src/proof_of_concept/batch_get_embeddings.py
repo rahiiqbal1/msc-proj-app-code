@@ -23,7 +23,7 @@ def main() -> None:
 
     # Only get titles if they have not already been saved:
     title_save_path: str = os.path.join(
-        os.path.dirname(wiki_data_path), "page_titles.tar.gz"
+        os.path.dirname(wiki_data_path), "page_titles.gz"
     )
     if os.path.isfile(title_save_path) == False:
         # Getting titles to use for indexing:
@@ -36,7 +36,7 @@ def main() -> None:
 
         save_data(
             page_titles,
-            "page_titles.tar.gz",
+            "page_titles.gz",
             os.path.dirname(title_save_path)
         )
 
@@ -53,7 +53,7 @@ def main() -> None:
     embeddings.index(tqdm(page_titles))
 
     # Save index:
-    embeddings.save("embeddings.tar.gz")
+    embeddings.save("embeddings.gz")
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
