@@ -49,6 +49,12 @@ def main() -> None:
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
 
+    # Index page titles:
+    embeddings.index(tqdm(page_titles))
+
+    # Save index:
+    embeddings.save("embeddings.tar.gz")
+
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
     Loads in json objects from a .ndjson file. Stores as python dictionaries in
