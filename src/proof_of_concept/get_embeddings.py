@@ -40,7 +40,7 @@ def main() -> int:
     idx_save_path: str = (
         os.path.join(
             os.path.dirname(wiki_ndjsons_dir),
-            f"embeddings_subset_{NUM_TITLES_TO_USE}.gz"
+            f"embeddings_subset_{NUM_TITLES_TO_USE}"
         )
     )
     # Attempt to generate and save index:
