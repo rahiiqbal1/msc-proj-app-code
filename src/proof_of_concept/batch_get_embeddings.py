@@ -48,31 +48,6 @@ def main() -> int:
 
     return 0
 
-def gen_and_save_index(
-    data_to_index: Any,
-    index_save_path: str
-    ) -> Embeddings | None:
-    '''
-    Indexes the given data, and saves the index at the given path. Uses
-    the model in code by default.
-    '''
-    # Want to generate word embeddings using specified hugging-face model:
-    embeddings = Embeddings(
-        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
-    )
-
-    if os.path.isfile(index_save_path) == False:
-        # Index data:
-        embeddings.index(tqdm(data_to_index))
-        # Save index:
-        embeddings.save(index_save_path)
-        
-        return embeddings
-
-    else:
-        print("An index is already saved at the given path.")
-
-
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
     Loads in json objects from a .ndjson file. Stores as python dictionaries in
@@ -103,9 +78,6 @@ def generate_jsons_from_ndjsons(
     # Get all filenames in ndjsons_dir to read through them:
     ndjson_filenames: list[str] = os.listdir(ndjsons_dir)
 
-    # Initialising list to store all deserialised jsons:
-    json_list_all: list[dict[str, Any]] = []
-
     ndjson_filename: str
     for ndjson_filename in tqdm(ndjson_filenames, "Reading .ndjsons"):
         # Getting full filepath as ndjson_filename is only the filename:
@@ -120,8 +92,8 @@ def gen_or_get_titles(
     ) -> list[str]:
     '''
     If the file at the given path already exists, attempt to load it using
-    joblib. If not, read all .ndjson files in the given directory and
-    attempt to read titles from each .json within them.
+    joblib. If not, read all .ndjson files in the given directory and attempt
+    to read titles from each .json within them.
 
     Returns the list of titles.
     '''
@@ -143,6 +115,30 @@ def gen_or_get_titles(
     else:
         page_titles: list[str] = load_data(title_save_path)
         return page_titles
+
+def gen_and_save_index(
+    data_to_index: Any,
+    index_save_path: str
+    ) -> Embeddings | None:
+    '''
+    Indexes the given data, and saves the index at the given path. Uses
+    the model in code by default.
+    '''
+    # Want to generate word embeddings using specified hugging-face model:
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    )
+
+    if os.path.isfile(index_save_path) == False:
+        # Index data:
+        embeddings.index(tqdm(data_to_index))
+        # Save index:
+        embeddings.save(index_save_path)
+        
+        return embeddings
+
+    else:
+        print("An index is already saved at the given path.")
 
 def save_data(
     data: Any,
