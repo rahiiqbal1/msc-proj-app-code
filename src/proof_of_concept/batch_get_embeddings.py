@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from typing import Any, Generator
 from txtai import Embeddings
 from tqdm import tqdm
@@ -7,7 +8,7 @@ import joblib
 
 NUM_TITLES_TO_USE = 2**16
 
-def main() -> None:
+def main() -> int:
     # Get path to where data is stored. Note that this uses a relative path
     # from the CWD.
     data_store_path: str = os.path.join(
@@ -54,11 +55,24 @@ def main() -> None:
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
 
-    # Index page titles:
-    embeddings.index(tqdm(page_titles_subset))
+    # If the index does not already exist at the specified path, index and
+    # save:
+    idx_save_path: str = (
+        os.path.join(
+            os.path.dirname(wiki_data_path),
+            f"embeddings_subset_{NUM_TITLES_TO_USE}.gz"
+        )
+    )
+    if os.path.isfile(idx_save_path) == False:
+        # Index page titles:
+        embeddings.index(tqdm(page_titles_subset))
+        # Save index:
+        embeddings.save(idx_save_path)
+    else:
+        print("An index is already saved at the given path.")
+        return 1
 
-    # Save index:
-    embeddings.save("embeddings_subset.gz")
+    return 0
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
@@ -129,4 +143,4 @@ def load_data(file_path: str) -> Any:
     return joblib.load(file_path)
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
