@@ -58,7 +58,7 @@ def main() -> None:
     embeddings.index(tqdm(page_titles_subset))
 
     # Save index:
-    embeddings.save("embeddings.gz")
+    embeddings.save("embeddings_subset.gz")
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
