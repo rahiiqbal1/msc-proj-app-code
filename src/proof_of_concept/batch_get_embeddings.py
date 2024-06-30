@@ -18,7 +18,7 @@ def main() -> int:
     )
 
     # Get path to wiki-data:
-    wiki_data_path: str = os.path.join(
+    wiki_ndjsons_dir: str = os.path.join(
         data_store_path,
         "wikidata",
         "reduced-ndjsons"
@@ -26,53 +26,52 @@ def main() -> int:
 
     # Only get titles if they have not already been saved:
     title_save_path: str = os.path.join(
-        os.path.dirname(wiki_data_path), "page_titles"
+        os.path.dirname(wiki_ndjsons_dir), "page_titles.gz"
     )
-    if os.path.isfile(title_save_path) == False:
-        # Getting titles to use for indexing:
-        page_titles: list[str] = []
-        page_json_list: list[dict[str, Any]]
-        single_page_json: dict[str, Any]
-        for page_json_list in generate_jsons_from_ndjsons(wiki_data_path):
-            for single_page_json in page_json_list:
-                page_titles.append(single_page_json["name"])
-
-        save_data(
-            page_titles,
-            "page_titles.gz",
-            os.path.dirname(title_save_path)
-        )
-
-    # Otherwise, get the titles and save them:
-    else:
-        page_titles: list[str] = load_data(title_save_path)
+    page_titles: list[str] = gen_or_get_titles(
+        wiki_ndjsons_dir, title_save_path
+    )
 
     # Using only NUM_TITLES_TO_USE titles to save computation time:
     page_titles_subset: list[str] = page_titles[: NUM_TITLES_TO_USE]
-
-    # Want to generate word embeddings using specified hugging-face model:
-    embeddings = Embeddings(
-        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
-    )
 
     # If the index does not already exist at the specified path, index and
     # save:
     idx_save_path: str = (
         os.path.join(
-            os.path.dirname(wiki_data_path),
+            os.path.dirname(wiki_ndjsons_dir),
             f"embeddings_subset_{NUM_TITLES_TO_USE}.gz"
         )
     )
-    if os.path.isfile(idx_save_path) == False:
-        # Index page titles:
-        embeddings.index(tqdm(page_titles_subset))
-        # Save index:
-        embeddings.save(idx_save_path)
-    else:
-        print("An index is already saved at the given path.")
-        return 1
+    # Attempt to generate and save index:
+    gen_and_save_index(page_titles_subset, idx_save_path)
 
     return 0
+
+def gen_and_save_index(
+    data_to_index: Any,
+    index_save_path: str
+    ) -> Embeddings | None:
+    '''
+    Indexes the given data, and saves the index at the given path. Uses
+    the model in code by default.
+    '''
+    # Want to generate word embeddings using specified hugging-face model:
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    )
+
+    if os.path.isfile(index_save_path) == False:
+        # Index data:
+        embeddings.index(tqdm(data_to_index))
+        # Save index:
+        embeddings.save(index_save_path)
+        
+        return embeddings
+
+    else:
+        print("An index is already saved at the given path.")
+
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
@@ -114,6 +113,36 @@ def generate_jsons_from_ndjsons(
 
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
+
+def gen_or_get_titles(
+    ndjson_data_dir: str,
+    title_save_path: str
+    ) -> list[str]:
+    '''
+    If the file at the given path already exists, attempt to load it using
+    joblib. If not, read all .ndjson files in the given directory and
+    attempt to read titles from each .json within them.
+
+    Returns the list of titles.
+    '''
+    if os.path.isfile(title_save_path) == False:
+        # Getting titles to use for indexing:
+        page_titles: list[str] = []
+        page_json_list: list[dict[str, Any]]
+        single_page_json: dict[str, Any]
+        for page_json_list in generate_jsons_from_ndjsons(ndjson_data_dir):
+            for single_page_json in page_json_list:
+                page_titles.append(single_page_json["name"])
+
+        # Save parsed titles at specified save path:
+        title_save_dir, title_save_filename = os.path.split(title_save_path)
+        save_data(page_titles, title_save_filename, title_save_dir)
+        
+        return page_titles 
+
+    else:
+        page_titles: list[str] = load_data(title_save_path)
+        return page_titles
 
 def save_data(
     data: Any,
