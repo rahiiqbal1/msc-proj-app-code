@@ -1,12 +1,13 @@
 import json
 import os
 import sys
+import math
 from typing import Any, Generator
 from txtai import Embeddings
 from tqdm import tqdm
 import joblib
 
-NUM_TITLES_TO_USE = 2**16
+PROPORTION_TITLES_TO_USE = 0.5
 
 def main() -> int:
     # Get path to where data is stored. Note that this uses a relative path
@@ -32,15 +33,18 @@ def main() -> int:
         wiki_ndjsons_dir, title_save_path
     )
 
-    # Using only NUM_TITLES_TO_USE titles to save computation time:
-    page_titles_subset: list[str] = page_titles[: NUM_TITLES_TO_USE]
+    # Using only num_titles_to_use titles to save computation time:
+    num_titles_to_use: int = math.floor(
+        len(page_titles) * PROPORTION_TITLES_TO_USE
+    )
+    page_titles_subset: list[str] = page_titles[: num_titles_to_use]
 
     # If the index does not already exist at the specified path, index and
     # save:
     idx_save_path: str = (
         os.path.join(
             os.path.dirname(wiki_ndjsons_dir),
-            f"embeddings_subset_{NUM_TITLES_TO_USE}"
+            f"embeddings_subset_{num_titles_to_use}"
         )
     )
     # Attempt to generate and save index:
