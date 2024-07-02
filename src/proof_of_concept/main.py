@@ -23,13 +23,12 @@ def main() -> int:
         os.path.join(wikidata_dir, "embeddings_subset_3472510")
     )
 
-    cli_search(page_titles, embeddings)
-
+    streamlit_search(page_titles, embeddings)
 
     return 0
 
 # Cache to speed up streamlit load times:
-# @st.cache_data
+@st.cache_data
 def load_data_and_embeddings(
     data_path: str,
     embeddings_path: str
@@ -51,7 +50,7 @@ def load_data_and_embeddings(
     return data, embeddings
 
 # Cache to speed up streamlit load times:
-# @st.cache_data
+@st.cache_data
 def load_data(file_path: str) -> Any:
     '''
     Loads given object as python object using joblib.
@@ -77,6 +76,7 @@ def cli_search(data: list[str], embeddings: Embeddings) -> None:
     for result in readable_results:
         print(result)
 
+@st.cache_data
 def streamlit_search(data: list[str], embeddings: Embeddings) -> None:
     ''' 
     Searches through given data. Uses a streamlit interface.
