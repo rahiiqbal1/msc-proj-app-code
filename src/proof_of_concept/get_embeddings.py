@@ -26,7 +26,7 @@ def main() -> int:
 
     # Full path of data file:
     data_save_path: str = os.path.join(
-        wikidata_dir, "page_titles.gz"
+        wikidata_dir, "entry_data.gz"
     )
     # Loading in data:
     data_entries: list[str] = gen_or_get_data(
@@ -43,7 +43,7 @@ def main() -> int:
     # save:
     idx_save_path: str = (
         os.path.join(
-            os.path.dirname(wikidata_dir),
+            wikidata_dir,
             f"embeddings_subset_{num_entries_to_use}"
         )
     )
@@ -131,24 +131,6 @@ def gen_or_get_data(
         # Loads using joblib (pickle), so the file must be valid as the given
         # return type:
         return load_data(data_save_path)
-    # if os.path.isfile(data_save_path) == False:
-    #     # Getting data to use for indexing:
-    #     page_titles: list[str] = []
-    #     page_json_list: list[dict[str, Any]]
-    #     single_page_json: dict[str, Any]
-    #     for page_json_list in generate_jsons_from_ndjsons(ndjson_data_dir):
-    #         for single_page_json in page_json_list:
-    #             page_titles.append(single_page_json["name"])
-
-    #     # Save parsed titles at specified save path:
-    #     title_save_dir, title_save_filename = os.path.split(title_save_path)
-    #     save_data(page_titles, title_save_filename, title_save_dir)
-        
-    #     return page_titles 
-
-    # else:
-    #     page_titles: list[str] = load_data(title_save_path)
-    #     return page_titles
 
 def gen_and_save_index(
     data_to_index: Any,
