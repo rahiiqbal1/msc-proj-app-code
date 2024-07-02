@@ -123,7 +123,7 @@ def gen_or_get_titles(
 def gen_and_save_index(
     data_to_index: Any,
     index_save_path: str
-    ) -> Embeddings | None:
+    ) -> None:
     '''
     Indexes the given data, and saves the index at the given path. Uses
     the model in code by default.
@@ -138,9 +138,6 @@ def gen_and_save_index(
         embeddings.index(tqdm(data_to_index))
         # Save index:
         embeddings.save(index_save_path)
-        
-        return embeddings
-
     else:
         print("An index is already saved at the given path.")
 
