@@ -76,31 +76,31 @@ def cli_search(data: list[str], embeddings: Embeddings) -> None:
     for result in readable_results:
         print(result)
 
-def streamlit_search(data: list[str], embeddings: Embeddings) -> None:
-    ''' 
-    Searches through given data. Uses a streamlit interface.
-    '''
-    # Page title and search box:
-    st.title("Wikipedia Search Engine")
-    search_query: str = st.text_input("Enter a search query...")
+# def streamlit_search(data: list[str], embeddings: Embeddings) -> None:
+#     ''' 
+#     Searches through given data. Uses a streamlit interface.
+#     '''
+#     # Page title and search box:
+#     st.title("Wikipedia Search Engine")
+#     search_query: str = st.text_input("Enter a search query...")
 
-    # If the search button is pressed, search through the index with the given
-    # query:
-    if st.button("Search") == True and search_query == True:
-        # num_results is a tuple of the index of the given result in the
-        # data and it's score:
-        num_results: list[tuple[int, float]]  = embeddings.search(
-            search_query, 10
-        )
+#     # If the search button is pressed, search through the index with the given
+#     # query:
+#     if st.button("Search") == True and search_query == True:
+#         # num_results is a tuple of the index of the given result in the
+#         # data and it's score:
+#         num_results: list[tuple[int, float]]  = embeddings.search(
+#             search_query, 10
+#         )
 
-        # Getting readable results by index of result in page_titles:
-        readable_results: list[str] = [
-            data[num_result[0]] for num_result in num_results
-        ]
+#         # Getting readable results by index of result in page_titles:
+#         readable_results: list[str] = [
+#             data[num_result[0]] for num_result in num_results
+#         ]
 
-        # Displaying results:
-        for result in readable_results:
-            st.write(result)
+#         # Displaying results:
+#         for result in readable_results:
+#             st.write(result)
 
 if __name__ == "__main__":
     sys.exit(main())
