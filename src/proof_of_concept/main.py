@@ -3,7 +3,7 @@ import sys
 from typing import Any
 import joblib
 from txtai import Embeddings
-# import streamlit as st
+import streamlit as st
 
 def main() -> int:
     # Directory where relevant data is stored:
@@ -23,13 +23,7 @@ def main() -> int:
         os.path.join(wikidata_dir, "embeddings_subset_3472510")
     )
 
-    search_query: str = input("Enter a search query: ")
-    num_results: list[tuple[int, float]] = embeddings.search(search_query, 10)
-    readable_results: list[str] = [
-        page_titles[num_result[0]] for num_result in num_results
-    ]
-    for result in readable_results:
-        print(result)
+    cli_search(page_titles, embeddings)
 
     # Page title and search box:
     # st.title("Wikipedia Search Engine")
@@ -82,6 +76,25 @@ def load_data(file_path: str) -> Any:
     Loads given object as python object using joblib.
     '''
     return joblib.load(file_path)
+
+def cli_search(data: list[str], embeddings: Embeddings) -> None:
+    '''
+    Search through data. uses terminal interface.
+    '''
+    # Getting query and searching through index:
+    search_query: str = input("Enter a search query: ")
+    # This is a list of tuples containing the index of the result in the 
+    # data and it's score:
+    num_results: list[tuple[int, float]] = embeddings.search(search_query, 10)
+
+    # Getting readable results from index obtained:
+    readable_results: list[str] = [
+        data[num_result[0]] for num_result in num_results
+    ]
+
+    # Displaying results:
+    for result in readable_results:
+        print(result)
 
 if __name__ == "__main__":
     sys.exit(main())
