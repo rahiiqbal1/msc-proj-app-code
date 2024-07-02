@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 from typing import Any
 import joblib
 from txtai import Embeddings
@@ -14,16 +15,14 @@ def main() -> int:
         "wikidata"
     )
 
-    # Get title data and saved embeddings. Cache in streamlit for faster update
-    # times:
-    page_titles: list[str]
+    # Get data and saved embeddings:
     embeddings: Embeddings
-    page_titles, embeddings = load_data_and_embeddings(
-        os.path.join(wikidata_dir, "page_titles.gz"),
-        os.path.join(wikidata_dir, "embeddings_subset_3472510")
+    entry_data, embeddings = load_data_and_embeddings(
+        os.path.join(wikidata_dir, "entry_data.gz"),
+        os.path.join(wikidata_dir, "embeddings_subset_2083506")
     )
 
-    cli_search(page_titles, embeddings)
+    cli_search(entry_data, embeddings)
 
     return 0
 
@@ -34,7 +33,7 @@ def load_data_and_embeddings(
     embeddings_path: str
     ) -> tuple[list[str], Embeddings]:
     '''
-    Loads pickled (with joblib) data and it's associated txtai embeddings.
+    Loads data with joblib (pickle) and it's associated txtai embeddings.
 
     Returns a tuple of data and embeddings.
     '''
@@ -67,13 +66,22 @@ def cli_search(data: list[str], embeddings: Embeddings) -> None:
     # data and it's score:
     num_results: list[tuple[int, float]] = embeddings.search(search_query, 10)
 
-    # Getting readable results from index obtained:
-    readable_results: list[str] = [
-        data[num_result[0]] for num_result in num_results
-    ]
+    # List to store fields for display. Only show a subset of all fields of the
+    # data:
+    results_to_show: list[str] = []
+    # Getting titles of results:
+    num_result: tuple[int, float]
+    for num_result in num_results:
+        # Getting data from index in num_result:
+        readable_result: str = data[num_result[0]]
+        # Splitting on comma and taking only first element to (roughly) get 
+        # only title:
+        result_title: str = readable_result.split(',')[0]
+        # Adding to list to store data from relevant fields:
+        results_to_show.append(result_title)
 
     # Displaying results:
-    for result in readable_results:
+    for result in results_to_show:
         print(result)
 
 # def streamlit_search(data: list[str], embeddings: Embeddings) -> None:

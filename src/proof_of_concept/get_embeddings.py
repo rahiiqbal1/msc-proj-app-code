@@ -65,7 +65,7 @@ def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
         # dictionary, and storing in list:
         json_line: str
         try:
-            for json_line in tqdm(ndjson_file, "Loading data"):
+            for json_line in ndjson_file:
                 json_list.append(json.loads(json_line))
         except json.decoder.JSONDecodeError:
             pass
@@ -103,6 +103,9 @@ def gen_or_get_data(
     Returns a list of all fields for a given entry as a single string, e.g.
     ["name... abstract... categories... wikitext...", ...]
     '''
+    # List of fields to use for the data:
+    fields_to_use: list[str] = ["name", "abstract", "Category"]
+
     # If the data does not exist, proceed to generate it. Otherwise load it:
     if os.path.isfile(data_save_path) == False:
         # Initialising list to store strings of data for each entry:
@@ -120,11 +123,17 @@ def gen_or_get_data(
                 # Looping over each individual json (dictionary) to add each
                 # field to the return string:
                 for field in entry_json:
-                    entry_data += (entry_json[field] + ' ')
+                    if field in fields_to_use:
+                        entry_data += (entry_json[field] + ' ')
 
                 # Adding string of data to list of data:
                 all_entry_data.append(entry_data)
 
+        # Saving data:
+        data_save_dir: str
+        data_save_name: str
+        data_save_dir, data_save_name = os.path.split(data_save_path)
+        save_data(all_entry_data, data_save_name, data_save_dir)   
         return all_entry_data
 
     else:
