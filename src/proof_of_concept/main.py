@@ -3,10 +3,22 @@ import sys
 from typing import Any
 import joblib
 from txtai import Embeddings
-import streamlit as st
 
 def main() -> int:
+    wikidata_dir: str = os.path.join(
+        os.pardir,
+        os.pardir,
+        "data",
+        "wikidata"
+    )
 
+    # Get title data and saved embeddings:
+    page_titles: list[str]
+    embeddings: Embeddings
+    page_titles, embeddings = load_data_and_embeddings(
+        os.path.join(wikidata_dir, "page_titles.gz"),
+        os.path.join(wikidata_dir, "embeddings_subset_3472510")
+    )
 
     return 0
 
