@@ -1,0 +1,11 @@
+Want to give some of the fields in the json to txtai for indexing, take a 
+search query from the user, then return a list of relevant results giving both
+title and url.
+
+Text should be cleaned beforehand, removing punctuation, stopwords,
+lemmatising. 
+
+Code to clean and whatnot should be easily adjustable for different desired 
+fields.
+
+
