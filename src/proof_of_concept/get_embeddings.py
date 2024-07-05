@@ -73,8 +73,8 @@ def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     return json_list
 
 def generate_jsons_from_ndjsons(
-        ndjsons_dir: str
-        ) -> Generator[list[dict[str, Any]], None, None]:
+    ndjsons_dir: str
+    ) -> Generator[list[dict[str, Any]], None, None]:
     '''
     Acts as generator, yielding at each step a list of all deserialised json
     objects from a given file.
