@@ -30,15 +30,27 @@ PROCESSED_NDJSON_STORE_DIR: str = os.path.join(
 FIELDS_TO_PROCESS: list[str] = [
     "name",
     "abstract",
-    "article_body"
+    "wikitext"
 ]
+
+# Path to .txt file listing which .ndjson files have already been processed:
+NDJSONS_ALREADY_PROCESSED_TXT_PATH = os.path.join(
+    os.pardir,
+    os.pardir,
+    "data",
+    "wikidata",
+    "ndjsons_already_processed.txt"
+)
 
 def main() -> int:
     # Generating deserialised json objects per .ndjson file in the specified
     # directory:
     loaded_json_list: list[dict[str, Any]]
     for idx, loaded_json_list in enumerate(
-            generate_jsons_from_ndjsons(NDJSON_DIR)
+            generate_jsons_from_ndjsons(
+                NDJSON_DIR,
+                NDJSONS_ALREADY_PROCESSED_TXT_PATH
+            )
     ):
         # Looping through each json in the list which we loaded in to process
         # it's text:
@@ -52,7 +64,7 @@ def main() -> int:
                 PROCESSED_NDJSON_STORE_DIR, f"processed_ndjson_{idx}"
             )
             with open(processed_ndjson_store_path, 'a') as processed_ndjson:
-                processed_ndjson.write(single_json_as_string)
+                processed_ndjson.write(single_json_as_string + '\n')
 
     return 0
 
@@ -88,8 +100,8 @@ def process_json_text(
                 if word_token not in stopwords.words("english"):
                     # If the current token is not in the list of stopwords,
                     # lemmatise it and add it to our processed string:
-                    lemmatised_nostopword_text += lemmatiser.lemmatize(
-                        word_token
+                    lemmatised_nostopword_text += (
+                        lemmatiser.lemmatize(word_token) + ' '
                     )
             # Set the processed field text equal to the lemmatised and 
             # stopword-free version of the already punctuation-free and lower
