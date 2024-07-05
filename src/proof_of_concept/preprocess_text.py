@@ -49,21 +49,29 @@ def main() -> int:
     for idx, loaded_json_list in enumerate(
             generate_jsons_from_ndjsons(
                 NDJSON_DIR,
-                NDJSONS_ALREADY_PROCESSED_TXT_PATH
             )
     ):
         # Looping through each json in the list which we loaded in to process
         # it's text:
-        single_json: dict[str, Any]
-        for single_json in tqdm(loaded_json_list, "Processing .jsons"):
-            # Write processed json to processing file for current .ndjson file:
-            single_json_as_string: str = json.dumps(
-                process_json_text(single_json, FIELDS_TO_PROCESS)
-            )
-            processed_ndjson_store_path: str = os.path.join(
-                PROCESSED_NDJSON_STORE_DIR, f"processed_ndjson_{idx}"
-            )
-            with open(processed_ndjson_store_path, 'a') as processed_ndjson:
+        processed_ndjson_store_path: str = os.path.join(
+            PROCESSED_NDJSON_STORE_DIR, f"processed_ndjson_{idx}"
+        )
+        # If a file with the name of the path for the current index exists,
+        # skip to the next .ndjson. This is so that we can stop and start the
+        # processing at different times as it can take a while:
+        if os.path.isfile(processed_ndjson_store_path):
+            continue
+
+        # An else clause is not needed because the continue will skip this code
+        # when desired:
+        with open(processed_ndjson_store_path, 'a') as processed_ndjson:
+            single_json: dict[str, Any]
+            for single_json in tqdm(loaded_json_list, "Processing .jsons"):
+                # Write processed json to processing file for current .ndjson
+                # file:
+                single_json_as_string: str = json.dumps(
+                    process_json_text(single_json, FIELDS_TO_PROCESS)
+                )
                 processed_ndjson.write(single_json_as_string + '\n')
 
     return 0
@@ -131,8 +139,8 @@ def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     return json_list
 
 def generate_jsons_from_ndjsons(
-        ndjsons_dir: str
-        ) -> Generator[list[dict[str, Any]], None, None]:
+    ndjsons_dir: str,
+    ) -> Generator[list[dict[str, Any]], None, None]:
     '''
     Acts as generator, yielding at each step a list of all deserialised json
     objects from a given file.
