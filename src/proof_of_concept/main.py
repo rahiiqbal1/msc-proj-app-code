@@ -1,10 +1,13 @@
 import os
 import sys
+import math
 import json
 from typing import Any
 import joblib
 from txtai import Embeddings
 # import streamlit as st
+
+from get_embeddings import NUM_ENTRIES
 
 def main() -> int:
     # Directory where relevant data is stored:
@@ -19,7 +22,7 @@ def main() -> int:
     embeddings: Embeddings
     entry_data, embeddings = load_data_and_embeddings(
         os.path.join(wikidata_dir, "entry_data.gz"),
-        os.path.join(wikidata_dir, "embeddings_subset_2083506")
+        os.path.join(wikidata_dir, f"embeddings_subset_{NUM_ENTRIES}")
     )
 
     cli_search(entry_data, embeddings)

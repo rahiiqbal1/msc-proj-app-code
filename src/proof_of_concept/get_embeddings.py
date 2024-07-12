@@ -7,7 +7,8 @@ from txtai import Embeddings
 from tqdm import tqdm
 import joblib
 
-PROPORTION_DATA_TO_USE = 0.3
+NUM_ENTRIES = 6947320
+PROPORTION_ENTRIES_TO_USE = 0.3
 
 def main() -> int:
     # Get path to where data is stored. Note that this uses a relative path
@@ -35,7 +36,7 @@ def main() -> int:
 
     # Using only num_entries_to_use entries to save computation time:
     num_entries_to_use: int = math.floor(
-        len(data_entries) * PROPORTION_DATA_TO_USE
+        NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
     )
     data_entries_subset: list[str] = data_entries[: num_entries_to_use]
 
