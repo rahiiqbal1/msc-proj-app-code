@@ -27,7 +27,15 @@ def main() -> int:
         os.path.join(wikidata_dir, f"embeddings_subset_{num_entries_used}")
     )
 
-    cli_search(entry_jsons, embeddings)
+    while True:
+        print('-' * 50)
+        cli_search(entry_jsons, embeddings)
+        print('-' * 50)
+        input_to_quit: str = input(
+            "Enter q/Q to quit, any other key to search again: "
+        )
+        if input_to_quit == 'q':
+            break
 
     return 0
 
@@ -77,6 +85,7 @@ def cli_search(data: list[dict[str, str]], embeddings: Embeddings) -> None:
     # Getting results in readable format:
     num_result: tuple[int, float]
     for num_result in num_results:
+        print('+' * 50)
         readable_result: dict[str, str] = data[num_result[0]]
         # Displaying only desired fields:
         field_to_show: str
