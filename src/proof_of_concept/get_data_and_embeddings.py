@@ -8,7 +8,7 @@ from tqdm import tqdm
 import joblib
 
 NUM_ENTRIES = 6947320
-PROPORTION_ENTRIES_TO_USE = 0.3
+PROPORTION_ENTRIES_TO_USE = 0.5
 
 def main() -> int:
     # Get path to where data is stored. Note that this uses a relative path
@@ -30,7 +30,7 @@ def main() -> int:
         wikidata_dir, "entry_data.gz"
     )
     # Loading in data:
-    data_entries: list[str] = gen_or_get_data(
+    data_entries: list[dict[str, str]] = gen_or_get_data(
         os.path.join(wikidata_dir, "reduced-ndjsons"), data_save_path
     )
 
@@ -38,7 +38,13 @@ def main() -> int:
     num_entries_to_use: int = math.floor(
         NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
     )
-    data_entries_subset: list[str] = data_entries[: num_entries_to_use]
+    data_entries_subset: list[dict[str, str]] = data_entries[
+        : num_entries_to_use
+    ]
+
+    data_entries_subset_as_strings: list[str] = stringify_dictionaries(
+        data_entries_subset
+    )
 
     # If the index does not already exist at the specified path, index and
     # save:
@@ -49,9 +55,32 @@ def main() -> int:
         )
     )
     # Attempt to generate and save index:
-    gen_and_save_index(data_entries_subset, idx_save_path)
+    gen_and_save_index(data_entries_subset_as_strings, idx_save_path)
 
     return 0
+
+def stringify_dictionaries(
+    dicts_to_stringify: list[dict[str, str]]
+    ) -> list[str]:
+    '''
+    Takes a list of dictionaries which has both keys and values as string data,
+    and returns a list of each field in the dictionary as a single combined
+    string.
+    '''
+    strings_to_return: list[str] = []
+
+    single_dict: dict[str, str]
+    for single_dict in dicts_to_stringify:
+        # Initialising string to add to return list:
+        string_for_return: str = ""
+        dict_key: str 
+        for dict_key in single_dict:
+            string_for_return += single_dict[dict_key]
+
+        strings_to_return.append(string_for_return)
+
+    return strings_to_return
+
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
@@ -94,23 +123,22 @@ def generate_jsons_from_ndjsons(
 def gen_or_get_data(
     ndjson_data_dir: str,
     data_save_path: str
-    ) -> list[str]:
+    ) -> list[dict[str, str]]:
     '''
     If the file at the given path already exists, attempt to load it using
     joblib. If not, read all .ndjson files in the given directory and attempt
-    to read name, abstract, categories (todo), and wikitext from each .json 
+    to read name, abstract, categories, url, and wikitext from each .json 
     within them.
 
-    Returns a list of all fields for a given entry as a single string, e.g.
-    ["name... abstract... categories... wikitext...", ...]
+    Returns a list of all .json entries in the data as dictionaries.
     '''
     # List of fields to use for the data:
     fields_to_use: list[str] = ["name", "abstract", "Category"]
 
     # If the data does not exist, proceed to generate it. Otherwise load it:
     if os.path.isfile(data_save_path) == False:
-        # Initialising list to store strings of data for each entry:
-        all_entry_data: list[str] = []
+        # Initialising list to store dictionaries with desired fields:
+        all_cut_entry_jsons: list[dict[str, str]] = []
 
         # List of deserialised json objects per .ndjson file read:
         entry_jsons: list[dict[str, Any]]
@@ -119,23 +147,23 @@ def gen_or_get_data(
             # wikipage entry:
             entry_json: dict[str, Any]
             for entry_json in entry_jsons:
-                entry_data: str = ""
-                # String to store data of each field for the given entry:
-                # Looping over each individual json (dictionary) to add each
-                # field to the return string:
+                # Initialising dictionary which will be added to return list:
+                cut_json_for_return: dict[str, str] = {}
+                # Loop over fields in current json and if they are desired, add
+                # them to the dictionary which will be part of the return list:
                 for field in entry_json:
                     if field in fields_to_use:
-                        entry_data += (entry_json[field] + ' ')
+                        cut_json_for_return[field] = entry_json[field]
 
-                # Adding string of data to list of data:
-                all_entry_data.append(entry_data)
+                # Adding json with selected fields to return list:
+                all_cut_entry_jsons.append(cut_json_for_return)
 
         # Saving data:
         data_save_dir: str
         data_save_name: str
         data_save_dir, data_save_name = os.path.split(data_save_path)
-        save_data(all_entry_data, data_save_name, data_save_dir)   
-        return all_entry_data
+        save_data(all_cut_entry_jsons, data_save_name, data_save_dir)   
+        return all_cut_entry_jsons
 
     else:
         # Loads using joblib (pickle), so the file must be valid as the given
