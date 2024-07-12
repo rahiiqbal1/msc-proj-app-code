@@ -1,7 +1,5 @@
 import os
 import sys
-import math
-import json
 from typing import Any
 import joblib
 from txtai import Embeddings
