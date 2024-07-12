@@ -1,13 +1,16 @@
 import os
 import sys
+import math
 from typing import Any
 import joblib
 from txtai import Embeddings
 # import streamlit as st
 
-from get_data_and_embeddings import NUM_ENTRIES
+from get_data_and_embeddings import NUM_ENTRIES, PROPORTION_ENTRIES_TO_USE
 
 def main() -> int:
+    num_entries_used: int = math.floor(NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE)
+
     # Directory where relevant data is stored:
     wikidata_dir: str = os.path.join(
         os.pardir,
@@ -21,7 +24,7 @@ def main() -> int:
     embeddings: Embeddings
     entry_jsons, embeddings = load_data_and_embeddings(
         os.path.join(wikidata_dir, "entry_data.gz"),
-        os.path.join(wikidata_dir, f"embeddings_subset_{NUM_ENTRIES}")
+        os.path.join(wikidata_dir, f"embeddings_subset_{num_entries_used}")
     )
 
     cli_search(entry_jsons, embeddings)

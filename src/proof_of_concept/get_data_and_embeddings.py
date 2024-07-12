@@ -55,7 +55,7 @@ def main() -> int:
         )
     )
     # Attempt to generate and save index:
-    gen_and_save_index(data_entries_subset_as_strings, idx_save_path)
+    get_or_get_index(data_entries_subset_as_strings, idx_save_path)
 
     return 0
 
@@ -133,7 +133,7 @@ def gen_or_get_data(
     Returns a list of all .json entries in the data as dictionaries.
     '''
     # List of fields to use for the data:
-    fields_to_use: list[str] = ["name", "abstract", "Category"]
+    fields_to_use: list[str] = ["name", "abstract", "Category", "url"]
 
     # If the data does not exist, proceed to generate it. Otherwise load it:
     if os.path.isfile(data_save_path) == False:
@@ -170,7 +170,7 @@ def gen_or_get_data(
         # return type:
         return load_data(data_save_path)
 
-def gen_and_save_index(
+def get_or_get_index(
     data_to_index: Any,
     index_save_path: str
     ) -> None:
