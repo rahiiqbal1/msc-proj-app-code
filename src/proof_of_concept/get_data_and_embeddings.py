@@ -8,7 +8,7 @@ from tqdm import tqdm
 import joblib
 
 NUM_ENTRIES = 6947320
-PROPORTION_ENTRIES_TO_USE = 0.5
+PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> int:
     # Get path to where data is stored. Note that this uses a relative path
@@ -70,7 +70,7 @@ def stringify_dictionaries(
     strings_to_return: list[str] = []
 
     single_dict: dict[str, str]
-    for single_dict in dicts_to_stringify:
+    for single_dict in tqdm(dicts_to_stringify):
         # Initialising string to add to return list:
         string_for_return: str = ""
         dict_key: str 
