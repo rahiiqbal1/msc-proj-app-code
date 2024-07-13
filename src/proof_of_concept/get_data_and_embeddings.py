@@ -55,7 +55,7 @@ def main() -> int:
         )
     )
     # Attempt to generate and save index:
-    get_or_get_index(data_entries_subset_as_strings, idx_save_path)
+    gen_or_get_index(data_entries_subset_as_strings, idx_save_path)
 
     return 0
 
@@ -170,7 +170,7 @@ def gen_or_get_data(
         # return type:
         return load_data(data_save_path)
 
-def get_or_get_index(
+def gen_or_get_index(
     data_to_index: Any,
     index_save_path: str
     ) -> None:
