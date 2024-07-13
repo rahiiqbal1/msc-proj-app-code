@@ -71,7 +71,7 @@ def load_data(file_path: str) -> Any:
 
 def cli_search(data: list[dict[str, str]], embeddings: Embeddings) -> None:
     '''
-    Search through data. uses terminal interface.
+    Search through json data. uses terminal interface.
     '''
     # Getting query and searching through index:
     search_query: str = input("Enter a search query: ")
@@ -91,6 +91,24 @@ def cli_search(data: list[dict[str, str]], embeddings: Embeddings) -> None:
         field_to_show: str
         for field_to_show in fields_to_show:
             print(readable_result[field_to_show])
+
+def test_semantic_search() -> None:
+    '''
+    Testing whether semantic search works properly for this model: 
+    '''
+    test_data = [
+        "Beans on toast",
+        "Capital punishment",
+        "Tiger",
+        "Generosity"
+    ]
+
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    )
+    embeddings.index(test_data)
+
+    print(test_data[embeddings.search("breakfast", 1)[0][0]])
 
 # def streamlit_search(data: list[str], embeddings: Embeddings) -> None:
 #     ''' 
