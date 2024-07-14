@@ -5,7 +5,6 @@ import subprocess
 from typing import Any
 import joblib
 from txtai import Embeddings
-# import streamlit as st
 
 from get_data_and_embeddings import NUM_ENTRIES, PROPORTION_ENTRIES_TO_USE
 
@@ -94,34 +93,6 @@ def test_semantic_search() -> None:
 
     # print(test_data[embeddings.search("breakfast", 1)[0][0]])
 
-# def streamlit_search(data: list[str], embeddings: Embeddings) -> None:
-#     ''' 
-#     Searches through given data. Uses a streamlit interface.
-#     '''
-#     # Page title and search box:
-#     st.title("Wikipedia Search Engine")
-#     search_query: str = st.text_input("Enter a search query...")
-
-#     # If the search button is pressed, search through the index with the given
-#     # query:
-#     if st.button("Search") == True and search_query == True:
-#         # num_results is a tuple of the index of the given result in the
-#         # data and it's score:
-#         num_results: list[tuple[int, float]]  = embeddings.search(
-#             search_query, 10
-#         )
-
-#         # Getting readable results by index of result in page_titles:
-#         readable_results: list[str] = [
-#             data[num_result[0]] for num_result in num_results
-#         ]
-
-#         # Displaying results:
-#         for result in readable_results:
-#             st.write(result)
-
-# Cache to speed up streamlit load times:
-# @st.cache_data
 def load_data_and_embeddings(
     data_path: str,
     embeddings_path: str
@@ -142,8 +113,6 @@ def load_data_and_embeddings(
 
     return data, embeddings
 
-# Cache to speed up streamlit load times:
-# @st.cache_data
 def load_data(file_path: str) -> Any:
     '''
     Loads given object as python object using joblib.
