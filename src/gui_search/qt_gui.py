@@ -84,7 +84,7 @@ class SearchController:
     """
     def __init__(self, model: Callable, view: SearchWindow):
         # Attributes:
-        self._evaluate: Callable = model
+        self._searchFunction: Callable = model
         self._view: SearchWindow = view
 
         # Connect widgets:
@@ -94,12 +94,18 @@ class SearchController:
         """
         Connects search button to given search function.
         """
+        self._view.searchButton.clicked.connect(self._searchFunction)
 
 def main() -> None:
     # Initialise app:
     searchApp = QApplication([])
     # Initialise window:
     searchWindow = SearchWindow()
+
+    testFunction = lambda: print("test")
+    # Creating controller. Does not need to be stored as a variable as it holds
+    # references to the model and view:
+    SearchController(testFunction, searchWindow)
 
     # Display and event loop:
     searchWindow.show()
