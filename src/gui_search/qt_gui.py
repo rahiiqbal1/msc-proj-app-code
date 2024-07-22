@@ -9,7 +9,6 @@ from PyQt5.QtWidgets import (
     QWidget,
     QLabel,
     QVBoxLayout,
-    QHBoxLayout,
     QLineEdit,
     QPushButton,
 )
@@ -22,6 +21,7 @@ WINDOW_TITLE = "Wikipedia Search Engine"
 SEARCH_BOX_HEIGHT = 64
 SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 SEARCH_BUTTON_TEXT = "&Search"
+NUM_RESULTS_TO_SHOW = 10
 
 class SearchWindow(QMainWindow):
     """
@@ -59,6 +59,7 @@ class SearchWindow(QMainWindow):
         searchBoxLabel.setText(SEARCH_BOX_LABEL)
         searchBox.setAlignment(Qt.AlignmentFlag.AlignLeft)
         searchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
+        searchButton.setCheckable(True)
 
         # Adding to layout:
         generalLayout.addWidget(searchBoxLabel)
@@ -78,6 +79,31 @@ class SearchWindow(QMainWindow):
             "searchButton": searchButton
         }
 
+    def drawResultsPage(self, num_results_to_show: int = 10) -> dict[str, Any]:
+        """
+        Draws results page. To be shown after a valid query is entered into the
+        search box and the search button is pressed.
+        """
+        # Widgets:
+        generalLayout = QVBoxLayout()
+
+        # Drawing results:
+        for i in range(num_results_to_show):
+            result = QLabel()
+            result.setText(f"test{i}")
+            generalLayout.addWidget(result)
+            print(i)
+
+        # Creating and setting central widget:
+        centralWidget = QWidget(self)
+        centralWidget.setLayout(generalLayout)
+
+        self.setCentralWidget(centralWidget)
+
+        return {
+            "generalLayout": generalLayout
+        }
+
 class SearchController:
     """
     Controller class for the search engine app window.
@@ -94,7 +120,7 @@ class SearchController:
         """
         Connects search button to given search function.
         """
-        self._view.searchButton.clicked.connect(self._searchFunction)
+        self._view.searchButton.clicked.connect(self._view.drawResultsPage)
 
 def main() -> None:
     # Initialise app:
@@ -102,7 +128,7 @@ def main() -> None:
     # Initialise window:
     searchWindow = SearchWindow()
 
-    testFunction = lambda: print("test")
+    testFunction = lambda: print("this")
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view:
     SearchController(testFunction, searchWindow)
