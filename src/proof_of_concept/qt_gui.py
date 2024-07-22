@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
     QWidget,
     QGridLayout,
     QLineEdit,
-    QPushbutton,
+    QPushButton,
 )
 
 WINDOW_WIDTH = 720
@@ -27,10 +27,6 @@ class SearchWindow(QMainWindow):
         self.setWindowTitle(title)
         self.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT)
         self.setCentralWidget(centralWidget)
-
-        # self._createDisplay()
-        # self._createButtons()
-
 
 
 def main() -> None:
