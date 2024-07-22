@@ -30,8 +30,9 @@ class SearchWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
 
-        # Initialising to search page:
-        self.drawSearchPage()
+        # Initialising window to display search page and retrieving search
+        # button widget for use in controller:
+        self.searchButton: QPushButton = self.drawSearchPage()["searchButton"]
 
         # Basic window formatting:
         self.setGeometry(
