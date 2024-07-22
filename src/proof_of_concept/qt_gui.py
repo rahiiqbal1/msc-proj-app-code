@@ -1,4 +1,6 @@
 import sys
+from typing import Callable
+from functools import partial
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -28,6 +30,20 @@ class SearchWindow(QMainWindow):
         self.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT)
         self.setCentralWidget(centralWidget)
 
+class SearchController:
+    """
+    Controller class for the search engine app window.
+    """
+    def __init__(self, model: Callable, view: SearchWindow):
+        # Attributes:
+        self._evaluate: Callable = model
+        self._view: SearchWindow = view
+
+        # Widget initialisation:
+        self._connectSignalsAndSlots()
+
+    def _connectSignalsAndSlots(self) -> None:
+        pass
 
 def main() -> None:
     # Initialise app:
