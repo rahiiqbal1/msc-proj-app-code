@@ -35,7 +35,7 @@ class SearchWindow(QMainWindow):
         self.generalWidget = QStackedWidget()
 
         # Getting layout for search page and adding to the generalWidget:
-        self.generalWidget.addWidget(self.generateSearchPage())
+        self.searchButton: QPushButton = self.showSearchPage()["searchButton"]
 
         # # Initialising window to display search page and retrieving search
         # # button widget for use in controller:
@@ -53,10 +53,12 @@ class SearchWindow(QMainWindow):
         # Set layout:
         self.setCentralWidget(self.generalWidget)
 
-    def generateSearchPage(self) -> QWidget:
+    def showSearchPage(self) -> dict[str, QWidget]:
         """
         Generates the layout for the search page, adds it to a widget instance,
-        and returns.
+        and adds that widget to the general (stacked) widget. 
+
+        Returns a dictionary of each widget with it's variable name as key.
         """
         # Widgets:
         overallLayout = QVBoxLayout()
@@ -78,7 +80,58 @@ class SearchWindow(QMainWindow):
         centralWidget = QWidget()
         centralWidget.setLayout(overallLayout)
 
+        self.generalWidget.addWidget(centralWidget)
+
+        return {
+            "overallLayout": overallLayout,
+            "searchBoxLabel": searchBoxLabel,
+            "searchBox": searchBox,
+            "searchButton": searchButton,
+            "centralWidget": centralWidget
+        }
+
+    def showResultsPage(self, num_results_to_show: int = 10) -> QWidget:
+        """
+        Shows results page for given results.
+        """
+        # Widgets:
+        generalLayout = QVBoxLayout()
+
+        # Adding results to widget:
+        for i in range(num_results_to_show):
+            result = QLabel(f"test{i}")
+            generalLayout.addWidget(result)
+            print(i)
+
+        # Creating central widget:
+        centralWidget = QWidget()
+        centralWidget.setLayout(generalLayout)
+
         return centralWidget
+
+    # def drawResultsPage(self, num_results_to_show: int = 10) -> dict[str, Any]:
+    #     """
+    #     Draws results page. To be shown after a valid query is entered into the
+    #     search box and the search button is pressed.
+    #     """
+    #     # Widgets:
+    #     generalLayout = QVBoxLayout()
+
+    #     # Drawing results:
+    #     for i in range(num_results_to_show):
+    #         result = QLabel(f"test{i}")
+    #         generalLayout.addWidget(result)
+    #         print(i)
+
+    #     # Creating and setting central widget:
+    #     centralWidget = QWidget()
+    #     centralWidget.setLayout(generalLayout)
+
+    #     self.setCentralWidget(centralWidget)
+
+    #     return {
+    #         "generalLayout": generalLayout
+    #     }
 
     # def drawSearchPage(self) -> dict[str, Any]:
     #     """
@@ -114,30 +167,6 @@ class SearchWindow(QMainWindow):
     #         "searchBoxLabel": searchBoxLabel,
     #         "searchBox": searchBox,
     #         "searchButton": searchButton
-    #     }
-
-    # def drawResultsPage(self, num_results_to_show: int = 10) -> dict[str, Any]:
-    #     """
-    #     Draws results page. To be shown after a valid query is entered into the
-    #     search box and the search button is pressed.
-    #     """
-    #     # Widgets:
-    #     generalLayout = QVBoxLayout()
-
-    #     # Drawing results:
-    #     for i in range(num_results_to_show):
-    #         result = QLabel(f"test{i}")
-    #         generalLayout.addWidget(result)
-    #         print(i)
-
-    #     # Creating and setting central widget:
-    #     centralWidget = QWidget()
-    #     centralWidget.setLayout(generalLayout)
-
-    #     self.setCentralWidget(centralWidget)
-
-    #     return {
-    #         "generalLayout": generalLayout
     #     }
 
 class SearchController:
