@@ -67,7 +67,7 @@ class SearchWindow(QMainWindow):
         generalLayout.addWidget(searchButton)
 
         # Creating and setting central widget:
-        centralWidget = QWidget(self)
+        centralWidget = QWidget()
         centralWidget.setLayout(generalLayout)
 
         self.setCentralWidget(centralWidget)
@@ -89,13 +89,12 @@ class SearchWindow(QMainWindow):
 
         # Drawing results:
         for i in range(num_results_to_show):
-            result = QLabel()
-            result.setText(f"test{i}")
+            result = QLabel(f"test{i}")
             generalLayout.addWidget(result)
             print(i)
 
         # Creating and setting central widget:
-        centralWidget = QWidget(self)
+        centralWidget = QWidget()
         centralWidget.setLayout(generalLayout)
 
         self.setCentralWidget(centralWidget)
