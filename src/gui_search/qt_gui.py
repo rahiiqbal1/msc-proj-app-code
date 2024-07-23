@@ -50,25 +50,6 @@ class SearchWindow(QMainWindow):
         # Set layout:
         self.setCentralWidget(self.generalWidget)
 
-    def showResultsPage(self, num_results_to_show: int = 10) -> QWidget:
-        """
-        Shows results page for given results.
-        """
-        # Widgets:
-        generalLayout = QVBoxLayout()
-
-        # Adding results to widget:
-        for i in range(num_results_to_show):
-            result = QLabel(f"test{i}")
-            generalLayout.addWidget(result)
-            print(i)
-
-        # Creating central widget:
-        centralWidget = QWidget()
-        centralWidget.setLayout(generalLayout)
-
-        return centralWidget
-
     def showSearchPage(self) -> dict[str, QWidget]:
         """
         Generates the layout for the search page, adds it to a widget instance,
@@ -106,6 +87,25 @@ class SearchWindow(QMainWindow):
             "centralWidget": centralWidget
         }
 
+    def showResultsPage(self, num_results_to_show: int = 10) -> QWidget:
+        """
+        Shows results page for given results.
+        """
+        # Widgets:
+        generalLayout = QVBoxLayout()
+
+        # Adding results to widget:
+        for i in range(num_results_to_show):
+            result = QLabel(f"test{i}")
+            generalLayout.addWidget(result)
+            print(i)
+
+        # Creating central widget:
+        centralWidget = QWidget()
+        centralWidget.setLayout(generalLayout)
+
+        return centralWidget
+
 class SearchController:
     """
     Controller class for the search engine app window.
@@ -115,14 +115,14 @@ class SearchController:
         self._searchFunction: Callable = model
         self._view: SearchWindow = view
 
-        # # Connect widgets:
-        # self._connectSignalsAndSlots()
+        # Connect widgets:
+        self._connectSignalsAndSlots()
 
-    # def _connectSignalsAndSlots(self) -> None:
-        # """
-        # Connects search button to given search function.
-        # """
-        # self._view.searchButton.clicked.connect(self._view.drawResultsPage)
+    def _connectSignalsAndSlots(self) -> None:
+        """
+        Connects search button to given search function.
+        """
+        self._view.searchButton.clicked.connect(self._view.showResultsPage)
 
 def main() -> None:
     # Initialise app:
@@ -132,8 +132,7 @@ def main() -> None:
 
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view:
-    testFunction = lambda: print("this")
-    SearchController(testFunction, searchWindow)
+    SearchController(searchWindow.showResultsPage(), searchWindow)
 
     # Display and event loop:
     searchWindow.show()
