@@ -92,17 +92,17 @@ class SearchWindow(QMainWindow):
         Shows results page for given results.
         """
         # Widgets:
-        generalLayout = QVBoxLayout()
+        overallLayout = QVBoxLayout()
 
         # Adding results to widget:
         for i in range(num_results_to_show):
             result = QLabel(f"test{i}")
-            generalLayout.addWidget(result)
+            overallLayout.addWidget(result)
             print(i)
 
         # Creating central widget:
         centralWidget = QWidget()
-        centralWidget.setLayout(generalLayout)
+        centralWidget.setLayout(overallLayout)
 
         # Adding to general stacked widget of class instance. Placing at index
         # 1:
@@ -112,7 +112,7 @@ class SearchWindow(QMainWindow):
         self.generalWidget.setCurrentIndex(1)
 
         return {
-            "generalLayout": generalLayout
+            "overallLayout": overallLayout
         }
 
 class SearchController:
