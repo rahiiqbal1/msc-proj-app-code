@@ -68,7 +68,6 @@ class SearchWindow(QMainWindow):
         searchBoxLabel.setText(SEARCH_BOX_LABEL)
         searchBox.setAlignment(Qt.AlignmentFlag.AlignLeft)
         searchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
-        searchButton.setCheckable(True)
 
         # Adding to layout:
         overallLayout.addWidget(searchBoxLabel)
