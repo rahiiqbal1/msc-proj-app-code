@@ -35,7 +35,8 @@ class SearchWindow(QMainWindow):
         self.generalWidget = QStackedWidget()
 
         # Getting layout for search page and adding to the generalWidget, 
-        # retrieving search button widget for use in controller:
+        # retrieving search button widget for use in controller. The search 
+        # page should always be at index 0 within the stacked widget:
         self.searchButton: QPushButton = self.showSearchPage()["searchButton"]
 
         # Basic window formatting:
@@ -104,13 +105,12 @@ class SearchWindow(QMainWindow):
         centralWidget = QWidget()
         centralWidget.setLayout(generalLayout)
 
-        # Adding to general stacked widget of class instance:
-        self.generalWidget.addWidget(centralWidget)
+        # Adding to general stacked widget of class instance. Placing at index
+        # 1:
+        self.generalWidget.insertWidget(1, centralWidget)
 
         # Switching general stacked widget's index to display results:
-        self.generalWidget.setCurrentIndex(
-            self.generalWidget.currentIndex() + 1
-        )
+        self.generalWidget.setCurrentIndex(1)
 
         return {
             "generalLayout": generalLayout
