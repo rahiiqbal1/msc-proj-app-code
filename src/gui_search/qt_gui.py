@@ -87,7 +87,11 @@ class SearchWindow(QMainWindow):
             "centralWidget": centralWidget
         }
 
-    def showResultsPage(self, num_results_to_show: int = 10) -> dict[str, Any]:
+    def showResultsPage(
+        self,
+        results: list[dict[str, str]] = [{"title": "a"}, {"title": "b"}],
+        num_results_to_show: int = 10
+        ) -> dict[str, Any]:
         """
         Shows results page for given results.
         """
@@ -95,10 +99,15 @@ class SearchWindow(QMainWindow):
         overallLayout = QVBoxLayout()
 
         # Adding results to widget:
-        for i in range(num_results_to_show):
-            result = QLabel(f"test{i}")
-            overallLayout.addWidget(result)
-            print(i)
+        result: dict[str, str]
+        print(type(results))
+        for result in results:
+            resultLabelWidget = QLabel(result["title"])
+            overallLayout.addWidget(resultLabelWidget)
+        # result = QLabel("test")
+        # overallLayout.addWidget(result)
+        # result2 = QLabel("another")
+        # overallLayout.addWidget(result2)
 
         # Creating central widget:
         centralWidget = QWidget()
