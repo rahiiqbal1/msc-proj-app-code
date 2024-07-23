@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QLineEdit,
     QPushButton,
+    QStackedWidget,
 )
 
 DISPLAY_WIDTH = 3840
@@ -30,9 +31,15 @@ class SearchWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
 
-        # Initialising window to display search page and retrieving search
-        # button widget for use in controller:
-        self.searchButton: QPushButton = self.drawSearchPage()["searchButton"]
+        # Widgets:
+        self.generalWidget = QStackedWidget()
+
+        # Getting layout for search page and adding to the generalWidget:
+        self.generalWidget.addWidget(self.generateSearchPage())
+
+        # # Initialising window to display search page and retrieving search
+        # # button widget for use in controller:
+        # self.searchButton: QPushButton = self.drawSearchPage()["searchButton"]
 
         # Basic window formatting:
         self.setGeometry(
@@ -43,14 +50,16 @@ class SearchWindow(QMainWindow):
         )
         self.setWindowTitle(WINDOW_TITLE)
 
-    def drawSearchPage(self) -> dict[str, Any]:
-        """
-        Draws the search page for the window.
+        # Set layout:
+        self.setCentralWidget(self.generalWidget)
 
-        Returns a dictionary with each widget created for the search page.
+    def generateSearchPage(self) -> QWidget:
+        """
+        Generates the layout for the search page, adds it to a widget instance,
+        and returns.
         """
         # Widgets:
-        generalLayout = QVBoxLayout()
+        overallLayout = QVBoxLayout()
         searchBoxLabel = QLabel()
         searchBox = QLineEdit()
         searchButton = QPushButton(SEARCH_BUTTON_TEXT)
@@ -62,46 +71,74 @@ class SearchWindow(QMainWindow):
         searchButton.setCheckable(True)
 
         # Adding to layout:
-        generalLayout.addWidget(searchBoxLabel)
-        generalLayout.addWidget(searchBox)
-        generalLayout.addWidget(searchButton)
+        overallLayout.addWidget(searchBoxLabel)
+        overallLayout.addWidget(searchBox)
+        overallLayout.addWidget(searchButton)
 
-        # Creating and setting central widget:
         centralWidget = QWidget()
-        centralWidget.setLayout(generalLayout)
+        centralWidget.setLayout(overallLayout)
 
-        self.setCentralWidget(centralWidget)
+        return centralWidget
 
-        return {
-            "generalLayout": generalLayout,
-            "searchBoxLabel": searchBoxLabel,
-            "searchBox": searchBox,
-            "searchButton": searchButton
-        }
+    # def drawSearchPage(self) -> dict[str, Any]:
+    #     """
+    #     Draws the search page for the window.
 
-    def drawResultsPage(self, num_results_to_show: int = 10) -> dict[str, Any]:
-        """
-        Draws results page. To be shown after a valid query is entered into the
-        search box and the search button is pressed.
-        """
-        # Widgets:
-        generalLayout = QVBoxLayout()
+    #     Returns a dictionary with each widget created for the search page.
+    #     """
+    #     # Widgets:
+    #     generalLayout = QVBoxLayout()
+    #     searchBoxLabel = QLabel()
+    #     searchBox = QLineEdit()
+    #     searchButton = QPushButton(SEARCH_BUTTON_TEXT)
 
-        # Drawing results:
-        for i in range(num_results_to_show):
-            result = QLabel(f"test{i}")
-            generalLayout.addWidget(result)
-            print(i)
+    #     # Formatting for widgets:
+    #     searchBoxLabel.setText(SEARCH_BOX_LABEL)
+    #     searchBox.setAlignment(Qt.AlignmentFlag.AlignLeft)
+    #     searchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
+    #     searchButton.setCheckable(True)
 
-        # Creating and setting central widget:
-        centralWidget = QWidget()
-        centralWidget.setLayout(generalLayout)
+    #     # Adding to layout:
+    #     generalLayout.addWidget(searchBoxLabel)
+    #     generalLayout.addWidget(searchBox)
+    #     generalLayout.addWidget(searchButton)
 
-        self.setCentralWidget(centralWidget)
+    #     # Creating and setting central widget:
+    #     centralWidget = QWidget()
+    #     centralWidget.setLayout(generalLayout)
 
-        return {
-            "generalLayout": generalLayout
-        }
+    #     self.setCentralWidget(centralWidget)
+
+    #     return {
+    #         "generalLayout": generalLayout,
+    #         "searchBoxLabel": searchBoxLabel,
+    #         "searchBox": searchBox,
+    #         "searchButton": searchButton
+    #     }
+
+    # def drawResultsPage(self, num_results_to_show: int = 10) -> dict[str, Any]:
+    #     """
+    #     Draws results page. To be shown after a valid query is entered into the
+    #     search box and the search button is pressed.
+    #     """
+    #     # Widgets:
+    #     generalLayout = QVBoxLayout()
+
+    #     # Drawing results:
+    #     for i in range(num_results_to_show):
+    #         result = QLabel(f"test{i}")
+    #         generalLayout.addWidget(result)
+    #         print(i)
+
+    #     # Creating and setting central widget:
+    #     centralWidget = QWidget()
+    #     centralWidget.setLayout(generalLayout)
+
+    #     self.setCentralWidget(centralWidget)
+
+    #     return {
+    #         "generalLayout": generalLayout
+    #     }
 
 class SearchController:
     """
@@ -112,14 +149,14 @@ class SearchController:
         self._searchFunction: Callable = model
         self._view: SearchWindow = view
 
-        # Connect widgets:
-        self._connectSignalsAndSlots()
+        # # Connect widgets:
+        # self._connectSignalsAndSlots()
 
-    def _connectSignalsAndSlots(self) -> None:
-        """
-        Connects search button to given search function.
-        """
-        self._view.searchButton.clicked.connect(self._view.drawResultsPage)
+    # def _connectSignalsAndSlots(self) -> None:
+        # """
+        # Connects search button to given search function.
+        # """
+        # self._view.searchButton.clicked.connect(self._view.drawResultsPage)
 
 def main() -> None:
     # Initialise app:
@@ -127,9 +164,9 @@ def main() -> None:
     # Initialise window:
     searchWindow = SearchWindow()
 
-    testFunction = lambda: print("this")
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view:
+    testFunction = lambda: print("this")
     SearchController(testFunction, searchWindow)
 
     # Display and event loop:
