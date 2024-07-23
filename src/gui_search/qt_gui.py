@@ -34,12 +34,9 @@ class SearchWindow(QMainWindow):
         # Widgets:
         self.generalWidget = QStackedWidget()
 
-        # Getting layout for search page and adding to the generalWidget:
+        # Getting layout for search page and adding to the generalWidget, 
+        # retrieving search button widget for use in controller:
         self.searchButton: QPushButton = self.showSearchPage()["searchButton"]
-
-        # # Initialising window to display search page and retrieving search
-        # # button widget for use in controller:
-        # self.searchButton: QPushButton = self.drawSearchPage()["searchButton"]
 
         # Basic window formatting:
         self.setGeometry(
@@ -52,6 +49,25 @@ class SearchWindow(QMainWindow):
 
         # Set layout:
         self.setCentralWidget(self.generalWidget)
+
+    def showResultsPage(self, num_results_to_show: int = 10) -> QWidget:
+        """
+        Shows results page for given results.
+        """
+        # Widgets:
+        generalLayout = QVBoxLayout()
+
+        # Adding results to widget:
+        for i in range(num_results_to_show):
+            result = QLabel(f"test{i}")
+            generalLayout.addWidget(result)
+            print(i)
+
+        # Creating central widget:
+        centralWidget = QWidget()
+        centralWidget.setLayout(generalLayout)
+
+        return centralWidget
 
     def showSearchPage(self) -> dict[str, QWidget]:
         """
@@ -89,85 +105,6 @@ class SearchWindow(QMainWindow):
             "searchButton": searchButton,
             "centralWidget": centralWidget
         }
-
-    def showResultsPage(self, num_results_to_show: int = 10) -> QWidget:
-        """
-        Shows results page for given results.
-        """
-        # Widgets:
-        generalLayout = QVBoxLayout()
-
-        # Adding results to widget:
-        for i in range(num_results_to_show):
-            result = QLabel(f"test{i}")
-            generalLayout.addWidget(result)
-            print(i)
-
-        # Creating central widget:
-        centralWidget = QWidget()
-        centralWidget.setLayout(generalLayout)
-
-        return centralWidget
-
-    # def drawResultsPage(self, num_results_to_show: int = 10) -> dict[str, Any]:
-    #     """
-    #     Draws results page. To be shown after a valid query is entered into the
-    #     search box and the search button is pressed.
-    #     """
-    #     # Widgets:
-    #     generalLayout = QVBoxLayout()
-
-    #     # Drawing results:
-    #     for i in range(num_results_to_show):
-    #         result = QLabel(f"test{i}")
-    #         generalLayout.addWidget(result)
-    #         print(i)
-
-    #     # Creating and setting central widget:
-    #     centralWidget = QWidget()
-    #     centralWidget.setLayout(generalLayout)
-
-    #     self.setCentralWidget(centralWidget)
-
-    #     return {
-    #         "generalLayout": generalLayout
-    #     }
-
-    # def drawSearchPage(self) -> dict[str, Any]:
-    #     """
-    #     Draws the search page for the window.
-
-    #     Returns a dictionary with each widget created for the search page.
-    #     """
-    #     # Widgets:
-    #     generalLayout = QVBoxLayout()
-    #     searchBoxLabel = QLabel()
-    #     searchBox = QLineEdit()
-    #     searchButton = QPushButton(SEARCH_BUTTON_TEXT)
-
-    #     # Formatting for widgets:
-    #     searchBoxLabel.setText(SEARCH_BOX_LABEL)
-    #     searchBox.setAlignment(Qt.AlignmentFlag.AlignLeft)
-    #     searchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
-    #     searchButton.setCheckable(True)
-
-    #     # Adding to layout:
-    #     generalLayout.addWidget(searchBoxLabel)
-    #     generalLayout.addWidget(searchBox)
-    #     generalLayout.addWidget(searchButton)
-
-    #     # Creating and setting central widget:
-    #     centralWidget = QWidget()
-    #     centralWidget.setLayout(generalLayout)
-
-    #     self.setCentralWidget(centralWidget)
-
-    #     return {
-    #         "generalLayout": generalLayout,
-    #         "searchBoxLabel": searchBoxLabel,
-    #         "searchBox": searchBox,
-    #         "searchButton": searchButton
-    #     }
 
 class SearchController:
     """
