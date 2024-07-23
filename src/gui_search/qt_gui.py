@@ -87,7 +87,7 @@ class SearchWindow(QMainWindow):
             "centralWidget": centralWidget
         }
 
-    def showResultsPage(self, num_results_to_show: int = 10) -> QWidget:
+    def showResultsPage(self, num_results_to_show: int = 10) -> dict[str, Any]:
         """
         Shows results page for given results.
         """
@@ -104,7 +104,17 @@ class SearchWindow(QMainWindow):
         centralWidget = QWidget()
         centralWidget.setLayout(generalLayout)
 
-        return centralWidget
+        # Adding to general stacked widget of class instance:
+        self.generalWidget.addWidget(centralWidget)
+
+        # Switching general stacked widget's index to display results:
+        self.generalWidget.setCurrentIndex(
+            self.generalWidget.currentIndex() + 1
+        )
+
+        return {
+            "generalLayout": generalLayout
+        }
 
 class SearchController:
     """
@@ -132,7 +142,7 @@ def main() -> None:
 
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view:
-    SearchController(searchWindow.showResultsPage(), searchWindow)
+    SearchController(searchWindow.showResultsPage, searchWindow)
 
     # Display and event loop:
     searchWindow.show()
