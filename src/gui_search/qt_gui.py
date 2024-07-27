@@ -13,15 +13,19 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QStackedWidget,
 )
-
+# Display:
 DISPLAY_WIDTH = 3840
 DISPLAY_HEIGHT = 2160
+# Window:
 WINDOW_WIDTH = 720
 WINDOW_HEIGHT = 480
 WINDOW_TITLE = "Wikipedia Search Engine"
+# Search box:
 SEARCH_BOX_HEIGHT = 64
 SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
+# Search button:
 SEARCH_BUTTON_TEXT = "&Search"
+# Data and results:
 NUM_RESULTS_TO_SHOW = 10
 
 class SearchWindow(QMainWindow):
@@ -157,7 +161,14 @@ def main() -> None:
 
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view:
-    SearchController(searchWindow.showResultsPage, searchWindow)
+    test_results: list[dict[str, str]] = [
+        {"name": "blah",      "url": "here.com"},
+        {"name": "more blah", "url": "there.org"}
+    ]
+    SearchController(
+        partial(searchWindow.showResultsPage, test_results),
+        searchWindow
+    )
 
     # Display and event loop:
     searchWindow.show()
