@@ -26,7 +26,7 @@ SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 # Search button:
 SEARCH_BUTTON_TEXT = "&Search"
 # Data and results:
-NUM_RESULTS_TO_SHOW = 2
+NUM_RESULTS_TO_SHOW = 10
 
 class SearchWindow(QMainWindow):
     """
@@ -112,12 +112,25 @@ class SearchWindow(QMainWindow):
             current_result_string_to_show: str = ""
             field: str
             for field in fields_to_show:
-                current_result_string_to_show += (
-                    f"{results[result_idx][field]}\n"
-                )
+                # Inserting url as hyperlink:
+                if field == "url":
+                    current_result_string_to_show += (
+                        f"<a href='{results[result_idx][field]}'>" + 
+                        f"{results[result_idx][field]}</a>"
+                    )
+                else:
+                    current_result_string_to_show += (
+                        f"{results[result_idx][field]}\n"
+                    )
 
             # Creating QLabel with string to show and adding to layout:
             resultLabelWidget = QLabel(current_result_string_to_show)
+            resultLabelWidget.setTextFormat(Qt.RichText)
+            resultLabelWidget.setTextInteractionFlags(
+                Qt.LinksAccessibleByMouse
+            )
+            resultLabelWidget.setOpenExternalLinks(True)
+
             overallLayout.addWidget(resultLabelWidget)
 
         # Creating central widget:
