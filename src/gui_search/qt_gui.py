@@ -41,7 +41,7 @@ class SearchWindow(QMainWindow):
         # Getting layout for search page and adding to the generalWidget, 
         # retrieving search button widget for use in controller. The search 
         # page should always be at index 0 within the stacked widget:
-        self.searchButton: QPushButton = self.showSearchPage()["searchButton"]
+        self.searchWidgets: dict[str, Any] = self.showSearchPage() 
 
         # Basic window formatting:
         self.setGeometry(
@@ -154,7 +154,7 @@ class SearchController:
         """
         # Connecting search button to search function. showResultsPage takes
         # the results of the search function as it's argument:
-        self._view.searchButton.clicked.connect(
+        self._view.searchWidgets["searchButton"].clicked.connect(
             partial(
                 self._view.showResultsPage, 
                 self._searchFunction()
