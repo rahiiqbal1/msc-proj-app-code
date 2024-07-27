@@ -140,7 +140,8 @@ class SearchController:
     Controller class for the search engine app window.
     """
     def __init__(self, model: Callable, view: SearchWindow):
-        # Attributes:
+        # Attributes. model should be a function returning results represented
+        # as list[dict[str, str]], a list of deserialised JSON objects:
         self._searchFunction: Callable = model
         self._view: SearchWindow = view
 
@@ -151,7 +152,14 @@ class SearchController:
         """
         Connects search button to given search function.
         """
-        self._view.searchButton.clicked.connect(self._view.showResultsPage)
+        # Connecting search button to search function. showResultsPage takes
+        # the results of the search function as it's argument:
+        self._view.searchButton.clicked.connect(
+            partial(
+                self._view.showResultsPage, 
+                self._searchFunction()
+            )
+        )
 
 def main() -> None:
     # Initialise app:
@@ -161,14 +169,12 @@ def main() -> None:
 
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view:
-    test_results: list[dict[str, str]] = [
-        {"name": "blah",      "url": "here.com"},
-        {"name": "more blah", "url": "there.org"}
-    ]
-    SearchController(
-        partial(searchWindow.showResultsPage, test_results),
-        searchWindow
-    )
+    def testSearchFunction():
+        return [
+            {"name": "blah",      "url": "here.com"},
+            {"name": "more blah", "url": "there.org"}
+        ]
+    SearchController(testSearchFunction, searchWindow)
 
     # Display and event loop:
     searchWindow.show()
