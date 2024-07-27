@@ -89,24 +89,30 @@ class SearchWindow(QMainWindow):
 
     def showResultsPage(
         self,
-        results: list[dict[str, str]] = [{"title": "a"}, {"title": "b"}]
+        results: list[dict[str, str]]
         # num_results_to_show: int = NUM_RESULTS_TO_SHOW
         ) -> dict[str, Any]:
         """
         Shows results page for given results.
         """
+        # List of keys within the results which we want to see:
+        fields_to_show: tuple[str, ...] = ("name", "url")
+
         # Widgets:
         overallLayout = QVBoxLayout()
+        # Adding results to widget, only showing NUM_RESULTS_TO_SHOW results:
+        for result_idx in range(NUM_RESULTS_TO_SHOW):
+            # Only showing desired fields. Here we construct the string which
+            # will be the label, and then add it to the layout when it is fully
+            # constructed:
+            current_result_string_to_show: str = ""
+            field: str
+            for field in fields_to_show:
+                current_result_string_to_show += results[result_idx][field]
 
-        # Adding results to widget:
-        result: dict[str, str]
-        for result in results:
-            resultLabelWidget = QLabel(result["title"])
+            # Creating QLabel with string to show and adding to layout:
+            resultLabelWidget = QLabel(current_result_string_to_show)
             overallLayout.addWidget(resultLabelWidget)
-        # result = QLabel("test")
-        # overallLayout.addWidget(result)
-        # result2 = QLabel("another")
-        # overallLayout.addWidget(result2)
 
         # Creating central widget:
         centralWidget = QWidget()
