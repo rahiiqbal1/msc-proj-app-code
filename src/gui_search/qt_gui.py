@@ -89,8 +89,8 @@ class SearchWindow(QMainWindow):
 
     def showResultsPage(
         self,
-        results: list[dict[str, str]] = [{"title": "a"}, {"title": "b"}],
-        num_results_to_show: int = 10
+        # results: list[dict[str, str]] = [{"title": "a"}, {"title": "b"}],
+        # num_results_to_show: int = NUM_RESULTS_TO_SHOW
         ) -> dict[str, Any]:
         """
         Shows results page for given results.
@@ -98,9 +98,10 @@ class SearchWindow(QMainWindow):
         # Widgets:
         overallLayout = QVBoxLayout()
 
+        results = [{"title": "a"}, {"title": "b"}]
+        num_results_to_show = 10
         # Adding results to widget:
         result: dict[str, str]
-        print(type(results))
         for result in results:
             resultLabelWidget = QLabel(result["title"])
             overallLayout.addWidget(resultLabelWidget)
