@@ -108,7 +108,9 @@ class SearchWindow(QMainWindow):
             current_result_string_to_show: str = ""
             field: str
             for field in fields_to_show:
-                current_result_string_to_show += results[result_idx][field]
+                current_result_string_to_show += (
+                    f"{results[result_idx][field]}\n"
+                )
 
             # Creating QLabel with string to show and adding to layout:
             resultLabelWidget = QLabel(current_result_string_to_show)
