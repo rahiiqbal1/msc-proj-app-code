@@ -1,6 +1,6 @@
 import sys
 import math
-from typing import Callable, Any
+from typing import Callable, Any 
 from functools import partial
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
@@ -139,11 +139,13 @@ class SearchController:
     """
     Controller class for the search engine app window.
     """
-    def __init__(self, model: Callable, view: SearchWindow):
+    def __init__(self, model: Callable, view: SearchWindow, *model_args):
         # Attributes. model should be a function returning results represented
         # as list[dict[str, str]], a list of deserialised JSON objects:
         self._searchFunction: Callable = model
         self._view: SearchWindow = view
+        # Arguments to be passed to model:
+        self.model_args = model_args
 
         # Connect widgets:
         self._connectSignalsAndSlots()
@@ -157,7 +159,7 @@ class SearchController:
         self._view.searchWidgets["searchButton"].clicked.connect(
             partial(
                 self._view.showResultsPage, 
-                self._searchFunction()
+                self._searchFunction(*self.model_args)
             )
         )
 
@@ -169,12 +171,13 @@ def main() -> None:
 
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view:
-    def testSearchFunction():
+    def testSearchFunction(this: str):
+        print(this)
         return [
             {"name": "blah",      "url": "here.com"},
             {"name": "more blah", "url": "there.org"}
         ]
-    SearchController(testSearchFunction, searchWindow)
+    SearchController(testSearchFunction, searchWindow, "test")
 
     # Display and event loop:
     searchWindow.show()
