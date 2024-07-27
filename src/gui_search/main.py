@@ -1,12 +1,16 @@
 import os
 import sys
 import math
-import subprocess
-from typing import Any
+from typing import Any, Callable
 import joblib
 from txtai import Embeddings
+from PyQt5.QtWidgets import (
+    QApplication
+)
+from qt_gui import SearchWindow, SearchController
 
-from get_data_and_embeddings import NUM_ENTRIES, PROPORTION_ENTRIES_TO_USE
+NUM_ENTRIES = 6947320
+PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> int:
     num_entries_used: int = math.floor(NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE)
@@ -27,71 +31,62 @@ def main() -> int:
         os.path.join(wikidata_dir, f"embeddings_subset_{num_entries_used}")
     )
 
-    cli_search(entry_jsons, embeddings)
+    gui_search(transformer_get_results,
+               entry_jsons,
+               embeddings)
 
     return 0
         
-def cli_search(data: list[dict[str, str]], embeddings: Embeddings) -> None:
-    '''
-    Search through json data. uses terminal interface.
-    '''
-    while True:
-        # Clear screen:
-        subprocess.run(["clear"])
-            
-        # Display niceties:
-        print("Wikipedia Search")
-        print('-' * 50)
+def gui_search(
+    search_model_to_use: Callable,
+    *args_of_search_model_to_use
+    ) -> None:
+    """
+    Search through list of JSON data as python dictionaries. Uses GUI
+    interface.
+    """
+    # Initialising app:
+    searchApp = QApplication([])
+    # Initialising window:
+    searchWindow = SearchWindow()
 
-        # Getting query and searching through index:
-        search_query: str = input("Enter a search query: ")
-        # This is a list of tuples containing the index of the result in the
-        # data and it's score:
-        num_results: list[tuple[int, float]] = embeddings.search(
-            search_query, 10
-        )
+    # Creating controller. Does not need to be stored as a variable as it holds
+    # references to the model and view:
+    SearchController(search_model_to_use,
+                     searchWindow,
+                     *args_of_search_model_to_use)
 
-        # Tuple of desired fields of the data to display to the user in
-        # results:
-        fields_to_show: tuple[str, ...] = ("name", "url")
+    # Display and event loop:
+    searchWindow.show()
+    sys.exit(searchApp.exec())
 
-        # Getting results in readable format:
-        num_result: tuple[int, float]
-        for num_result in num_results:
-            print('+' * 50)
-            readable_result: dict[str, str] = data[num_result[0]]
-            # Displaying only desired fields:
-            field_to_show: str
-            for field_to_show in fields_to_show:
-                print(readable_result[field_to_show])
+def transformer_get_results(
+    data: list[dict[str, str]],
+    embeddings: Embeddings
+    ) -> list[dict[str, str]]:
+    """
+    Searches through given data using given transformer-model-derived
+    embeddings. Returns results with all fields intact, so they should be cut
+    as desired outside of this function.
+    """
+    search_query: str = "test query"
 
-        print('-' * 50)
-        
-        # Break condition:
-        to_leave: str = input(
-            "Input q/Q to quit, any other key to search again: "
-        ).lower()
-
-        if to_leave == 'q':
-            break
-
-def test_semantic_search() -> None:
-    '''
-    Testing whether semantic search works properly for this model: 
-    '''
-    test_data = [
-        "Beans on toast",
-        "Capital punishment",
-        "Tiger",
-        "Generosity"
-    ]
-
-    embeddings = Embeddings(
-        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    # This is a list of tuples containing the index of the result in the
+    # data and it's score:
+    num_results: list[tuple[int, float]] = embeddings.search(
+        search_query, 10
     )
-    embeddings.index(test_data)
 
-    # print(test_data[embeddings.search("breakfast", 1)[0][0]])
+    # Initialising list to store readable results:
+    results: list[dict[str, str]] = []
+
+    # Getting results in readable format:
+    num_result: tuple[int, float]
+    for num_result in num_results:
+        readable_result: dict[str, str] = data[num_result[0]]
+        results.append(readable_result)
+
+    return results
 
 def load_data_and_embeddings(
     data_path: str,
