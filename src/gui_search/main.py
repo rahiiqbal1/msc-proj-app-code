@@ -7,7 +7,7 @@ from txtai import Embeddings
 from PyQt5.QtWidgets import (
     QApplication
 )
-from qt_gui import SearchWindow, SearchController
+from qt_gui import NUM_RESULTS_TO_SHOW, SearchWindow, SearchController
 
 NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
@@ -65,6 +65,7 @@ def guiSearch(
     searchWindow.show()
     sys.exit(searchApp.exec())
 
+# Model:
 def transformerGetResults(
     data: list[dict[str, str]],
     embeddings: Embeddings,
@@ -78,7 +79,7 @@ def transformerGetResults(
     # This is a list of tuples containing the index of the result in the
     # data and it's score:
     numResults: list[tuple[int, float]] = embeddings.search(
-        searchQuery, 10
+        searchQuery, NUM_RESULTS_TO_SHOW
     )
 
     # Initialising list to store readable results:
