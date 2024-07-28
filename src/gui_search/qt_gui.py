@@ -155,13 +155,23 @@ class SearchController:
     def __init__(self, model: Callable, view: SearchWindow, *model_args):
         # Attributes. model should be a function returning results represented
         # as list[dict[str, str]], a list of deserialised JSON objects:
-        self._searchFunction: Callable = model
+        self._model: Callable = model
         self._view: SearchWindow = view
         # Arguments to be passed to model:
-        self.model_args = model_args
+        self._modelArgs = model_args
 
         # Connect widgets:
         self._connectSignalsAndSlots()
+
+    def _searchFunction(self) -> list[dict[str, str]]:
+        """
+        Deals with searching through data with query present in search box.
+        """
+        searchQuery: str = self._view.searchWidgets["searchBox"].text()
+        # Passing given modelArgs to model along with search query present in
+        # text box:
+        print(searchQuery + "nothing")
+        return self._model(*(self._modelArgs + (searchQuery, )))
 
     def _connectSignalsAndSlots(self) -> None:
         """
@@ -172,7 +182,7 @@ class SearchController:
         self._view.searchWidgets["searchButton"].clicked.connect(
             partial(
                 self._view.showResultsPage, 
-                self._searchFunction(*self.model_args)
+                self._searchFunction()
             )
         )
 

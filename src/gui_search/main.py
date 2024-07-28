@@ -53,8 +53,8 @@ def guiSearch(
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view. Note that guiSearch takes all
     # arguments of the searchModel except the search query, which must be taken
-    # from the searchWindow and so is not known initially:
-    searchQuery: str = searchWindow.searchWidgets["searchBox"].text()
+    # from the searchWindow and so is not known initially. This is taken care
+    # of within the SearchController:
     SearchController(
         searchModelToUse,
         searchWindow,
