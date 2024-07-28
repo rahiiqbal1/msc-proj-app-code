@@ -12,11 +12,11 @@ from qt_gui import SearchWindow, SearchController
 NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
 
-def main() -> int:
-    num_entries_used: int = math.floor(NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE)
+def main() -> None:
+    numEntriesUsed: int = math.floor(NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE)
 
     # Directory where relevant data is stored:
-    wikidata_dir: str = os.path.join(
+    wikidataDir: str = os.path.join(
         os.pardir,
         os.pardir,
         "data",
@@ -24,22 +24,22 @@ def main() -> int:
     )
 
     # Get data and saved embeddings:
-    entry_jsons: list[dict[str, str]]
+    entryJsons: list[dict[str, str]]
     embeddings: Embeddings
-    entry_jsons, embeddings = load_data_and_embeddings(
-        os.path.join(wikidata_dir, "entry_data.gz"),
-        os.path.join(wikidata_dir, f"embeddings_subset_{num_entries_used}")
+    entryJsons, embeddings = loadDataAndEmbeddings(
+        os.path.join(wikidataDir, "entry_data.gz"),
+        os.path.join(wikidataDir, f"embeddings_subset_{numEntriesUsed}")
     )
 
-    gui_search(transformer_get_results,
-               entry_jsons,
+    guiSearch(transformerGetResults,
+               entryJsons,
                embeddings)
 
-    return 0
+    sys.exit(0)
         
-def gui_search(
-    search_model_to_use: Callable,
-    *args_of_search_model_to_use
+def guiSearch(
+    searchModelToUse: Callable,
+    *argsOfSearchModelToUse
     ) -> None:
     """
     Search through list of JSON data as python dictionaries. Uses GUI
@@ -51,46 +51,50 @@ def gui_search(
     searchWindow = SearchWindow()
 
     # Creating controller. Does not need to be stored as a variable as it holds
-    # references to the model and view:
-    SearchController(search_model_to_use,
-                     searchWindow,
-                     *args_of_search_model_to_use)
+    # references to the model and view. Note that guiSearch takes all
+    # arguments of the searchModel except the search query, which must be taken
+    # from the searchWindow and so is not known initially:
+    searchQuery: str = searchWindow.searchWidgets["searchBox"].text()
+    SearchController(
+        searchModelToUse,
+        searchWindow,
+        *argsOfSearchModelToUse
+    )
 
     # Display and event loop:
     searchWindow.show()
     sys.exit(searchApp.exec())
 
-def transformer_get_results(
+def transformerGetResults(
     data: list[dict[str, str]],
-    embeddings: Embeddings
+    embeddings: Embeddings,
+    searchQuery: str
     ) -> list[dict[str, str]]:
     """
     Searches through given data using given transformer-model-derived
     embeddings. Returns results with all fields intact, so they should be cut
     as desired outside of this function.
     """
-    search_query: str = "test query"
-
     # This is a list of tuples containing the index of the result in the
     # data and it's score:
-    num_results: list[tuple[int, float]] = embeddings.search(
-        search_query, 10
+    numResults: list[tuple[int, float]] = embeddings.search(
+        searchQuery, 10
     )
 
     # Initialising list to store readable results:
     results: list[dict[str, str]] = []
 
     # Getting results in readable format:
-    num_result: tuple[int, float]
-    for num_result in num_results:
-        readable_result: dict[str, str] = data[num_result[0]]
-        results.append(readable_result)
+    numResult: tuple[int, float]
+    for numResult in numResults:
+        readableResult: dict[str, str] = data[numResult[0]]
+        results.append(readableResult)
 
     return results
 
-def load_data_and_embeddings(
-    data_path: str,
-    embeddings_path: str
+def loadDataAndEmbeddings(
+    dataPath: str,
+    embeddingsPath: str
     ) -> tuple[list[dict[str, str]], Embeddings]:
     '''
     Loads data with joblib (pickle) and it's associated txtai embeddings.
@@ -98,21 +102,21 @@ def load_data_and_embeddings(
     Returns a tuple of data and embeddings.
     '''
     # Getting data:
-    data: list[dict[str, str]] = load_data(data_path)
+    data: list[dict[str, str]] = loadData(dataPath)
 
     # Getting embeddings:
     embeddings = Embeddings(
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
-    embeddings.load(embeddings_path)
+    embeddings.load(embeddingsPath)
 
     return data, embeddings
 
-def load_data(file_path: str) -> Any:
+def loadData(filePath: str) -> Any:
     '''
     Loads given object as python object using joblib.
     '''
-    return joblib.load(file_path)
+    return joblib.load(filePath)
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
