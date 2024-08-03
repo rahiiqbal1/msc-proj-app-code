@@ -112,15 +112,15 @@ class SearchWindow(QMainWindow):
             current_result_string_to_show: str = ""
             field: str
             for field in fields_to_show:
+                if field == "name":
+                    current_result_string_to_show += (
+                        f"<h3>{results[result_idx][field]}</h3><br>"
+                    )
                 # Inserting url as hyperlink:
-                if field == "url":
+                elif field == "url":
                     current_result_string_to_show += (
                         f"<a href='{results[result_idx][field]}'>" + 
                         f"{results[result_idx][field]}</a>"
-                    )
-                else:
-                    current_result_string_to_show += (
-                        f"{results[result_idx][field]}\n"
                     )
 
             # Creating QLabel with string to show and adding to layout:
