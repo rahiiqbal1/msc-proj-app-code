@@ -184,13 +184,12 @@ def main() -> None:
 
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view:
-    def testSearchFunction(this: str):
-        print(this)
+    def testSearchFunction():
         return [
             {"name": "blah",      "url": "here.com"},
             {"name": "more blah", "url": "there.org"}
         ]
-    SearchController(testSearchFunction, searchWindow, "test")
+    SearchController(testSearchFunction, searchWindow)
 
     # Display and event loop:
     searchWindow.show()
