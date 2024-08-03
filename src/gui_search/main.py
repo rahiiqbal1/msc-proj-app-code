@@ -2,7 +2,7 @@ import os
 import sys
 import math
 from typing import Any, Callable
-import joblib
+import pickle
 from txtai import Embeddings
 from PyQt5.QtWidgets import (
     QApplication
@@ -112,7 +112,8 @@ def load_data(file_path: str) -> Any:
     '''
     Loads given object as python object using joblib.
     '''
-    return joblib.load(file_path)
+    with open(file_path, "rb") as file_to_load:
+        return pickle.load(file_to_load)
 
 if __name__ == "__main__":
     sys.exit(main())
