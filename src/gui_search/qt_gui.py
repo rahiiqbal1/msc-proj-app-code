@@ -14,8 +14,8 @@ from PyQt5.QtWidgets import (
     QStackedWidget,
 )
 # Display:
-DISPLAY_WIDTH = 3840
-DISPLAY_HEIGHT = 2160
+DISPLAY_WIDTH = 1920
+DISPLAY_HEIGHT = 1080
 # Window:
 WINDOW_WIDTH = 720
 WINDOW_HEIGHT = 480
@@ -26,7 +26,7 @@ SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 # Search button:
 SEARCH_BUTTON_TEXT = "&Search"
 # Data and results:
-NUM_RESULTS_TO_SHOW = 10
+NUM_RESULTS_TO_SHOW = 2
 
 class SearchWindow(QMainWindow):
     """
