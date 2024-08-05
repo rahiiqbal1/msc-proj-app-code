@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QStackedWidget,
 )
 # Display:
-DISPLAY_WIDTH = 3840
+DISPLAY_WIDTH = 3840    
 DISPLAY_HEIGHT = 2160
 # Window:
 WINDOW_WIDTH = 720
@@ -26,7 +26,7 @@ SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 # Search button:
 SEARCH_BUTTON_TEXT = "&Search"
 # Data and results:
-NUM_RESULTS_TO_SHOW = 10
+NUM_RESULTS_TO_SHOW = 2
 
 class SearchWindow(QMainWindow):
     """
@@ -112,15 +112,15 @@ class SearchWindow(QMainWindow):
             current_result_string_to_show: str = ""
             field: str
             for field in fields_to_show:
+                if field == "name":
+                    current_result_string_to_show += (
+                        f"<h3>{results[result_idx][field]}</h3><br>"
+                    )
                 # Inserting url as hyperlink:
-                if field == "url":
+                elif field == "url":
                     current_result_string_to_show += (
                         f"<a href='{results[result_idx][field]}'>" + 
                         f"{results[result_idx][field]}</a>"
-                    )
-                else:
-                    current_result_string_to_show += (
-                        f"{results[result_idx][field]}\n"
                     )
 
             # Creating QLabel with string to show and adding to layout:
@@ -170,7 +170,7 @@ class SearchController:
         searchQuery: str = self._view.searchWidgets["searchBox"].text()
         # Passing given modelArgs to model along with search query present in
         # text box:
-        print(searchQuery + "nothing")
+        print(searchQuery)
         return self._model(*(self._modelArgs + (searchQuery, )))
 
     def _connectSignalsAndSlots(self) -> None:
@@ -194,13 +194,12 @@ def main() -> None:
 
     # Creating controller. Does not need to be stored as a variable as it holds
     # references to the model and view:
-    def testSearchFunction(this: str):
-        print(this)
+    def testSearchFunction():
         return [
             {"name": "blah",      "url": "here.com"},
             {"name": "more blah", "url": "there.org"}
         ]
-    SearchController(testSearchFunction, searchWindow, "test")
+    SearchController(testSearchFunction, searchWindow)
 
     # Display and event loop:
     searchWindow.show()

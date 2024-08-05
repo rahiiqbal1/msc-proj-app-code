@@ -166,7 +166,7 @@ def gen_or_get_data(
         return all_cut_entry_jsons
 
     else:
-        # Loads using joblib (pickle), so the file must be valid as the given
+        # Loads using joblib, so the file must be valid as the given
         # return type:
         return load_data(data_save_path)
 
