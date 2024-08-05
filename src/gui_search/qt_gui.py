@@ -26,7 +26,7 @@ SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 # Search button:
 SEARCH_BUTTON_TEXT = "&Search"
 # Data and results:
-NUM_RESULTS_TO_SHOW = 2
+NUM_RESULTS_TO_SHOW = 10
 
 class SearchWindow(QMainWindow):
     """
@@ -93,14 +93,18 @@ class SearchWindow(QMainWindow):
 
     def showResultsPage(
         self,
-        results: list[dict[str, str]]
-        # num_results_to_show: int = NUM_RESULTS_TO_SHOW
+        searchFunction: Callable,
+        # searchQuery: str
+        # results: list[dict[str, str]]
         ) -> dict[str, Any]:
         """
-        Shows results page for given results.
+        Shows results page using given search function and query.
         """
         # List of keys within the results which we want to see:
         fields_to_show: tuple[str, ...] = ("name", "url")
+
+        # Evaluating results:
+        results: list[dict[str, str]] = searchFunction()
 
         # Widgets:
         overallLayout = QVBoxLayout()
@@ -154,11 +158,12 @@ class SearchController:
     """
     def __init__(self, model: Callable, view: SearchWindow, *model_args):
         # Attributes. model should be a function returning results represented
-        # as list[dict[str, str]], a list of deserialised JSON objects:
+        # as list[dict[str, str]], a list of deserialised JSON objects. The 
+        # final argument of model must be the search query:
         self._model: Callable = model
         self._view: SearchWindow = view
-        # Arguments to be passed to model:
-        self._modelArgs = model_args
+        # Arguments to be passed to model, to be unpacked when used:
+        self._modelArgs: tuple[Any, ...] = model_args
 
         # Connect widgets:
         self._connectSignalsAndSlots()
@@ -182,7 +187,7 @@ class SearchController:
         self._view.searchWidgets["searchButton"].clicked.connect(
             partial(
                 self._view.showResultsPage, 
-                self._searchFunction()
+                self._searchFunction
             )
         )
 
