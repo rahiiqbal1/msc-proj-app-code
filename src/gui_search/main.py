@@ -31,6 +31,7 @@ def main() -> None:
         os.path.join(wikidataDir, f"embeddings_subset_{numEntriesUsed}")
     )
 
+    # Search using transformer:
     guiSearch(transformerGetResults,
                entryJsons,
                embeddings)
