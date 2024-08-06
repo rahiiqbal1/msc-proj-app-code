@@ -127,13 +127,13 @@ def gen_or_get_data(
     '''
     If the file at the given path already exists, attempt to load it using
     joblib. If not, read all .ndjson files in the given directory and attempt
-    to read name, abstract, categories, url, and wikitext from each .json 
+    to read name, abstract, url, and wikitext from each .json 
     within them.
 
     Returns a list of all .json entries in the data as dictionaries.
     '''
     # List of fields to use for the data:
-    fields_to_use: list[str] = ["name", "abstract", "Category", "url"]
+    fields_to_use: list[str] = ["name", "abstract", "wikitext", "url"]
 
     # If the data does not exist, proceed to generate it. Otherwise load it:
     if os.path.isfile(data_save_path) == False:
