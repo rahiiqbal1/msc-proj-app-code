@@ -127,8 +127,7 @@ def gen_or_get_data(
     '''
     If the file at the given path already exists, attempt to load it using
     joblib. If not, read all .ndjson files in the given directory and attempt
-    to read name, abstract, url, and wikitext from each .json 
-    within them.
+    to read name, abstract, url, and wikitext from each .json within them.
 
     Returns a list of all .json entries in the data as dictionaries.
     '''
