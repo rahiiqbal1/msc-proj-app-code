@@ -202,6 +202,22 @@ def cut_single_dict(
 
     return cut_dict_for_return
 
+def upsert_to_index(data_to_upsert: Any, index_save_path: str) -> None:
+    """
+    Upserts data to index at given save path. That is, if the index exists then
+    new data is appended. If not, the index is created. Allows for indexing in
+    batches.
+    """
+    # Want to generate word embeddings using specified hugging-face model:
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    )
+
+    # Index:
+    embeddings.upsert(tqdm(data_to_upsert))
+    # Save:
+    embeddings.save(index_save_path)
+
 def gen_or_get_index(data_to_index: Any, index_save_path: str) -> None:
     '''
     Indexes the given data, and saves the index at the given path. Uses
