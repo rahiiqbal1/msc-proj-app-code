@@ -31,7 +31,7 @@ def main() -> int:
     )
     # Loading in data:
     data_entries: list[dict[str, str]] = gen_or_get_data(
-        os.path.join(wikidata_dir, "reduced-ndjsons"), data_save_path
+        os.path.join(wikidata_dir, "reduced-nohtml-ndjsons"), data_save_path
     )
 
     # Using only num_entries_to_use entries to save computation time:
