@@ -1,12 +1,14 @@
 import os
 import sys
 import math
+import pickle
 from typing import Any, Callable
-import joblib
+
 from txtai import Embeddings
 from PyQt5.QtWidgets import (
     QApplication
 )
+
 from qt_gui import NUM_RESULTS_TO_SHOW, SearchWindow, SearchController
 
 NUM_ENTRIES = 6947320
@@ -27,7 +29,7 @@ def main() -> None:
     entryJsons: list[dict[str, str]]
     embeddings: Embeddings
     entryJsons, embeddings = loadDataAndEmbeddings(
-        os.path.join(wikidataDir, "entry_data.gz"),
+        os.path.join(wikidataDir, "pickled_json_data.pkl"),
         os.path.join(wikidataDir, f"embeddings_subset_{numEntriesUsed}")
     )
 
@@ -114,11 +116,12 @@ def loadDataAndEmbeddings(
 
     return data, embeddings
 
-def loadData(filePath: str) -> Any:
+def loadData(file_path: str) -> Any:
     '''
-    Loads given object as python object using joblib.
+    Loads given object as python object using pickle.
     '''
-    return joblib.load(filePath)
+    with open(file_path, "rb") as file_to_read:
+        return pickle.load(file_to_read)
 
 if __name__ == "__main__":
     main()
