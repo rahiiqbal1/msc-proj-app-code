@@ -8,7 +8,6 @@ from tqdm import tqdm
 
 import data_manipulation as dm
 
-NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
@@ -30,7 +29,7 @@ def main() -> None:
     # Path to save index at:
     index_save_path: str = os.path.join(
         wikidata_dir,
-        f"embeddings_subset_{NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
+        f"embeddings_subset_{dm.NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
     )
 
     # Attempt to create the pickled data:

@@ -8,6 +8,8 @@ from typing import Any, Generator
 
 from tqdm import tqdm
 
+NUM_ENTRIES = 6947320
+
 def save_data(data: Any, data_save_name: str, save_dir: str) -> None:
     '''
     Saves the given python object using pickle. Stores in given directory.
