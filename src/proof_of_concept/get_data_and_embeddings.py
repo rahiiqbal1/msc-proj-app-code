@@ -25,11 +25,11 @@ def main() -> int:
         "wikidata"
     )
 
-    # Full path of data file:
+    # Full path of json data file:
     data_save_path: str = os.path.join(
         wikidata_dir, "entry_data.gz"
     )
-    # Loading in data:
+    # Loading in json data:
     data_entries: list[dict[str, str]] = gen_or_get_data(
         os.path.join(wikidata_dir, "reduced-nohtml-ndjsons"), data_save_path
     )
