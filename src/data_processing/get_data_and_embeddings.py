@@ -123,12 +123,12 @@ def gen_or_get_pickled_jsons(
     '''
     If the file at the given path already exists, attempt to load it using
     pickle. If not, read all .ndjson files in the given directory and attempt
-    to read name, abstract, url, and wikitext from each .json within them.
+    to read set fields from each .json within them.
 
     Returns a list of all .json entries in the data as dictionaries.
     '''
     # Fields of the data which we want to use:
-    fields_to_use: tuple[str, ...] = ("name", "abstract", "wikitext", "url")
+    fields_to_use: tuple[str, ...] = ("name", "abstract", "Categories", "url")
 
     # If the data does not exist, proceed to generate it. Otherwise load it:
     if os.path.isfile(data_save_path) == False:
@@ -142,28 +142,46 @@ def gen_or_get_pickled_jsons(
             # wikipage entry:
             entry_json: dict[str, Any]
             for entry_json in entry_jsons:
-                # Initialising dictionary which will be added to return list:
-                cut_json_for_return: dict[str, str] = {}
-                # Loop over fields in current json and if they are desired, add
-                # them to the dictionary which will be part of the return list:
-                for field in entry_json:
-                    if field in fields_to_use:
-                        cut_json_for_return[field] = entry_json[field]
+                entry_json_cut: dict[str, str] = cut_single_dict(
+                    entry_json,
+                    fields_to_use
+                )
 
-                # Adding json with selected fields to return list:
-                all_cut_entry_jsons.append(cut_json_for_return)
+                all_cut_entry_jsons.append(entry_json_cut)
 
         # Saving data:
         data_save_dir: str
         data_save_name: str
         data_save_dir, data_save_name = os.path.split(data_save_path)
         save_data(all_cut_entry_jsons, data_save_name, data_save_dir)   
+
         return all_cut_entry_jsons
 
     else:
-        # Loads using pickle, so the file must be valid as the given
-        # return type:
+        # Loads using pickle, so the file must be valid as the given return
+        # type:
         return load_data(data_save_path)
+
+def cut_single_dict(
+    dict_to_cut: dict[str, Any],
+    fields_to_use: tuple[str, ...]
+    ) -> dict[str, Any]:
+    """
+    Selects only the chosen fields from the given dictionary and returns the
+    reduced version.
+
+    Returned dictionary must have both keys and values as strings.
+    """
+    cut_dict_for_return: dict[str, str] = {}
+
+    # Loop over fields in dictionary and if they are desired, add them to the
+    # dictionary which will be returned:
+    field: str
+    for field in dict_to_cut:
+        if field in fields_to_use:
+            cut_dict_for_return[field] = dict_to_cut[field]
+
+    return cut_dict_for_return
 
 def gen_or_get_index(data_to_index: Any, index_save_path: str) -> None:
     '''
