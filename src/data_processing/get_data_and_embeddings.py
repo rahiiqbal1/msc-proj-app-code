@@ -2,60 +2,57 @@ import json
 import os
 import sys
 import math
+import pickle
 from typing import Any, Generator
+
 from txtai import Embeddings
 from tqdm import tqdm
-import joblib
 
 NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> int:
-    # Get path to where data is stored. Note that this uses a relative path
-    # from the CWD.
-    data_store_dir: str = os.path.join(
+    # Path to directory where all data is stored:
+    all_data_dir: str = os.path.join(
         os.pardir,
         os.pardir,
         "data"
     )
 
-    # Get path to wiki-data:
-    wikidata_dir: str = os.path.join(
-        data_store_dir,
-        "wikidata"
-    )
+    # Get path to wikipedia data:
+    wikidata_dir: str = os.path.join(all_data_dir, "reduced-nohtml-ndjsons")
 
     # Full path of json data file:
-    data_save_path: str = os.path.join(
-        wikidata_dir, "entry_data.gz"
+    json_data_save_path: str = os.path.join(
+        all_data_dir, "pickled_json_data.pkl"
     )
     # Loading in json data:
-    data_entries: list[dict[str, str]] = gen_or_get_data(
-        os.path.join(wikidata_dir, "reduced-nohtml-ndjsons"), data_save_path
+    all_jsons: list[dict[str, str]] = gen_or_get_pickled_jsons(
+        wikidata_dir, json_data_save_path
     )
 
     # Using only num_entries_to_use entries to save computation time:
-    num_entries_to_use: int = math.floor(
+    num_jsons_to_use: int = math.floor(
         NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
     )
-    data_entries_subset: list[dict[str, str]] = data_entries[
-        : num_entries_to_use
+    subset_of_jsons: list[dict[str, str]] = all_jsons[
+        : num_jsons_to_use
     ]
 
-    data_entries_subset_as_strings: list[str] = stringify_dictionaries(
-        data_entries_subset
+    subset_of_jsons_as_strings: list[str] = stringify_dictionaries(
+        subset_of_jsons
     )
 
     # If the index does not already exist at the specified path, index and
     # save:
-    idx_save_path: str = (
+    index_save_path: str = (
         os.path.join(
             wikidata_dir,
-            f"embeddings_subset_{num_entries_to_use}"
+            f"embeddings_subset_{num_jsons_to_use}"
         )
     )
     # Attempt to generate and save index:
-    gen_or_get_index(data_entries_subset_as_strings, idx_save_path)
+    gen_or_get_index(subset_of_jsons_as_strings, index_save_path)
 
     return 0
 
@@ -120,7 +117,7 @@ def generate_jsons_from_ndjsons(
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
 
-def gen_or_get_data(
+def gen_or_get_pickled_jsons(
     ndjson_data_dir: str,
     data_save_path: str
     ) -> list[dict[str, str]]:
@@ -194,28 +191,24 @@ def save_data(
     data: Any,
     data_save_name: str,
     save_dir: str,
-    compression_level: int = 3
-    ) -> list[str]:
+    ) -> None:
     '''
-    Saves the given python object using joblib. Stores in given directory.
+    Saves the given python object using pickle. Stores in given directory.
 
-    If compression_level is given, a supported file extension (.z, .gz, .bz2,
-    .xz, .lzma) must be given at the end of data_save_name.
     '''
     # Full path to save data at, including directory and filename:
     data_store_path: str = os.path.join(save_dir, data_save_name)
 
-    return joblib.dump(
-        data,
-        data_store_path,
-        compress = compression_level
-    )
+    # Writing data to file:
+    with open(data_store_path, "wb") as file_for_writing_data:
+        pickle.dump(data, file_for_writing_data)
 
 def load_data(file_path: str) -> Any:
     '''
     Loads given object as python object using joblib.
     '''
-    return joblib.load(file_path)
+    with open(file_path, "rb") as file_to_read:
+        return pickle.load(file_to_read)
 
 if __name__ == "__main__":
     sys.exit(main())
