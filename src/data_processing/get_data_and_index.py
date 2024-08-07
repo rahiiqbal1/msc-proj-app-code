@@ -28,7 +28,7 @@ def main() -> None:
 
     # Path to save index at:
     index_save_path: str = os.path.join(
-        wikidata_dir,
+        all_data_dir,
         f"embeddings_subset_{dm.NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
     )
 
