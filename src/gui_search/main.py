@@ -18,12 +18,7 @@ def main() -> None:
     numEntriesUsed: int = math.floor(NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE)
 
     # Directory where relevant data is stored:
-    wikidataDir: str = os.path.join(
-        os.pardir,
-        os.pardir,
-        "data",
-        "wikidata"
-    )
+    wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
     # Get data and saved embeddings:
     entryJsons: list[dict[str, str]]
