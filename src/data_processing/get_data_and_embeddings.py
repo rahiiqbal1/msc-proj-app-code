@@ -102,8 +102,8 @@ def generate_jsons_from_ndjsons(
     ndjsons_dir: str
     ) -> Generator[list[dict[str, Any]], None, None]:
     '''
-    Acts as generator, yielding at each step a list of all deserialised json
-    objects from a given file.
+    Yields at each step a list of all deserialised json objects from a given
+    file.
     '''
     # Get all filenames in ndjsons_dir to read through them:
     ndjson_filenames: list[str] = os.listdir(ndjsons_dir)
@@ -115,6 +115,34 @@ def generate_jsons_from_ndjsons(
 
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
+
+def create_pickled_cut_jsons(
+    ndjson_data_dir: str,
+    pickled_list_of_cut_jsons_save_dir: str
+    ) -> None:
+    """
+    For each .ndjson file in the given directory, select only the specified
+    fields from it's JSONs and pickle them as a list[dict[str, str]].
+    """
+    # Fields of the data which we want to use:
+    fields_to_use: tuple[str, ...] = ("name", "abstract", "Categories", "url")
+
+    # Variable to keep track of which ndjson we are on for numeric file naming:
+    current_ndjson: int = 0
+
+    wikiarticle_jsons: list[dict[str, str]]
+    for wikiarticle_jsons in generate_jsons_from_ndjsons(ndjson_data_dir):
+        # Reduce all dictionaries in the current list to the chosen fields and
+        # pickle the data:
+        cut_json_list_save_name: str = os.path.join(
+            pickled_list_of_cut_jsons_save_dir,
+            f"list_of_pickled_jsons_{current_ndjson}.pkl"
+        )
+        with open(cut_json_list_save_name, "wb") as file_for_writing_to:
+            pickle.dump(
+                cut_list_of_dicts(wikiarticle_jsons, fields_to_use),
+                file_for_writing_to
+            )
 
 def gen_or_get_pickled_jsons(
     ndjson_data_dir: str,
