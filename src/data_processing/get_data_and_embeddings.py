@@ -123,13 +123,13 @@ def gen_or_get_pickled_jsons(
     ) -> list[dict[str, str]]:
     '''
     If the file at the given path already exists, attempt to load it using
-    joblib. If not, read all .ndjson files in the given directory and attempt
+    pickle. If not, read all .ndjson files in the given directory and attempt
     to read name, abstract, url, and wikitext from each .json within them.
 
     Returns a list of all .json entries in the data as dictionaries.
     '''
-    # List of fields to use for the data:
-    fields_to_use: list[str] = ["name", "abstract", "wikitext", "url"]
+    # Fields of the data which we want to use:
+    fields_to_use: tuple[str, ...] = ("name", "abstract", "wikitext", "url")
 
     # If the data does not exist, proceed to generate it. Otherwise load it:
     if os.path.isfile(data_save_path) == False:
@@ -162,7 +162,7 @@ def gen_or_get_pickled_jsons(
         return all_cut_entry_jsons
 
     else:
-        # Loads using joblib, so the file must be valid as the given
+        # Loads using pickle, so the file must be valid as the given
         # return type:
         return load_data(data_save_path)
 
@@ -205,7 +205,7 @@ def save_data(
 
 def load_data(file_path: str) -> Any:
     '''
-    Loads given object as python object using joblib.
+    Loads given object as python object using pickle.
     '''
     with open(file_path, "rb") as file_to_read:
         return pickle.load(file_to_read)
