@@ -11,7 +11,7 @@ from tqdm import tqdm
 NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
 
-def main() -> int:
+def main() -> None:
     # Path to directory where all data is stored:
     all_data_dir: str = os.path.join(
         os.pardir,
@@ -19,42 +19,76 @@ def main() -> int:
         "data"
     )
 
-    # Get path to wikipedia data:
+    # Path to wikipedia data:
     wikidata_dir: str = os.path.join(all_data_dir, "reduced-nohtml-ndjsons")
 
-    # Full path of json data file:
-    json_data_save_path: str = os.path.join(
-        all_data_dir, "pickled_json_data.pkl"
-    )
-    # Loading in json data:
-    all_jsons: list[dict[str, str]] = gen_or_get_pickled_jsons(
-        wikidata_dir, json_data_save_path
+    # Directory in which pickled lists of cut jsons are stored:
+    pickled_jsons_dir: str = os.path.join(
+        all_data_dir, "pickled-list-of-cut-jsons"
     )
 
-    # Using only num_entries_to_use entries to save computation time:
-    num_jsons_to_use: int = math.floor(
-        NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
-    )
-    subset_of_jsons: list[dict[str, str]] = all_jsons[
-        : num_jsons_to_use
-    ]
+    # Attempt to create the pickled data:
+    if len(os.listdir(pickled_jsons_dir)) == 0:
+        create_pickled_cut_jsons(wikidata_dir, pickled_jsons_dir)
 
-    subset_of_jsons_as_strings: list[str] = stringify_dictionaries(
-        subset_of_jsons
-    )
-
-    # If the index does not already exist at the specified path, index and
-    # save:
-    index_save_path: str = (
-        os.path.join(
-            wikidata_dir,
-            f"embeddings_subset_{num_jsons_to_use}"
+    # Looping through all of the data to index it:
+    cut_jsons: list[dict[str, str]]
+    for cut_jsons in generate_list_of_jsons_from_pickles(pickled_jsons_dir):
+        # Using only the specified proportion of the data:
+        num_jsons_to_use: int = math.floor(
+            len(cut_jsons) * PROPORTION_ENTRIES_TO_USE
         )
-    )
-    # Attempt to generate and save index:
-    gen_or_get_index(subset_of_jsons_as_strings, index_save_path)
+        subset_of_cut_jsons: list[dict[str, str]] = cut_jsons[
+            : num_jsons_to_use
+        ]
 
-    return 0
+        # Converting dictionaries to single strings of the desired fields:
+        subset_of_cut_jsons_as_strings: list[str] = stringify_dictionaries(
+            subset_of_cut_jsons
+        )
+
+        # Path to save index at:
+        index_save_path: str = os.path.join(
+            wikidata_dir,
+            f"embeddings_subset_{NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
+        )
+
+        # Attempt to upsert to index:
+        upsert_to_index(subset_of_cut_jsons_as_strings, index_save_path)
+
+    sys.exit(0)
+
+    # # Full path of json data file:
+    # json_data_save_path: str = os.path.join(
+    #     all_data_dir, "pickled_json_data.pkl"
+    # )
+    # # Loading in json data:
+    # all_jsons: list[dict[str, str]] = gen_or_get_pickled_jsons(
+    #     wikidata_dir, json_data_save_path
+    # )
+
+    # # Using only num_entries_to_use entries to save computation time:
+    # num_jsons_to_use: int = math.floor(
+    #     NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
+    # )
+    # subset_of_jsons: list[dict[str, str]] = all_jsons[
+    #     : num_jsons_to_use
+    # ]
+
+    # subset_of_jsons_as_strings: list[str] = stringify_dictionaries(
+    #     subset_of_jsons
+    # )
+
+    # # If the index does not already exist at the specified path, index and
+    # # save:
+    # index_save_path: str = (
+    #     os.path.join(
+    #         wikidata_dir,
+    #         f"embeddings_subset_{num_jsons_to_use}"
+    #     )
+    # )
+    # # Attempt to generate and save index:
+    # gen_or_get_index(subset_of_jsons_as_strings, index_save_path)
 
 def stringify_dictionaries(
     dicts_to_stringify: list[dict[str, str]]
@@ -116,7 +150,7 @@ def generate_jsons_from_ndjsons(
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
 
-def generate_list_of_jsons_from_pickle(
+def generate_list_of_jsons_from_pickles(
     pickled_data_dir: str
 ) -> Generator[list[dict[str, str]], None, None]:
     """
@@ -146,7 +180,7 @@ def create_pickled_cut_jsons(
     fields from it's JSONs and pickle them as a list[dict[str, str]].
     """
     # Fields of the data which we want to use:
-    fields_to_use: tuple[str, ...] = ("name", "abstract", "Categories", "url")
+    fields_to_use: tuple[str, ...] = ("name", "abstract", "wikitext", "url")
 
     # Variable to keep track of which ndjson we are on for numeric file naming:
     current_ndjson: int = 0
@@ -251,7 +285,7 @@ def cut_single_dict(
 
     return cut_dict_for_return
 
-def upsert_to_index(data_to_upsert: Any, index_save_path: str) -> None:
+def upsert_to_index(data_to_upsert: list[str], index_save_path: str) -> None:
     """
     Upserts data to index at given save path. That is, if the index exists then
     new data is appended. If not, the index is created. Allows for indexing in
