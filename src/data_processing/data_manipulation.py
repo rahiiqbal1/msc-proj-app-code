@@ -163,6 +163,22 @@ def create_pickled_cut_jsons(
 
         current_ndjson += 1
 
+    # # Pool for multiprocessing:
+    # pool = Pool()
+
+    # # Processing jsons in parallel:
+    # processed_json_list: list[str] = list(tqdm(
+    #     pool.imap(
+    #         process_single_json, jsons_in_ndjson
+    #     ),
+    #     total = len(jsons_in_ndjson)
+    # ))
+
+    # pool.close()
+    # pool.join()
+
+    # return processed_json_list
+
 def generate_list_of_jsons_from_pickles(
     pickled_data_dir: str
 ) -> Generator[list[dict[str, str]], None, None]:

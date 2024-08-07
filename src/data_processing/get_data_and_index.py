@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 import data_manipulation as dm
 
+NUMBER_OF_NDJSONS = 372
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
@@ -23,7 +24,7 @@ def main() -> None:
 
     # Directory in which pickled lists of cut jsons are stored:
     pickled_jsons_dir: str = os.path.join(
-        all_data_dir, "pickled-list-of-cut-jsons"
+        all_data_dir, "pickled-lists-of-cut-jsons"
     )
 
     # Path to save index at:
@@ -38,7 +39,10 @@ def main() -> None:
 
     # Looping through all of the data to index it:
     cut_jsons: list[dict[str, str]]
-    for cut_jsons in dm.generate_list_of_jsons_from_pickles(pickled_jsons_dir):
+    for cut_jsons in tqdm(
+            dm.generate_list_of_jsons_from_pickles(pickled_jsons_dir),
+            total = NUMBER_OF_NDJSONS
+        ):
         upsert_jsons_text_to_index(cut_jsons, index_save_path)
 
     sys.exit(0)
