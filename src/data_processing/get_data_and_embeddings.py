@@ -34,29 +34,66 @@ def main() -> None:
     # Looping through all of the data to index it:
     cut_jsons: list[dict[str, str]]
     for cut_jsons in generate_list_of_jsons_from_pickles(pickled_jsons_dir):
-        # Using only the specified proportion of the data:
-        num_jsons_to_use: int = math.floor(
-            len(cut_jsons) * PROPORTION_ENTRIES_TO_USE
-        )
-        subset_of_cut_jsons: list[dict[str, str]] = cut_jsons[
-            : num_jsons_to_use
-        ]
-
-        # Converting dictionaries to single strings of the desired fields:
-        subset_of_cut_jsons_as_strings: list[str] = stringify_dictionaries(
-            subset_of_cut_jsons
-        )
-
         # Path to save index at:
         index_save_path: str = os.path.join(
             wikidata_dir,
             f"embeddings_subset_{NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
         )
 
-        # Attempt to upsert to index:
-        upsert_to_index(subset_of_cut_jsons_as_strings, index_save_path)
+        upsert_jsons_text_to_index(cut_jsons, index_save_path)
+
+        # # Using only the specified proportion of the data:
+        # num_jsons_to_use: int = math.floor(
+        #     len(cut_jsons) * PROPORTION_ENTRIES_TO_USE
+        # )
+        # subset_of_cut_jsons: list[dict[str, str]] = cut_jsons[
+        #     : num_jsons_to_use
+        # ]
+
+        # # Converting dictionaries to single strings of the desired fields:
+        # subset_of_cut_jsons_as_strings: list[str] = stringify_dictionaries(
+        #     subset_of_cut_jsons
+        # )
+
+        # # Path to save index at:
+        # index_save_path: str = os.path.join(
+        #     wikidata_dir,
+        #     f"embeddings_subset_{NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
+        # )
+
+        # # Attempt to upsert to index:
+        # upsert_text_list_to_index(
+        #     subset_of_cut_jsons_as_strings, index_save_path
+        # )
 
     sys.exit(0)
+
+def upsert_jsons_text_to_index(
+    jsons_to_upsert: list[dict[str, str]],
+    index_save_path: str
+    ) -> None:
+    """
+    Takes a list of json objects as dictionaries and attempts to index their
+    text, upserting into an index at the given save path.
+    """
+    # Using only the specified proportion of the data:
+    num_jsons_to_use: int = math.floor(
+        len(jsons_to_upsert) * PROPORTION_ENTRIES_TO_USE
+    )
+    jsons_to_upsert_subset: list[dict[str, str]] = jsons_to_upsert[
+        : num_jsons_to_use
+    ]
+
+    # Converting each dictionary to single strings of the desired fields:
+    jsons_to_upsert_subset_as_strings: list[str] = stringify_dictionaries(
+        jsons_to_upsert_subset
+    )
+
+    upsert_text_list_to_index(
+        jsons_to_upsert_subset_as_strings,
+        index_save_path
+    )
+
 
     # # Full path of json data file:
     # json_data_save_path: str = os.path.join(
@@ -285,7 +322,10 @@ def cut_single_dict(
 
     return cut_dict_for_return
 
-def upsert_to_index(data_to_upsert: list[str], index_save_path: str) -> None:
+def upsert_text_list_to_index(
+    data_to_upsert: list[str],
+    index_save_path: str
+    ) -> None:
     """
     Upserts data to index at given save path. That is, if the index exists then
     new data is appended. If not, the index is created. Allows for indexing in
