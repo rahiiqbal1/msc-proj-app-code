@@ -116,6 +116,27 @@ def generate_jsons_from_ndjsons(
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
 
+def generate_list_of_jsons_from_pickle(
+    pickled_data_dir: str
+) -> Generator[list[dict[str, str]], None, None]:
+    """
+    Yields at each step a list of json objects as python dictionaries. Data 
+    must be pickled.
+    """
+    # Get filenames to read through:
+    pickled_data_filenames: list[str] = os.listdir(pickled_data_dir)
+
+    pickled_data_filename: str
+    for pickled_data_filename in tqdm(pickled_data_filenames):
+        # Getting absolute path for current file:
+        pickled_data_fullpath: str = os.path.join(
+            pickled_data_dir, pickled_data_filename
+        )
+
+        # Reading pickle and yielding:
+        with open(pickled_data_fullpath, "rb") as file_to_read:
+            yield pickle.load(file_to_read)
+
 def create_pickled_cut_jsons(
     ndjson_data_dir: str,
     pickled_list_of_cut_jsons_save_dir: str
