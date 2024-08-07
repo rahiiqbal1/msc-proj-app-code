@@ -39,7 +39,6 @@ def main() -> None:
     # Looping through all of the data to index it:
     cut_jsons: list[dict[str, str]]
     for cut_jsons in dm.generate_list_of_jsons_from_pickles(pickled_jsons_dir):
-
         upsert_jsons_text_to_index(cut_jsons, index_save_path)
 
     sys.exit(0)
@@ -107,6 +106,7 @@ def upsert_jsons_text_to_index(
     # Save:
     embeddings.save(index_save_path)
 
+# Old.
 def gen_or_get_index(data_to_index: Any, index_save_path: str) -> None:
     '''
     Indexes the given data, and saves the index at the given path. Uses
@@ -125,6 +125,7 @@ def gen_or_get_index(data_to_index: Any, index_save_path: str) -> None:
     else:
         print("An index is already saved at the given path.")
 
+# Old.
 def gen_or_get_pickled_jsons(
     ndjson_data_dir: str,
     data_save_path: str
