@@ -27,18 +27,20 @@ def main() -> None:
         all_data_dir, "pickled-list-of-cut-jsons"
     )
 
+    # Path to save index at:
+    index_save_path: str = os.path.join(
+        wikidata_dir,
+        f"embeddings_subset_{NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
+    )
+
     # Attempt to create the pickled data:
     if len(os.listdir(pickled_jsons_dir)) == 0:
         create_pickled_cut_jsons(wikidata_dir, pickled_jsons_dir)
 
+
     # Looping through all of the data to index it:
     cut_jsons: list[dict[str, str]]
     for cut_jsons in generate_list_of_jsons_from_pickles(pickled_jsons_dir):
-        # Path to save index at:
-        index_save_path: str = os.path.join(
-            wikidata_dir,
-            f"embeddings_subset_{NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
-        )
 
         upsert_jsons_text_to_index(cut_jsons, index_save_path)
 
