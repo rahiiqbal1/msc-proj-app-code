@@ -138,16 +138,11 @@ def gen_or_get_pickled_jsons(
         # List of deserialised json objects per .ndjson file read:
         entry_jsons: list[dict[str, Any]]
         for entry_jsons in generate_jsons_from_ndjsons(ndjson_data_dir):
-            # Looping over entry_jsons to get single json objects for each 
-            # wikipage entry:
-            entry_json: dict[str, Any]
-            for entry_json in entry_jsons:
-                entry_json_cut: dict[str, str] = cut_single_dict(
-                    entry_json,
-                    fields_to_use
-                )
-
-                all_cut_entry_jsons.append(entry_json_cut)
+            # Reducing all dictionaries in the current list to the chosen 
+            # fields and adding to the list to store them all:
+            all_cut_entry_jsons += cut_list_of_dicts(
+                entry_jsons, fields_to_use
+            )
 
         # Saving data:
         data_save_dir: str
@@ -158,9 +153,33 @@ def gen_or_get_pickled_jsons(
         return all_cut_entry_jsons
 
     else:
-        # Loads using pickle, so the file must be valid as the given return
-        # type:
+        # Loads using pickle, so the file must be deserialisable as the correct
+        # return type.
         return load_data(data_save_path)
+
+def cut_list_of_dicts(
+    list_of_dicts_to_cut: list[dict[str, Any]],
+    fields_to_use: tuple[str, ...]
+    ) -> list[dict[str, str]]:
+    """
+    Cuts all dictionaries in a given list.
+
+    Returns a list of dictionaries with only the chosen fields of the 
+    dictionaries from the given list. Chosen fields must have string type 
+    values.
+    """
+    # initialising list to store cut dictionaries:
+    list_of_cut_dicts: list[dict[str, str]] = []
+
+    single_dict: dict[str, Any]
+    for single_dict in list_of_dicts_to_cut:
+        single_cut_dict: dict[str, str] = cut_single_dict(
+            single_dict, fields_to_use
+        )
+
+        list_of_cut_dicts.append(single_cut_dict)
+
+    return list_of_cut_dicts
 
 def cut_single_dict(
     dict_to_cut: dict[str, Any],
