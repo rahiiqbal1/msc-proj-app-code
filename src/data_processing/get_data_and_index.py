@@ -44,7 +44,6 @@ def main() -> None:
 
     sys.exit(0)
 
-
     # # Full path of json data file:
     # json_data_save_path: str = os.path.join(
     #     all_data_dir, "pickled_json_data.pkl"
@@ -108,6 +107,24 @@ def upsert_jsons_text_to_index(
     # Save:
     embeddings.save(index_save_path)
 
+def gen_or_get_index(data_to_index: Any, index_save_path: str) -> None:
+    '''
+    Indexes the given data, and saves the index at the given path. Uses
+    the model in code by default.
+    '''
+    # Want to generate word embeddings using specified hugging-face model:
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    )
+
+    if os.path.isfile(index_save_path) == False:
+        # Index data:
+        embeddings.index(tqdm(data_to_index))
+        # Save index:
+        embeddings.save(index_save_path)
+    else:
+        print("An index is already saved at the given path.")
+
 def gen_or_get_pickled_jsons(
     ndjson_data_dir: str,
     data_save_path: str
@@ -148,24 +165,6 @@ def gen_or_get_pickled_jsons(
         # Loads using pickle, so the file must be deserialisable as the correct
         # return type.
         return dm.load_data(data_save_path)
-
-def gen_or_get_index(data_to_index: Any, index_save_path: str) -> None:
-    '''
-    Indexes the given data, and saves the index at the given path. Uses
-    the model in code by default.
-    '''
-    # Want to generate word embeddings using specified hugging-face model:
-    embeddings = Embeddings(
-        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
-    )
-
-    if os.path.isfile(index_save_path) == False:
-        # Index data:
-        embeddings.index(tqdm(data_to_index))
-        # Save index:
-        embeddings.save(index_save_path)
-    else:
-        print("An index is already saved at the given path.")
 
 if __name__ == "__main__":
     sys.exit(main())
