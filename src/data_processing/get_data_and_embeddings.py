@@ -78,7 +78,6 @@ def stringify_dictionaries(
 
     return strings_to_return
 
-
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
     Loads in json objects from a .ndjson file. Stores as python dictionaries in
@@ -166,10 +165,7 @@ def gen_or_get_pickled_jsons(
         # return type:
         return load_data(data_save_path)
 
-def gen_or_get_index(
-    data_to_index: Any,
-    index_save_path: str
-    ) -> None:
+def gen_or_get_index(data_to_index: Any, index_save_path: str) -> None:
     '''
     Indexes the given data, and saves the index at the given path. Uses
     the model in code by default.
@@ -187,14 +183,9 @@ def gen_or_get_index(
     else:
         print("An index is already saved at the given path.")
 
-def save_data(
-    data: Any,
-    data_save_name: str,
-    save_dir: str,
-    ) -> None:
+def save_data(data: Any, data_save_name: str, save_dir: str) -> None:
     '''
     Saves the given python object using pickle. Stores in given directory.
-
     '''
     # Full path to save data at, including directory and filename:
     data_store_path: str = os.path.join(save_dir, data_save_name)
