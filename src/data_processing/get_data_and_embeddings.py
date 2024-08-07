@@ -37,7 +37,6 @@ def main() -> None:
     if len(os.listdir(pickled_jsons_dir)) == 0:
         create_pickled_cut_jsons(wikidata_dir, pickled_jsons_dir)
 
-
     # Looping through all of the data to index it:
     cut_jsons: list[dict[str, str]]
     for cut_jsons in generate_list_of_jsons_from_pickles(pickled_jsons_dir):
@@ -86,16 +85,20 @@ def upsert_jsons_text_to_index(
         : num_jsons_to_use
     ]
 
-    # Converting each dictionary to single strings of the desired fields:
+    # Converting each dictionary to single strings of their fields:
     jsons_to_upsert_subset_as_strings: list[str] = stringify_dictionaries(
         jsons_to_upsert_subset
     )
 
-    upsert_text_list_to_index(
-        jsons_to_upsert_subset_as_strings,
-        index_save_path
+    # Want to generate word embeddings using specified hugging-face model:
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
 
+    # Index:
+    embeddings.upsert(tqdm(jsons_to_upsert_subset_as_strings))
+    # Save:
+    embeddings.save(index_save_path)
 
     # # Full path of json data file:
     # json_data_save_path: str = os.path.join(
@@ -238,6 +241,8 @@ def create_pickled_cut_jsons(
                 file_for_writing_to
             )
 
+        current_ndjson += 1
+
 def gen_or_get_pickled_jsons(
     ndjson_data_dir: str,
     data_save_path: str
@@ -323,25 +328,6 @@ def cut_single_dict(
             cut_dict_for_return[field] = dict_to_cut[field]
 
     return cut_dict_for_return
-
-def upsert_text_list_to_index(
-    data_to_upsert: list[str],
-    index_save_path: str
-    ) -> None:
-    """
-    Upserts data to index at given save path. That is, if the index exists then
-    new data is appended. If not, the index is created. Allows for indexing in
-    batches.
-    """
-    # Want to generate word embeddings using specified hugging-face model:
-    embeddings = Embeddings(
-        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
-    )
-
-    # Index:
-    embeddings.upsert(tqdm(data_to_upsert))
-    # Save:
-    embeddings.save(index_save_path)
 
 def gen_or_get_index(data_to_index: Any, index_save_path: str) -> None:
     '''
