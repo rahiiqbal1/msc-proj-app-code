@@ -135,15 +135,13 @@ def generate_jsons_from_ndjsons(
 
 def create_pickled_cut_jsons(
     ndjson_data_dir: str,
-    pickled_list_of_cut_jsons_save_dir: str
+    pickled_list_of_cut_jsons_save_dir: str,
+    fields_to_use: tuple[str, ...]
     ) -> None:
     """
     For each .ndjson file in the given directory, select only the specified
     fields from it's JSONs and pickle them as a list[dict[str, str]].
     """
-    # Fields of the data which we want to use:
-    fields_to_use: tuple[str, ...] = ("name", "abstract", "wikitext", "url")
-
     # Variable to keep track of which ndjson we are on for numeric file naming:
     current_ndjson: int = 0
 

@@ -33,9 +33,14 @@ def main() -> None:
         f"embeddings_subset_{dm.NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
     )
 
+    # Fields of the data which we want to use:
+    fields_to_use: tuple[str, ...] = ("name", "abstract", "wikitext", "url")
+
     # Attempt to create the pickled data:
     if len(os.listdir(pickled_jsons_dir)) == 0:
-        dm.create_pickled_cut_jsons(wikidata_dir, pickled_jsons_dir)
+        dm.create_pickled_cut_jsons(
+            wikidata_dir, pickled_jsons_dir, fields_to_use
+        )
 
     # Looping through all of the data to index it:
     cut_jsons: list[dict[str, str]]
