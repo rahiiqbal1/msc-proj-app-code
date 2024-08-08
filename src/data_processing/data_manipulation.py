@@ -1,5 +1,6 @@
 """
-Functions here deal with manipulating JSON data, saving, loading it etc.
+Functions here deal with manipulating JSON data, saving, loading it etc, 
+aswell as dictionaries in general in some cases.
 """
 import os
 import json
@@ -95,6 +96,23 @@ def cut_list_of_dicts(
 
     return list_of_cut_dicts
 
+def add_values_of_dict_keys(
+    dicts_to_add: list[dict[int, int]]
+    ) -> dict[int, int]:
+    """
+    Takes a list of dictionaries with integer keys and values, adds together
+    the corresponding values for each key and returns the sum as a new 
+    dictionary.
+    """
+    sum_dict: dict[int, int] = {}
+
+    for dictionary in dicts_to_add:
+        key_idx: int
+        for key_idx in dictionary:
+
+
+    return sum_dict
+
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
     Loads in json objects from a .ndjson file. Stores as python dictionaries in
@@ -160,22 +178,6 @@ def create_pickled_cut_jsons(
             )
 
         current_ndjson += 1
-
-    # # Pool for multiprocessing:
-    # pool = Pool()
-
-    # # Processing jsons in parallel:
-    # processed_json_list: list[str] = list(tqdm(
-    #     pool.imap(
-    #         process_single_json, jsons_in_ndjson
-    #     ),
-    #     total = len(jsons_in_ndjson)
-    # ))
-
-    # pool.close()
-    # pool.join()
-
-    # return processed_json_list
 
 def generate_list_of_jsons_from_pickles(
     pickled_data_dir: str
