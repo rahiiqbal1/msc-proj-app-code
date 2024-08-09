@@ -3,6 +3,7 @@ Functions here deal with manipulating JSON data, saving, loading it etc,
 aswell as dictionaries in general in some cases.
 """
 import os
+import sys   
 import json
 import pickle
 from typing import Any, Generator
@@ -10,6 +11,22 @@ from typing import Any, Generator
 from tqdm import tqdm
 
 NUM_ENTRIES = 6947320
+
+def main() -> None:
+    # Testing add_values_of_dict_keys:
+    dict1: dict[int, int] = {1: 4, 2: 5, 4: 7}
+    dict2: dict[int, int] = {1: 2, 2: 3, 3: 3}
+    dict3: dict[int, int] = {1: 1, 2: 3, 3: 3}
+    dicts_to_sum: list[dict[int, int]] = [dict1, dict2, dict3]
+
+    sum_dict: dict[int, int] = add_values_of_dict_keys(dicts_to_sum)
+
+    print("Expected value of add_values_of_dict_keys: " +
+          "{1: 7, 2: 11, 3: 6, 4: 7}\n" + 
+          "Outcome value of add_values_of_dict_keys: " +
+          f"{sum_dict}")
+
+    sys.exit(0)
 
 def save_data(data: Any, data_save_name: str, save_dir: str) -> None:
     '''
@@ -107,9 +124,9 @@ def add_values_of_dict_keys(
     sum_dict: dict[int, int] = {}
 
     for dictionary in dicts_to_add:
-        key_idx: int
-        for key_idx in dictionary:
-
+        key: int
+        for key in dictionary:
+            sum_dict[key] = sum_dict.get(key, 0) + dictionary[key]
 
     return sum_dict
 
@@ -199,3 +216,6 @@ def generate_list_of_jsons_from_pickles(
         # Reading pickle and yielding:
         with open(pickled_data_fullpath, "rb") as file_to_read:
             yield pickle.load(file_to_read)
+
+if __name__ == "__main__":
+    main()
