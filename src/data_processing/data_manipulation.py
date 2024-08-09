@@ -13,18 +13,6 @@ from tqdm import tqdm
 NUM_ENTRIES = 6947320
 
 def main() -> None:
-    # Testing add_values_of_dict_keys:
-    dict1: dict[int, int] = {1: 4, 2: 5, 4: 7}
-    dict2: dict[int, int] = {1: 2, 2: 3, 3: 3}
-    dict3: dict[int, int] = {1: 1, 2: 3, 3: 3}
-    dicts_to_sum: list[dict[int, int]] = [dict1, dict2, dict3]
-
-    sum_dict: dict[int, int] = sum_values_of_dict_keys(dicts_to_sum)
-
-    print("Expected value of add_values_of_dict_keys: " +
-          "{1: 7, 2: 11, 3: 6, 4: 7}\n" + 
-          "Outcome value of add_values_of_dict_keys: " +
-          f"{sum_dict}")
 
     sys.exit(0)
 
@@ -112,23 +100,6 @@ def cut_list_of_dicts(
         list_of_cut_dicts.append(single_cut_dict)
 
     return list_of_cut_dicts
-
-def sum_values_of_dict_keys(
-    dicts_to_add: list[dict[int, int]]
-    ) -> dict[int, int]:
-    """
-    Takes a list of dictionaries with integer keys and values, adds together
-    the corresponding values for each key and returns the sum as a new 
-    dictionary.
-    """
-    sum_dict: dict[int, int] = {}
-
-    for dictionary in dicts_to_add:
-        key: int
-        for key in dictionary:
-            sum_dict[key] = sum_dict.get(key, 0) + dictionary[key]
-
-    return sum_dict
 
 def combine_indexes(
     indexes_to_combine: list[dict[str, dict[int, int]]]
