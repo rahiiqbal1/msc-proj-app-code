@@ -163,7 +163,7 @@ def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
             for json_line in ndjson_file:
                 json_list.append(json.loads(json_line))
         except json.decoder.JSONDecodeError:
-            pass
+            json_list.append({})
 
     return json_list
 
