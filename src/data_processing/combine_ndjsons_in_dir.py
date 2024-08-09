@@ -9,7 +9,7 @@ def main() -> None:
         os.pardir, os.pardir, "data", "fully-processed-ndjsons"
     )
     combined_ndjson_save_path: str = os.path.join(
-        os.pardir, os.pardir, "data", "combined_processed_ndjson.ndjson"
+        os.pardir, os.pardir, "data", "combined_processed.ndjson"
     )
 
     combine_ndjsons_in_dir(ndjsons_dir, combined_ndjson_save_path)
