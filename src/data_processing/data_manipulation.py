@@ -17,25 +17,6 @@ def main() -> None:
 
     sys.exit(0)
 
-def test_combine_indexes() -> None:
-    # Test combine indexes:
-    print("Testing combine_indexes")
-
-    idx1 = {"this": {1: 12}}
-    idx2 = {"this": {2: 12}}
-
-    # 1 + 2:
-    print("Expected value: {'this': {1: 12, 2: 12}}")
-    print(f"Actual value: {combine_indexes([idx1, idx2])}")
-
-    idx3 = {"this": {1: 12, 2: 4}, "that": {1: 2, 2: 8}}
-    idx4 = {"there": {3: 3, 4: 5}, "that": {3: 2, 4: 6}}
-
-    # 3 + 4:
-    print("Expected value: {'this': {1: 12, 2: 4}, 'there': {3: 3, 4: 5}, " +
-                           "'that': {1: 2, 2: 8, 3: 2, 4: 6}}")
-    print(f"Actual value: {combine_indexes([idx3, idx4])}")
-
 def save_data(data: Any, data_save_name: str, save_dir: str) -> None:
     '''
     Saves the given python object using pickle. Stores in given directory.
@@ -146,6 +127,26 @@ def combine_indexes(
             combined_index[word].update(single_index[word])
 
     return combined_index
+
+def test_combine_indexes() -> None:
+    print("Testing combine_indexes")
+
+    idx1 = {"this": {1: 12}}
+    idx2 = {"this": {2: 12}}
+
+    # 1 + 2:
+    print("Expected value: {'this': {1: 12, 2: 12}}")
+    print(f"Actual value: {combine_indexes([idx1, idx2])}")
+    print("----------")
+
+    idx3 = {"this": {1: 12, 2: 4}, "that": {1: 2, 2: 8}}
+    idx4 = {"there": {3: 3, 4: 5}, "that": {3: 2, 4: 6}}
+
+    # 3 + 4:
+    print("Expected value: {'this': {1: 12, 2: 4}, 'there': {3: 3, 4: 5}, " +
+                           "'that': {1: 2, 2: 8, 3: 2, 4: 6}}")
+    print(f"Actual value: {combine_indexes([idx3, idx4])}")
+    print("----------")
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
