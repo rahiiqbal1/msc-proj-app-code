@@ -129,7 +129,7 @@ def combine_indexes(
     return combined_index
 
 def test_combine_indexes() -> None:
-    print("Testing combine_indexes")
+    print("Testing combine_indexes:\n")
 
     idx1 = {"this": {1: 12}}
     idx2 = {"this": {2: 12}}

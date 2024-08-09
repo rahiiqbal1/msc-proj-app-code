@@ -83,6 +83,15 @@ def index_single_json(
 #         list_of_indexes.append(index_single_json(single_json, idx_of_json))
 
 #     return dm.add_values_of_dict_keys(list_of_indexes)
+def index_single_ndjson(
+    ndjson_file_path: str
+) -> dict[str, dict[int, int]]:
+    """
+    Indexes all json objects in an ndjson. 
+    """
+    combined_index: dict[str, dict[int, int]] = {}
+
+    return combined_index
 
 if __name__ == "__main__":
     # main()
