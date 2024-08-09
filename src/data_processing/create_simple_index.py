@@ -73,15 +73,20 @@ def index_single_ndjson(
     # Initialise list to store indexes for each json in the ndjson:
     list_of_indexes: list[dict[str, dict[int, int]]] = []
 
-    # Loading in jsons:
-    list_of_jsons: list[dict[str, str]] = dm.load_jsons_from_ndjson(
-        ndjson_file_path
-    )
+    # Initialising variable to keep track of json index (i.e. line number - 1)
+    # within .ndjson:
+    json_idx: int = 0
 
     # Indexing each json and adding the index to the list of them all:
-    single_json: dict[str, str]
-    for json_idx, single_json in enumerate(list_of_jsons):
-        list_of_indexes.append(index_single_json(single_json, json_idx))
+    json_batch: list[dict[str, str]]
+    for json_batch in dm.generate_jsons_from_single_ndjson(ndjson_file_path):
+        single_json: dict[str, str]
+        # For each json in the batch, index it, add it to the list of indexes,
+        # and then increment the index keeping track of which json we are at
+        # in the file (the ndjson):
+        for single_json in json_batch:
+            list_of_indexes.append(index_single_json(single_json, json_idx))
+            json_idx += 1
 
     # Combining the indexes and returning:
     return combine_indexes(list_of_indexes)

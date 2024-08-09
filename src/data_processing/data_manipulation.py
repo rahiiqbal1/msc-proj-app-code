@@ -13,7 +13,7 @@ from tqdm import tqdm
 NUM_ENTRIES = 6947320
 
 def main() -> None:
-    test_generate_jsons_from_single_ndjson()
+    # test_generate_jsons_from_single_ndjson()
 
     sys.exit(0)
 
