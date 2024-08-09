@@ -90,10 +90,10 @@ def index_single_ndjson(
     Indexes all json objects in an ndjson. 
     """
     # Specifying batch size to generate jsons in:
-    json_batch_size: int = 5096
+    batch_size: int = 2**16
 
     # Calculating the number of iterations the loop should see:
-    num_iterations: int = NDJSON_NUM_LINES // json_batch_size
+    num_iterations: int = NDJSON_NUM_LINES // batch_size
 
     # Initialise list to store indexes for each json in the ndjson:
     list_of_indexes: list[dict[str, dict[int, int]]] = []
@@ -105,13 +105,13 @@ def index_single_ndjson(
     # Indexing each json and adding the index to the list of them all:
     json_batch: list[dict[str, str]]
     for json_batch in tqdm(
-        dm.generate_jsons_from_single_ndjson(ndjson_file_path),
+        dm.generate_jsons_from_single_ndjson(ndjson_file_path, batch_size),
         total = num_iterations):
         single_json: dict[str, str]
         # For each json in the batch, index it, add it to the list of indexes,
         # and then increment the index keeping track of which json we are at
         # in the file (the ndjson):
-        for single_json in json_batch:
+        for single_json in tqdm(json_batch, "Indexing batch"):
             list_of_indexes.append(index_single_json(single_json, json_idx))
             json_idx += 1
 
