@@ -130,9 +130,19 @@ def sum_values_of_dict_keys(
 
     return sum_dict
 
-def sum_values_of_index(
-    indexes_to_add: list[dict[str, dict[int, int]]]
-) -> dict[str, dict[int, int]]:
+def combine_indexes(
+    indexes_to_combine: list[dict[str, dict[int, int]]]
+    ) -> dict[str, dict[int, int]]:
+    """
+    Combines the indexes in the given list. Requires that there is no crossover
+    in document index between the indexes.
+
+    Allowed: {"this": {1: 12}} + {"this": {2: 13}} = {"this": {1: 12, 2: 13}}
+    Invalid: {"this": {1: 12}} + {"this": {1: 13}}
+    """
+    combined_index: dict[str, dict[int, int]] = {}
+
+    return combined_index
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
