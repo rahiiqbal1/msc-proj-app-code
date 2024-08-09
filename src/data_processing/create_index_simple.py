@@ -16,7 +16,7 @@ def main() -> None:
 
     sys.exit(0)
 
-def test() -> None:
+def test_index_single_json() -> None:
     test_json_path: str = os.path.join(
         os.pardir, os.pardir, "data", "testing.json"
     )
@@ -40,7 +40,7 @@ def index_single_json(
     Creates index for a single json object.
 
     Returns index as dictionary of the form 
-    {word: [num of times word appears in doc at this idx, ...]}.
+    {word: {idx_of_doc: num_of_occurences_of_word, ...}}.
     """
     # Initialising index:
     index: dict[str, dict[int, int]] = {}
@@ -64,6 +64,26 @@ def index_single_json(
 
     return index
 
+# def index_single_ndjson(
+#     ndjson_file_path: str
+#     ) -> dict[str, dict[int, int]]:
+#     """
+#     Indexes all json objects in an ndjson. 
+#     """
+#     # Loading in jsons:
+#     list_of_jsons: list[dict[str, str]] = dm.load_jsons_from_ndjson(
+#         ndjson_file_path
+#     )
+
+#     # Initialising list to store indexes created for each json:
+#     list_of_indexes: list[dict[int, int]] = []
+
+#     single_json: dict[str, str]
+#     for idx_of_json, single_json in enumerate(list_of_jsons):
+#         list_of_indexes.append(index_single_json(single_json, idx_of_json))
+
+#     return dm.add_values_of_dict_keys(list_of_indexes)
+
 if __name__ == "__main__":
     # main()
-    test()
+    test_index_single_json()
