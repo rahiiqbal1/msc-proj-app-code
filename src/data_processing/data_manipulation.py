@@ -19,7 +19,7 @@ def main() -> None:
     dict3: dict[int, int] = {1: 1, 2: 3, 3: 3}
     dicts_to_sum: list[dict[int, int]] = [dict1, dict2, dict3]
 
-    sum_dict: dict[int, int] = add_values_of_dict_keys(dicts_to_sum)
+    sum_dict: dict[int, int] = sum_values_of_dict_keys(dicts_to_sum)
 
     print("Expected value of add_values_of_dict_keys: " +
           "{1: 7, 2: 11, 3: 6, 4: 7}\n" + 
@@ -113,7 +113,7 @@ def cut_list_of_dicts(
 
     return list_of_cut_dicts
 
-def add_values_of_dict_keys(
+def sum_values_of_dict_keys(
     dicts_to_add: list[dict[int, int]]
     ) -> dict[int, int]:
     """
@@ -129,6 +129,10 @@ def add_values_of_dict_keys(
             sum_dict[key] = sum_dict.get(key, 0) + dictionary[key]
 
     return sum_dict
+
+def sum_values_of_index(
+    indexes_to_add: list[dict[str, dict[int, int]]]
+) -> dict[str, dict[int, int]]:
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
     '''
