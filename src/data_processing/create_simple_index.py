@@ -144,5 +144,5 @@ def test_combine_indexes() -> None:
     print("----------")
 
 if __name__ == "__main__":
-    # main()
-    test_index_single_ndjson()
+    main()
+    # test_index_single_ndjson()
