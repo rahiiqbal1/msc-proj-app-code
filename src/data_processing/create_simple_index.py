@@ -95,8 +95,8 @@ def index_single_ndjson(
     # Calculating the number of iterations the loop should see:
     num_iterations: int = NDJSON_NUM_LINES // batch_size
 
-    # Initialising final index:
-    final_index: dict[str, dict[int, int]] = {}
+    # Initialise list to store indexes for each json in the ndjson:
+    list_of_indexes: list[dict[str, dict[int, int]]] = []
 
     # Initialising variable to keep track of json index (i.e. line number - 1)
     # within .ndjson:
@@ -107,23 +107,16 @@ def index_single_ndjson(
     for json_batch in tqdm(
         dm.generate_jsons_from_single_ndjson(ndjson_file_path, batch_size),
         total = num_iterations):
-        # Initialising list to store indexes for each batch:
-        batch_indexes: list[dict[str, dict[int, int]]] = []
-        single_json: dict[str, str]
-         
         # For each json in the batch, index it, add it to the list of indexes,
         # and then increment the index keeping track of which json we are at
         # in the file (the ndjson):
+        single_json: dict[str, str]
         for single_json in tqdm(json_batch, "Indexing batch"):
-            batch_indexes.append(index_single_json(single_json, json_idx))
+            list_of_indexes.append(index_single_json(single_json, json_idx))
             json_idx += 1
 
-        # Combine the indexes of this batch with one another, and the final
-        # index:
-        final_index = combine_indexes(batch_indexes + [final_index])
-
     # Combining the indexes and returning:
-    return final_index
+    return combine_indexes(list_of_indexes)
 
 def test_index_single_ndjson() -> None:
     test_ndjson_path: str = os.path.join(
