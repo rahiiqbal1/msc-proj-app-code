@@ -13,6 +13,7 @@ from tqdm import tqdm
 NUM_ENTRIES = 6947320
 
 def main() -> None:
+    test_generate_jsons_from_single_ndjson()
 
     sys.exit(0)
 
@@ -193,9 +194,6 @@ def generate_jsons_from_single_ndjson(
     Reads a single .ndjson file and returns lists of it's jsons in batches of
     size batch_size.
     """
-    # Initialising counter to keep track of batch size:
-    batch_count: int = 0
-
     # Initialise list to store batches of jsons:
     json_batch: list[dict[str, str]] = []
 
@@ -216,6 +214,30 @@ def generate_jsons_from_single_ndjson(
         # batch size was reached, so yield these:
         if len(json_batch) != 0:
             yield json_batch
+
+def test_generate_jsons_from_single_ndjson() -> None:
+    test_ndjson_path: str = os.path.join(
+        os.pardir,
+        os.pardir,
+        "data",
+        "fully-processed-ndjsons",
+        "processed_ndjson_0"
+    )
+
+    # Getting number of lines in file:
+    ndjson_num_lines: int = 0
+    with open(test_ndjson_path, 'r') as ndjson_to_read:
+        ndjson_num_lines = len(ndjson_to_read.readlines())
+
+    # Initialising variable to keep track of total number of jsons read:
+    num_jsons_read: int = 0
+
+    json_batch: list[dict[str, str]]
+    for json_batch in generate_jsons_from_single_ndjson(test_ndjson_path):
+        num_jsons_read += len(json_batch)
+
+    print(f"Number of lines in ndjson: {ndjson_num_lines}")
+    print(f"Number of lines read: {num_jsons_read}")
 
 def create_pickled_cut_jsons(
     ndjson_data_dir: str,
