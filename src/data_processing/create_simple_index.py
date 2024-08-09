@@ -1,18 +1,35 @@
 import sys
 import os
 import json
+import math
 import time
 
 from nltk.tokenize import word_tokenize
+from tqdm import tqdm
 
 import data_manipulation as dm
 
 def main() -> None:
-    # Directory in which the .ndjson files to be indexed are stored. Here we
-    # use the files which have already had their unrelated fields and html 
-    # removed, as well as their main body being preprocessed (lower case,
-    # stopwords removed, lemmatised, punctuation removed):
-    ndjson_store_dir: str = os.path.join(os.pardir, "fully-processed-ndjsons")
+    # Path to .ndjson containing all the desired json data to index:
+    ndjson_filepath: str = os.path.join(
+        os.pardir, os.pardir, "data", "combined_processed.ndjson"
+    )
+    # ndjson_filepath: str = os.path.join(
+    #     os.pardir,
+    #     os.pardir,
+    #     "data",
+    #     "fully-processed-ndjsons",
+    #     "processed_ndjson_0"
+    # )
+
+    # Name for index file and directory in which to store it:
+    index_filename: str = "simple.index"
+    index_store_dir: str = os.path.join(os.pardir, os.pardir, "data")
+
+    # Indexing:
+    dm.save_data(
+        index_single_ndjson(ndjson_filepath), index_filename, index_store_dir
+    )
 
     sys.exit(0)
 
@@ -70,6 +87,18 @@ def index_single_ndjson(
     """
     Indexes all json objects in an ndjson. 
     """
+    # Calculating number of lines in ndjson:
+    ndjson_num_lines: int = 0
+    with open(ndjson_file_path, 'r') as ndjson_to_read:
+        for _ in tqdm(ndjson_to_read, "Reading number of lines"):
+            ndjson_num_lines += 1
+
+    # Specifying batch size to generate jsons in:
+    json_batch_size: int = 64
+
+    # Calculating the number of iterations the loop should see:
+    num_iterations: int = ndjson_num_lines // json_batch_size
+
     # Initialise list to store indexes for each json in the ndjson:
     list_of_indexes: list[dict[str, dict[int, int]]] = []
 
@@ -79,7 +108,9 @@ def index_single_ndjson(
 
     # Indexing each json and adding the index to the list of them all:
     json_batch: list[dict[str, str]]
-    for json_batch in dm.generate_jsons_from_single_ndjson(ndjson_file_path):
+    for json_batch in tqdm(
+        dm.generate_jsons_from_single_ndjson(ndjson_file_path),
+        total = num_iterations):
         single_json: dict[str, str]
         # For each json in the batch, index it, add it to the list of indexes,
         # and then increment the index keeping track of which json we are at
@@ -150,4 +181,3 @@ def test_combine_indexes() -> None:
 
 if __name__ == "__main__":
     main()
-    # test_index_single_ndjson()
