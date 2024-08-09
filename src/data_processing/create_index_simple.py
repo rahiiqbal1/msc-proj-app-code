@@ -16,22 +16,6 @@ def main() -> None:
 
     sys.exit(0)
 
-def test_index_single_json() -> None:
-    test_json_path: str = os.path.join(
-        os.pardir, os.pardir, "data", "testing.json"
-    )
-
-    with open(test_json_path, 'r') as json_to_read:
-        test_json: dict[str, str] = json.loads(json_to_read.readline())
-
-        start_time: float = time.time()
-        test_index: dict[str, dict[int, int]] = index_single_json(test_json, 0)
-        end_time: float = time.time()
-
-        print(test_index, '\n', end_time - start_time)
-
-    sys.exit(0)
-
 def index_single_json(
     json_to_index: dict[str, str],
     idx_of_json: int # The index of the given json within the collection.
@@ -64,34 +48,89 @@ def index_single_json(
 
     return index
 
-# def index_single_ndjson(
-#     ndjson_file_path: str
-#     ) -> dict[str, dict[int, int]]:
-#     """
-#     Indexes all json objects in an ndjson. 
-#     """
-#     # Loading in jsons:
-#     list_of_jsons: list[dict[str, str]] = dm.load_jsons_from_ndjson(
-#         ndjson_file_path
-#     )
+def test_index_single_json() -> None:
+    test_json_path: str = os.path.join(
+        os.pardir, os.pardir, "data", "testing.json"
+    )
 
-#     # Initialising list to store indexes created for each json:
-#     list_of_indexes: list[dict[int, int]] = []
+    with open(test_json_path, 'r') as json_to_read:
+        test_json: dict[str, str] = json.loads(json_to_read.readline())
 
-#     single_json: dict[str, str]
-#     for idx_of_json, single_json in enumerate(list_of_jsons):
-#         list_of_indexes.append(index_single_json(single_json, idx_of_json))
+        start_time: float = time.time()
+        test_index: dict[str, dict[int, int]] = index_single_json(test_json, 0)
+        end_time: float = time.time()
 
-#     return dm.add_values_of_dict_keys(list_of_indexes)
+        print(test_index, '\n', end_time - start_time)
+
+    sys.exit(0)
+
 def index_single_ndjson(
     ndjson_file_path: str
 ) -> dict[str, dict[int, int]]:
     """
     Indexes all json objects in an ndjson. 
     """
+    # Initialise list to store indexes for each json in the ndjson:
+    list_of_indexes: list[dict[str, dict[int, int]]] = []
+
+    # Loading in jsons:
+    list_of_jsons: list[dict[str, str]] = dm.load_jsons_from_ndjson(
+        ndjson_file_path
+    )
+
+    # Indexing each json and adding the index to the list of them all:
+    single_json: dict[str, str]
+    for json_idx, single_json in enumerate(list_of_jsons):
+        list_of_indexes.append(index_single_json(single_json, json_idx))
+
+    # Combining the indexes and returning:
+    return combine_indexes(list_of_indexes)
+
+def combine_indexes(
+    indexes_to_combine: list[dict[str, dict[int, int]]]
+    ) -> dict[str, dict[int, int]]:
+    """
+    Combines the indexes in the given list. Requires that there is no crossover
+    in document index between the indexes.
+
+    Allowed: {"this": {1: 12}} + {"this": {2: 13}} = {"this": {1: 12, 2: 13}}
+    Invalid: {"this": {1: 12}} + {"this": {1: 13}}
+    """
     combined_index: dict[str, dict[int, int]] = {}
 
+    single_index: dict[str, dict[int, int]]
+    for single_index in indexes_to_combine:
+        word: str
+        for word in single_index:
+            # For each word in the current index, set the value in the combined
+            # index to be itself if it already exists, or the value for the
+            # current index if not:
+            combined_index[word] = combined_index.get(word, single_index[word])
+            # Then add the value for the current index to the dictionary for
+            # the current word in the combined index:
+            combined_index[word].update(single_index[word])
+
     return combined_index
+
+def test_combine_indexes() -> None:
+    print("Testing combine_indexes:\n")
+
+    idx1 = {"this": {1: 12}}
+    idx2 = {"this": {2: 12}}
+
+    # 1 + 2:
+    print("Expected value: {'this': {1: 12, 2: 12}}")
+    print(f"Actual value: {combine_indexes([idx1, idx2])}")
+    print("----------")
+
+    idx3 = {"this": {1: 12, 2: 4}, "that": {1: 2, 2: 8}}
+    idx4 = {"there": {3: 3, 4: 5}, "that": {3: 2, 4: 6}}
+
+    # 3 + 4:
+    print("Expected value: {'this': {1: 12, 2: 4}, 'there': {3: 3, 4: 5}, " +
+                           "'that': {1: 2, 2: 8, 3: 2, 4: 6}}")
+    print(f"Actual value: {combine_indexes([idx3, idx4])}")
+    print("----------")
 
 if __name__ == "__main__":
     # main()

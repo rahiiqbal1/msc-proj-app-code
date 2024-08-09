@@ -13,7 +13,6 @@ from tqdm import tqdm
 NUM_ENTRIES = 6947320
 
 def main() -> None:
-    test_combine_indexes()
 
     sys.exit(0)
 
