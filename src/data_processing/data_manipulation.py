@@ -13,8 +13,26 @@ from tqdm import tqdm
 NUM_ENTRIES = 6947320
 
 def main() -> None:
+    test_combine_indexes()
 
     sys.exit(0)
+
+def test_combine_indexes() -> None:
+    # Test combine indexes:
+    print("Testing combine_indexes")
+
+    idx1 = {"this": {1: 12}}
+    idx2 = {"this": {2: 12}}
+
+    print("Expected value: {'this': {1: 12, 2: 12}}")
+    print(f"Actual value: {combine_indexes([idx1, idx2])}")
+
+    idx3 = {"this": {1: 12, 2: 4}, "that": {1: 2, 2: 8}}
+    idx4 = {"there": {3: 3, 4: 5}, "that": {3: 2, 4: 6}}
+
+    print("Expected value: {'this': {1: 12, 2: 4}, 'there': {3: 3, 4: 5}, " +
+                           "'that': {1: 2, 2: 8, 3: 2, 4: 6}}")
+    print(f"Actual value: {combine_indexes([idx3, idx4])}")
 
 def save_data(data: Any, data_save_name: str, save_dir: str) -> None:
     '''
