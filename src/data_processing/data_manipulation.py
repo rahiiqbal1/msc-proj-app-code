@@ -46,7 +46,7 @@ def stringify_dictionaries(
     strings_to_return: list[str] = []
 
     single_dict: dict[str, str]
-    for single_dict in tqdm(dicts_to_stringify):
+    for single_dict in dicts_to_stringify:
         # Initialising string to add to return list:
         string_for_return: str = ""
         dict_key: str 
