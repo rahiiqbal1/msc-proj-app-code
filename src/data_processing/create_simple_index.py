@@ -9,6 +9,8 @@ from tqdm import tqdm
 
 import data_manipulation as dm
 
+NDJSON_NUM_LINES = 6947320
+
 def main() -> None:
     # Path to .ndjson containing all the desired json data to index:
     ndjson_filepath: str = os.path.join(
@@ -87,17 +89,11 @@ def index_single_ndjson(
     """
     Indexes all json objects in an ndjson. 
     """
-    # Calculating number of lines in ndjson:
-    ndjson_num_lines: int = 0
-    with open(ndjson_file_path, 'r') as ndjson_to_read:
-        for _ in tqdm(ndjson_to_read, "Reading number of lines"):
-            ndjson_num_lines += 1
-
     # Specifying batch size to generate jsons in:
-    json_batch_size: int = 64
+    json_batch_size: int = 5096
 
     # Calculating the number of iterations the loop should see:
-    num_iterations: int = ndjson_num_lines // json_batch_size
+    num_iterations: int = NDJSON_NUM_LINES // json_batch_size
 
     # Initialise list to store indexes for each json in the ndjson:
     list_of_indexes: list[dict[str, dict[int, int]]] = []
