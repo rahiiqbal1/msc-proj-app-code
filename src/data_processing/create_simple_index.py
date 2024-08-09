@@ -90,7 +90,7 @@ def index_single_ndjson(
     Indexes all json objects in an ndjson. 
     """
     # Specifying batch size to generate jsons in:
-    batch_size: int = 2**16
+    batch_size: int = 8192
 
     # Calculating the number of iterations the loop should see:
     num_iterations: int = NDJSON_NUM_LINES // batch_size
