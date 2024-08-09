@@ -111,12 +111,12 @@ def loadDataAndEmbeddings(
 
     return data, embeddings
 
-def loadData(file_path: str) -> Any:
+def loadData(filePath: str) -> Any:
     '''
     Loads given object as python object using pickle.
     '''
-    with open(file_path, "rb") as file_to_read:
-        return pickle.load(file_to_read)
+    with open(filePath, "rb") as fileToRead:
+        return pickle.load(fileToRead)
 
 if __name__ == "__main__":
     main()
