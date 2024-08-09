@@ -113,6 +113,18 @@ def combine_indexes(
     """
     combined_index: dict[str, dict[int, int]] = {}
 
+    single_index: dict[str, dict[int, int]]
+    for single_index in indexes_to_combine:
+        word: str
+        for word in single_index:
+            # For each word in the current index, set the value in the combined
+            # index to be itself if it already exists, or the value for the
+            # current index if not:
+            combined_index[word] = combined_index.get(word, single_index[word])
+            # Then add the value for the current index to the dictionary for
+            # the current word in the combined index:
+            combined_index[word].update(single_index[word])
+
     return combined_index
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
