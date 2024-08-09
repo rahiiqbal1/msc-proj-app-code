@@ -66,7 +66,7 @@ def test_index_single_json() -> None:
 
 def index_single_ndjson(
     ndjson_file_path: str
-) -> dict[str, dict[int, int]]:
+    ) -> dict[str, dict[int, int]]:
     """
     Indexes all json objects in an ndjson. 
     """
@@ -85,6 +85,17 @@ def index_single_ndjson(
 
     # Combining the indexes and returning:
     return combine_indexes(list_of_indexes)
+
+def test_index_single_ndjson() -> None:
+    test_ndjson_path: str = os.path.join(
+        os.pardir, os.pardir, "data", "testing.ndjson"
+    )
+
+    print("Expected value: {'for1': {0: 1}, 'that2': {0: 1, 1: 1}," +
+                           "'these3': {0: 2, 1: 1}, 'those4': {1: 4}}")
+    print(f"Actual value: {index_single_ndjson(test_ndjson_path)}")
+
+    sys.exit(0)
 
 def combine_indexes(
     indexes_to_combine: list[dict[str, dict[int, int]]]
@@ -134,4 +145,4 @@ def test_combine_indexes() -> None:
 
 if __name__ == "__main__":
     # main()
-    test_index_single_json()
+    test_index_single_ndjson()
