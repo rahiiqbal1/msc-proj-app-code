@@ -185,6 +185,38 @@ def generate_jsons_from_ndjsons(
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
 
+def generate_jsons_from_single_ndjson(
+    ndjson_path: str,
+    desired_batch_size: int = 64
+    ) -> Generator[list[dict[str, str]], None, None]:
+    """
+    Reads a single .ndjson file and returns lists of it's jsons in batches of
+    size batch_size.
+    """
+    # Initialising counter to keep track of batch size:
+    batch_count: int = 0
+
+    # Initialise list to store batches of jsons:
+    json_batch: list[dict[str, str]] = []
+
+    with open(ndjson_path, 'r') as ndjson_to_read:
+        json_line: str
+        for json_line in ndjson_to_read:
+            # If the desired batch size has been reached, yield the batch and
+            # clear the list:
+            if len(json_batch) == desired_batch_size:
+                yield json_batch
+                json_batch.clear()
+
+            # Continue adding jsons to the list:
+            json_batch.append(json.loads(json_line))
+
+        # If we have left the for loop reading lines and there is still some
+        # elements in json_batch, then we have some leftover before the full
+        # batch size was reached, so yield these:
+        if len(json_batch) != 0:
+            yield json_batch
+
 def create_pickled_cut_jsons(
     ndjson_data_dir: str,
     pickled_list_of_cut_jsons_save_dir: str,
