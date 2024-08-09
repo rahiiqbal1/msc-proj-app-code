@@ -185,6 +185,25 @@ def generate_jsons_from_ndjsons(
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
 
+def combine_ndjsons_in_dir(ndjsons_dir: str, final_save_path: str) -> None:
+    """
+    Combines all .ndjson files in a given directory into a single .ndjson.
+    """
+    # Get all filenames in ndjsons_dir to read through them:
+    ndjson_filenames: list[str] = os.listdir(ndjsons_dir)
+
+    # Opening a file to write the json data to:
+    with open(final_save_path, 'a') as ndjson_to_write_to:
+        ndjson_filename: str
+        for ndjson_filename in tqdm(ndjson_filenames):
+            # Getting full filepath as ndjson_filename is only the filename:
+            ndjson_filepath: str = os.path.join(ndjsons_dir, ndjson_filename)
+
+            # Reading one json at a time from the current ndjson and adding the
+            # line to the final ndjson:
+            with open(ndjson_filepath, 'r') as ndjson_to_read:
+                ndjson_to_write_to.writelines(ndjson_to_read.readlines())
+
 def create_pickled_cut_jsons(
     ndjson_data_dir: str,
     pickled_list_of_cut_jsons_save_dir: str,
