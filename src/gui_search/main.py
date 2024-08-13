@@ -15,7 +15,7 @@ NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
-    use_poc_data(transformerGetResults)
+    use_poc_data(pocTransformerGetResults)
 
     sys.exit(0)
 
@@ -90,7 +90,7 @@ def guiSearch(
     sys.exit(searchApp.exec())
 
 # Model:
-def transformerGetResults(
+def pocTransformerGetResults(
     data: list[dict[str, str]],
     embeddings: Embeddings,
     searchQuery: str
