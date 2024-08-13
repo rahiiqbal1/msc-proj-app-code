@@ -312,5 +312,19 @@ def test_get_num_from_string() -> None:
     for string in strings_to_parse:
         print(get_num_from_string(string))
 
+def sort_filenames_with_numbers(filenames: list[str]) -> list[str]:
+    """
+    Takes a list of filenames with at most one number within them and sorts the
+    list numerically.
+
+    e.g. ["a3", "b5", "c1"] -> ["c1", "a3", "b5"].
+    """
+    sorted_filenames: list[str] = []
+
+    return sorted_filenames
+
+def test_sort_filenames_with_numbers() -> None:
+    pass
+
 if __name__ == "__main__":
     main()
