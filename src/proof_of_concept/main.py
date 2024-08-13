@@ -6,25 +6,20 @@ from typing import Any
 import joblib
 from txtai import Embeddings
 
-from get_data_and_embeddings import NUM_ENTRIES, PROPORTION_ENTRIES_TO_USE
-
 def main() -> int:
-    num_entries_used: int = math.floor(NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE)
-
     # Directory where relevant data is stored:
     wikidata_dir: str = os.path.join(
         os.pardir,
         os.pardir,
-        "data",
-        "wikidata"
+        "data"
     )
 
     # Get data and saved embeddings:
     entry_jsons: list[dict[str, str]]
     embeddings: Embeddings
     entry_jsons, embeddings = load_data_and_embeddings(
-        os.path.join(wikidata_dir, "entry_data.gz"),
-        os.path.join(wikidata_dir, f"embeddings_subset_{num_entries_used}")
+        os.path.join(wikidata_dir, "poc_json_data.pkl"),
+        os.path.join(wikidata_dir, "poc_embeddings_subset_6947320")
     )
 
     cli_search(entry_jsons, embeddings)
