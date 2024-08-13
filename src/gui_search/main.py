@@ -10,13 +10,16 @@ from PyQt5.QtWidgets import (
 )
 
 from qt_gui import NUM_RESULTS_TO_SHOW, SearchWindow, SearchController
-from ..data_processing import data_manipulation as dm
+# Dirty hack!
+sys.path.append(os.path.abspath(".."))
+from data_processing import data_manipulation as dm
 
 NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
-    use_poc_data(pocTransformerGetResults)
+    testFindJsonGivenIndex()
+    # use_poc_data(pocTransformerGetResults)
 
     sys.exit(0)
 
@@ -190,8 +193,30 @@ def findJsonGivenIndex(dataDir: str, index: int) -> dict[str, str]:
         else:
             break
 
+    # Full path to file which contains the desired data point: 
+    containingFilePath: str = os.path.join(
+        dataDir, sortedFilenames[batchCounter]
+    )
+
     # Loading correct data in directory and getting json at required index:
-    return dm.load_data(sortedFilenames[batchCounter])[index]
+    return dm.load_data(containingFilePath)[index]
+
+def testFindJsonGivenIndex() -> None:
+    testPickledListsDir: str = os.path.join(
+        os.pardir, os.pardir, "data", "test-pickled-list-retrieval"
+    )
+    testIndex: int = 7
+
+    listsToPickle: tuple[list[int], ...] = (
+        [1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11, 12]
+    )
+
+    # Pickling data:
+    listToPickle: list[int]
+    for fileIdx, listToPickle in enumerate(listsToPickle):
+        dm.save_data(listToPickle, f"{fileIdx}.pkl", testPickledListsDir)
+
+    print(findJsonGivenIndex(testPickledListsDir, testIndex))
 
 def loadDataAndEmbeddings(
     dataPath: str,
