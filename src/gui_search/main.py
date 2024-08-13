@@ -150,17 +150,45 @@ def fullTransformerGetResults(
 
     return results
 
-def findJsonGivenIndex(dataDir: str, index: int) -> str:
+def findJsonGivenIndex(dataDir: str, index: int) -> dict[str, str]:
     """
     For a directory containing numerically-sorted pickled lists of json data,
-    and a given index, return the filename of the file which contains the data
-    specified by that index.
+    and a given index, return the json from within the file specified by that
+    index.
     """
     # Retrieving filenames within directory and sorting:
-    sorted_filenames: list[str] = dm.sort_filenames_with_numbers(
+    sortedFilenames: list[str] = dm.sort_filenames_with_numbers(
         os.listdir(dataDir)
     )
 
+    # Getting lengths of files:
+    fileListLengths: list[int] = []
+    filename: str
+    for filename in sortedFilenames:
+        # Getting full filepath as filename is only the name:
+        filepathFull: str = os.path.join(dataDir, filename)
+
+        # Loading data and adding it's length to the list of lengths:
+        fileListLengths.append(
+            len(loadData(filepathFull))
+        )
+
+    # Initialising variable to keep track of which file within the directory
+    # we are in the scope of through the for loop. Starting from 0 as we can 
+    # use the list of sorted filenames to load the file:
+    batchCounter: int = 0
+    # Searching through lengths till the index is contained:
+    listLength: int
+    for listLength in fileListLengths:
+        if index - listLength >= 0:
+            index -= listLength
+            batchCounter += 1
+
+        else:
+            break
+
+    # Loading correct data in directory and getting json at required index:
+    return loadData(sortedFilenames[batchCounter])[index]
 
 def loadDataAndEmbeddings(
     dataPath: str,
