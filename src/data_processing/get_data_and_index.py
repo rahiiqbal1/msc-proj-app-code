@@ -1,7 +1,6 @@
 import os
 import sys
 import math
-from typing import Any
 
 from txtai import Embeddings
 from tqdm import tqdm
@@ -109,71 +108,15 @@ def upsert_jsons_text_to_index(
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
 
-    # Index:
-    embeddings.upsert(tqdm(jsons_to_upsert_subset_as_strings))
+    for idx, single_json_text in enumerate(jsons_to_upsert_subset_as_strings):
+        # Name for the current 'document' within the txtai index:
+        json_doc_name: str = f"doc{idx}"
+        embeddings.upsert(
+            (json_doc_name, {"text": single_json_text}, None)
+        )
+        
     # Save:
     embeddings.save(index_save_path)
 
-# # Old!
-# def gen_or_get_index(data_to_index: Any, index_save_path: str) -> None:
-#     '''
-#     Indexes the given data, and saves the index at the given path. Uses
-#     the model in code by default.
-#     '''
-#     # Want to generate word embeddings using specified hugging-face model:
-#     embeddings = Embeddings(
-#         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
-#     )
-
-#     if os.path.isfile(index_save_path) == False:
-#         # Index data:
-#         embeddings.index(tqdm(data_to_index))
-#         # Save index:
-#         embeddings.save(index_save_path)
-#     else:
-#         print("An index is already saved at the given path.")
-
-# # Old!
-# def gen_or_get_pickled_jsons(
-#     ndjson_data_dir: str,
-#     data_save_path: str
-#     ) -> list[dict[str, str]]:
-#     '''
-#     If the file at the given path already exists, attempt to load it using
-#     pickle. If not, read all .ndjson files in the given directory and attempt
-#     to read set fields from each .json within them.
-
-#     Returns a list of all .json entries in the data as dictionaries.
-#     '''
-#     # Fields of the data which we want to use:
-#     fields_to_use: tuple[str, ...] = ("name", "abstract", "Categories", "url")
-
-#     # If the data does not exist, proceed to generate it. Otherwise load it:
-#     if os.path.isfile(data_save_path) == False:
-#         # Initialising list to store dictionaries with desired fields:
-#         all_cut_entry_jsons: list[dict[str, str]] = []
-
-#         # List of deserialised json objects per .ndjson file read:
-#         entry_jsons: list[dict[str, Any]]
-#         for entry_jsons in dm.generate_jsons_from_ndjsons(ndjson_data_dir):
-#             # Reducing all dictionaries in the current list to the chosen 
-#             # fields and adding to the list to store them all:
-#             all_cut_entry_jsons += dm.cut_list_of_dicts(
-#                 entry_jsons, fields_to_use
-#             )
-
-#         # Saving data:
-#         data_save_dir: str
-#         data_save_name: str
-#         data_save_dir, data_save_name = os.path.split(data_save_path)
-#         dm.save_data(all_cut_entry_jsons, data_save_name, data_save_dir)   
-
-#         return all_cut_entry_jsons
-
-#     else:
-#         # Loads using pickle, so the file must be deserialisable as the correct
-#         # return type.
-#         return dm.load_data(data_save_path)
-
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
