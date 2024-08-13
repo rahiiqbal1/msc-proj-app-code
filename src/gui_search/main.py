@@ -117,6 +117,31 @@ def pocTransformerGetResults(
 
     return results
 
+def fullTransformerGetResults(
+    dataDir: str,
+    embeddings: Embeddings,
+    searchQuery: str
+    ) -> list[dict[str, str]]:
+    """
+    Searches through all (pickled) data within directory using given
+    transformer-derived embeddings. Returns results with all fields intact, so
+    they should be cut as desired outside of this function.
+
+    Assumes that the data has been stored in the directory in numeric order and
+    that the embeddings have been indexed in this order. Will not work properly
+    if this is not the case.
+    """
+    # This is a list of tuples containing the index of the result in the
+    # data and it's score:
+    numResults: list[tuple[int, float]] = embeddings.search(
+        searchQuery, NUM_RESULTS_TO_SHOW
+    )
+
+    # Initialising list to store readable results:
+    results: list[dict[str, str]] = []
+
+    return results
+
 def loadDataAndEmbeddings(
     dataPath: str,
     embeddingsPath: str
