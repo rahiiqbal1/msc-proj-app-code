@@ -13,7 +13,7 @@ from tqdm import tqdm
 NUM_ENTRIES = 6947320
 
 def main() -> None:
-    test_get_num_from_string()
+    test_sort_filenames_with_numbers()
 
     sys.exit(0)
 
@@ -314,17 +314,23 @@ def test_get_num_from_string() -> None:
 
 def sort_filenames_with_numbers(filenames: list[str]) -> list[str]:
     """
-    Takes a list of filenames with at most one number within them and sorts the
+    Takes a list of filenames with exactly one number within them and sorts the
     list numerically.
 
     e.g. ["a3", "b5", "c1"] -> ["c1", "a3", "b5"].
     """
-    sorted_filenames: list[str] = []
+    # Copying list of filenames to prevent mutation:
+    sorted_filenames: list[str] = filenames.copy()
+
+    sorted_filenames.sort(key = get_num_from_string)
 
     return sorted_filenames
 
+
 def test_sort_filenames_with_numbers() -> None:
-    pass
+    test_names: list[str] = ["a3", "b5", "c1"]
+
+    print(sort_filenames_with_numbers(test_names))
 
 if __name__ == "__main__":
     main()
