@@ -50,38 +50,6 @@ def main() -> None:
 
     sys.exit(0)
 
-    # # Full path of json data file:
-    # json_data_save_path: str = os.path.join(
-    #     all_data_dir, "pickled_json_data.pkl"
-    # )
-    # # Loading in json data:
-    # all_jsons: list[dict[str, str]] = gen_or_get_pickled_jsons(
-    #     wikidata_dir, json_data_save_path
-    # )
-
-    # # Using only num_entries_to_use entries to save computation time:
-    # num_jsons_to_use: int = math.floor(
-    #     NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
-    # )
-    # subset_of_jsons: list[dict[str, str]] = all_jsons[
-    #     : num_jsons_to_use
-    # ]
-
-    # subset_of_jsons_as_strings: list[str] = stringify_dictionaries(
-    #     subset_of_jsons
-    # )
-
-    # # If the index does not already exist at the specified path, index and
-    # # save:
-    # index_save_path: str = (
-    #     os.path.join(
-    #         wikidata_dir,
-    #         f"embeddings_subset_{num_jsons_to_use}"
-    #     )
-    # )
-    # # Attempt to generate and save index:
-    # gen_or_get_index(subset_of_jsons_as_strings, index_save_path)
-
 def upsert_jsons_text_to_index(
     jsons_to_upsert: list[dict[str, str]],
     index_save_path: str
