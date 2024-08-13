@@ -26,10 +26,13 @@ def main() -> None:
         all_data_dir, "pickled-lists-of-cut-jsons"
     )
 
+    num_entries_used: int = math.floor(
+        dm.NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
+    )
+
     # Path to save index at:
     index_save_path: str = os.path.join(
-        all_data_dir,
-        f"embeddings_subset_{dm.NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE}"
+        all_data_dir, f"embeddings_subset_{num_entries_used}"
     )
 
     # Fields of the data which we want to use:
@@ -38,7 +41,8 @@ def main() -> None:
     # Attempt to create the pickled data:
     if len(os.listdir(pickled_jsons_dir)) == 0:
         dm.create_pickled_cut_jsons(
-            wikidata_dir, pickled_jsons_dir, fields_to_use)
+            wikidata_dir, pickled_jsons_dir, fields_to_use
+        )
 
     # Looping through all of the data to index it:
     cut_jsons: list[dict[str, str]]
