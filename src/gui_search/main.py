@@ -170,7 +170,7 @@ def findJsonGivenIndex(dataDir: str, index: int) -> dict[str, str]:
 
         # Loading data and adding it's length to the list of lengths:
         fileListLengths.append(
-            len(loadData(filepathFull))
+            len(dm.load_data(filepathFull))
         )
 
     # Initialising variable to keep track of which file within the directory
@@ -188,7 +188,7 @@ def findJsonGivenIndex(dataDir: str, index: int) -> dict[str, str]:
             break
 
     # Loading correct data in directory and getting json at required index:
-    return loadData(sortedFilenames[batchCounter])[index]
+    return dm.load_data(sortedFilenames[batchCounter])[index]
 
 def loadDataAndEmbeddings(
     dataPath: str,
@@ -200,7 +200,7 @@ def loadDataAndEmbeddings(
     Returns a tuple of data and embeddings.
     '''
     # Getting data:
-    data: list[dict[str, str]] = loadData(dataPath)
+    data: list[dict[str, str]] = dm.load_data(dataPath)
 
     # Getting embeddings:
     embeddings = Embeddings(
@@ -209,13 +209,6 @@ def loadDataAndEmbeddings(
     embeddings.load(embeddingsPath)
 
     return data, embeddings
-
-def loadData(filePath: str) -> Any:
-    '''
-    Loads given object as python object using pickle.
-    '''
-    with open(filePath, "rb") as fileToRead:
-        return pickle.load(fileToRead)
 
 if __name__ == "__main__":
     main()
