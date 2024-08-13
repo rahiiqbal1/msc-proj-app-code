@@ -46,10 +46,7 @@ def main() -> None:
 
     # Looping through all of the data to index it:
     cut_jsons: list[dict[str, str]]
-    for cut_jsons in tqdm(
-            dm.generate_list_of_jsons_from_pickles(pickled_jsons_dir),
-            total = NUMBER_OF_NDJSONS
-        ):
+    for cut_jsons in dm.generate_list_of_jsons_from_pickles(pickled_jsons_dir):
         upsert_jsons_text_to_index(cut_jsons, index_save_path)
 
     sys.exit(0)
@@ -80,14 +77,15 @@ def upsert_jsons_text_to_index(
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
 
-    for idx, single_json_text in enumerate(jsons_to_upsert_subset_as_strings):
-        # Name for the current 'document' within the txtai index:
-        json_doc_name: str = f"doc{idx}"
-        embeddings.upsert(
-            (json_doc_name, {"text": single_json_text}, None)
-        )
+    # Indexing:
+    embeddings.upsert(tqdm(jsons_to_upsert_subset_as_strings))
+    # for single_json_text in tqdm(jsons_to_upsert_subset_as_strings):
+    #     embeddings.upsert(single_json_text)
+    #     print(embeddings.count())
+
+    print(embeddings.count())
         
-    # Save:
+    # Saving:
     embeddings.save(index_save_path)
 
 if __name__ == "__main__":
