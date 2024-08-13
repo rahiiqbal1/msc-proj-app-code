@@ -44,16 +44,38 @@ def main() -> None:
             wikidata_dir, pickled_jsons_dir, fields_to_use
         )
 
+    # Number ndjson to begin at. This allows us to index the data within the 
+    # given directory in batches:
+    start_position_save_name: str = "start_position.pkl"
+    try:
+        start_position: int = dm.load_data(
+            os.path.join(all_data_dir, start_position_save_name)
+        )
+
+    except FileNotFoundError:
+        start_position: int = 0
+
     # Looping through all of the data to index it:
     cut_jsons: list[dict[str, str]]
-    for cut_jsons in dm.generate_list_of_jsons_from_pickles(pickled_jsons_dir):
+    for idx, cut_jsons in enumerate(
+            dm.generate_list_of_jsons_from_pickles(pickled_jsons_dir)
+    ):
+        # If we are not at the desired start position, continue to the next
+        # iteration of the loop i.e. the next file in the list:
+        if idx != start_position:
+            continue
+
         upsert_jsons_text_to_index(cut_jsons, index_save_path)
+
+        # Updating start position within list and saving:
+        start_position += 1
+        dm.save_data(start_position, start_position_save_name, all_data_dir)
 
     sys.exit(0)
 
 def upsert_jsons_text_to_index(
     jsons_to_upsert: list[dict[str, str]],
-    index_save_path: str
+    index_save_path: str 
     ) -> None:
     """
     Takes a list of json objects as dictionaries and attempts to index their
