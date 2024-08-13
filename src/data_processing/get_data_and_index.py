@@ -77,11 +77,12 @@ def upsert_jsons_text_to_index(
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
 
+    # Loading previous state of saved index if it exists:
+    if embeddings.exists(index_save_path):
+        embeddings.load(index_save_path)
+
     # Indexing:
     embeddings.upsert(tqdm(jsons_to_upsert_subset_as_strings))
-    # for single_json_text in tqdm(jsons_to_upsert_subset_as_strings):
-    #     embeddings.upsert(single_json_text)
-    #     print(embeddings.count())
 
     print(embeddings.count())
         
