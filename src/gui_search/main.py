@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import (
 )
 
 from qt_gui import NUM_RESULTS_TO_SHOW, SearchWindow, SearchController
+from ..data_processing import data_manipulation as dm
 
 NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
@@ -140,7 +141,26 @@ def fullTransformerGetResults(
     # Initialising list to store readable results:
     results: list[dict[str, str]] = []
 
+    # Getting results in readable format:
+    numResult: tuple[int, float]
+    for numResult in numResults:
+        # Getting index of result in the search-index in order to know from 
+        # where to retrieve the data:
+        resultIndex: int = numResult[0]
+
     return results
+
+def findJsonGivenIndex(dataDir: str, index: int) -> str:
+    """
+    For a directory containing numerically-sorted pickled lists of json data,
+    and a given index, return the filename of the file which contains the data
+    specified by that index.
+    """
+    # Retrieving filenames within directory and sorting:
+    sorted_filenames: list[str] = dm.sort_filenames_with_numbers(
+        os.listdir(dataDir)
+    )
+
 
 def loadDataAndEmbeddings(
     dataPath: str,
