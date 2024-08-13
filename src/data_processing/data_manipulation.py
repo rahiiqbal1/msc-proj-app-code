@@ -13,7 +13,6 @@ from tqdm import tqdm
 NUM_ENTRIES = 6947320
 
 def main() -> None:
-    # test_generate_jsons_from_single_ndjson()
 
     sys.exit(0)
 
@@ -287,6 +286,18 @@ def generate_list_of_jsons_from_pickles(
         # Reading pickle and yielding:
         with open(pickled_data_fullpath, "rb") as file_to_read:
             yield pickle.load(file_to_read)
+
+def get_num_from_string(str_to_parse: str) -> str|None:
+    """
+    Takes a string with at most 1 number within and returns that number as a
+    string. 
+
+    e.g. this_21 -> 21, that_5222 -> 5222, there0 -> 0, here -> None.
+    """
+        
+
+def test_get_num_from_string() -> None:
+    pass
 
 if __name__ == "__main__":
     main()
