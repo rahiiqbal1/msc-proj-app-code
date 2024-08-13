@@ -269,13 +269,18 @@ def create_pickled_cut_jsons(
 
 def generate_list_of_jsons_from_pickles(
     pickled_data_dir: str
-) -> Generator[list[dict[str, str]], None, None]:
+    ) -> Generator[list[dict[str, str]], None, None]:
     """
     Yields at each step a list of json objects as python dictionaries. Data 
     must be pickled.
     """
     # Get filenames to read through:
     pickled_data_filenames: list[str] = os.listdir(pickled_data_dir)
+
+    # Sorting filenames for known indexing:
+    pickled_data_filenames = sort_filenames_with_numbers(
+        pickled_data_filenames
+    )    
 
     pickled_data_filename: str
     for pickled_data_filename in tqdm(pickled_data_filenames):
