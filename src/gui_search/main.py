@@ -18,7 +18,7 @@ NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
-    testFindJsonGivenIndex()
+    testFindDataGivenIndex()
     # use_poc_data(pocTransformerGetResults)
 
     sys.exit(0)
@@ -152,14 +152,14 @@ def fullTransformerGetResults(
         resultIndex: int = numResult[0]
         
         # Getting result from directory:
-        results.append(findJsonGivenIndex(dataDir, resultIndex))
+        results.append(findDataGivenIndex(dataDir, resultIndex))
 
     return results
 
-def findJsonGivenIndex(dataDir: str, index: int) -> dict[str, str]:
+def findDataGivenIndex(dataDir: str, index: int) -> dict[str, str]:
     """
-    For a directory containing numerically-sorted pickled lists of json data,
-    and a given index, return the json from within the file specified by that
+    For a directory containing numerically-sorted pickled lists of data, and a
+    given index, return the data point from within the file specified by that
     index.
     """
     # Retrieving filenames within directory and sorting:
@@ -201,7 +201,7 @@ def findJsonGivenIndex(dataDir: str, index: int) -> dict[str, str]:
     # Loading correct data in directory and getting json at required index:
     return dm.load_data(containingFilePath)[index]
 
-def testFindJsonGivenIndex() -> None:
+def testFindDataGivenIndex() -> None:
     testPickledListsDir: str = os.path.join(
         os.pardir, os.pardir, "data", "test-pickled-list-retrieval"
     )
@@ -216,7 +216,7 @@ def testFindJsonGivenIndex() -> None:
     for fileIdx, listToPickle in enumerate(listsToPickle):
         dm.save_data(listToPickle, f"{fileIdx}.pkl", testPickledListsDir)
 
-    print(findJsonGivenIndex(testPickledListsDir, testIndex))
+    print(findDataGivenIndex(testPickledListsDir, testIndex))
 
 def loadDataAndEmbeddings(
     dataPath: str,
