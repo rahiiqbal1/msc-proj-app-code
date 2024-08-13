@@ -334,7 +334,7 @@ def sort_filenames_with_numbers(filenames: list[str]) -> list[str]:
 
 
 def test_sort_filenames_with_numbers() -> None:
-    test_names: list[str] = ["a3", "b5", "c1"]
+    test_names: list[str] = ["a3", "b5", "c1", "d100", "b10"]
 
     print(sort_filenames_with_numbers(test_names))
 
