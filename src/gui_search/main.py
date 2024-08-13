@@ -147,6 +147,9 @@ def fullTransformerGetResults(
         # Getting index of result in the search-index in order to know from 
         # where to retrieve the data:
         resultIndex: int = numResult[0]
+        
+        # Getting result from directory:
+        results.append(findJsonGivenIndex(dataDir, resultIndex))
 
     return results
 
