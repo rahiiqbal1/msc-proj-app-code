@@ -284,6 +284,7 @@ def generate_list_of_jsons_from_pickles(
 
     pickled_data_filename: str
     for pickled_data_filename in tqdm(pickled_data_filenames):
+        print(pickled_data_filename)
         # Getting absolute path for current file:
         pickled_data_fullpath: str = os.path.join(
             pickled_data_dir, pickled_data_filename
