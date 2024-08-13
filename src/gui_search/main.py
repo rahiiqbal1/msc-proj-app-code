@@ -15,6 +15,14 @@ NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
+    use_poc_data(transformerGetResults)
+
+    sys.exit(0)
+
+def use_full_data(model: Callable) -> None:
+    """
+    Uses any other specified data.
+    """
     numEntriesUsed: int = math.floor(NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE)
 
     # Directory where relevant data is stored:
@@ -24,16 +32,34 @@ def main() -> None:
     entryJsons: list[dict[str, str]]
     embeddings: Embeddings
     entryJsons, embeddings = loadDataAndEmbeddings(
-        os.path.join(wikidataDir, "pickled_json_data.pkl"),
+        os.path.join(wikidataDir, "poc_json_data.pkl"),
         os.path.join(wikidataDir, f"embeddings_subset_{numEntriesUsed}")
     )
 
     # Search using transformer:
-    guiSearch(transformerGetResults,
-               entryJsons,
-               embeddings)
+    guiSearch(model,
+              entryJsons,
+              embeddings)
 
-    sys.exit(0)
+def use_poc_data(model: Callable) -> None:
+    """
+    Uses the data used for the proof of concept.
+    """
+    # Directory where relevant data is stored:
+    wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
+
+    # Get data and saved embeddings:
+    entryJsons: list[dict[str, str]]
+    embeddings: Embeddings
+    entryJsons, embeddings = loadDataAndEmbeddings(
+        os.path.join(wikidataDir, "poc_json_data.pkl"),
+        os.path.join(wikidataDir, "poc_embeddings_subset_6947320")
+    )
+
+    # Search using transformer:
+    guiSearch(model,
+              entryJsons,
+              embeddings)
         
 def guiSearch(
     searchModelToUse: Callable,
