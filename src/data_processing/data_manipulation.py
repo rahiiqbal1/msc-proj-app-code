@@ -14,7 +14,7 @@ NUM_ENTRIES = 6947320
 
 def main() -> None:
     # test_get_num_from_string()
-    test_sort_filenames_with_numbers()
+    # test_sort_filenames_with_numbers()
 
     sys.exit(0)
 
@@ -295,10 +295,10 @@ def generate_list_of_jsons_from_pickles(
         with open(pickled_data_fullpath, "rb") as file_to_read:
             yield pickle.load(file_to_read)
 
-def get_num_from_string(str_to_parse: str) -> str:
+def get_num_from_string(str_to_parse: str) -> int:
     """
-    Takes a string with at most 1 number within and returns that number as a
-    string. 
+    Takes a string with at most 1 number within and returns that number as an
+    int. 
 
     e.g. this_21 -> 21, that_5222 -> 5222, there0 -> 0, here -> (empty string).
     """
@@ -310,7 +310,7 @@ def get_num_from_string(str_to_parse: str) -> str:
         if letter.isnumeric():
             num_in_str += letter    
 
-    return num_in_str
+    return int(num_in_str)
 
 def test_get_num_from_string() -> None:
     strings_to_parse: tuple[str, ...] = ("this1", "that24", "those0", "the100")
