@@ -13,6 +13,7 @@ from tqdm import tqdm
 NUM_ENTRIES = 6947320
 
 def main() -> None:
+    # test_get_num_from_string()
     test_sort_filenames_with_numbers()
 
     sys.exit(0)
@@ -312,7 +313,7 @@ def get_num_from_string(str_to_parse: str) -> str:
     return num_in_str
 
 def test_get_num_from_string() -> None:
-    strings_to_parse: tuple[str, ...] = ("this1", "that24", "those0", "the0_2")
+    strings_to_parse: tuple[str, ...] = ("this1", "that24", "those0", "the100")
 
     string: str
     for string in strings_to_parse:
@@ -331,7 +332,6 @@ def sort_filenames_with_numbers(filenames: list[str]) -> list[str]:
     sorted_filenames.sort(key = get_num_from_string)
 
     return sorted_filenames
-
 
 def test_sort_filenames_with_numbers() -> None:
     test_names: list[str] = ["a3", "b5", "c1", "d100", "b10"]
