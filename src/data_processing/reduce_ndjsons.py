@@ -6,11 +6,18 @@ from tqdm import tqdm
 import data_manipulation as dm
 
 def main() -> None:
+    # Directory in which all data is stored:
+    all_data_dir: str = os.path.join(os.pardir, os.pardir, "data")
+
     # Name of directory in which ndjsons to process are stored:
-    full_ndjson_load_dir: str = "fully-processed-ndjsons"
+    full_ndjson_load_dir: str = os.path.join(
+        all_data_dir, "fully-processed-ndjsons" 
+    )
 
     # Name of directory in which to store reduced ndjson files:
-    reduced_ndjson_save_dir: str = "reduced-ndjsons"
+    reduced_ndjson_save_dir: str = os.path.join(
+        all_data_dir, "poc-reduced-ndjsons"
+    )
 
     # Creating directory to store reduced .ndjson files: 
     try:
@@ -40,7 +47,6 @@ def reduce_single_json(
     field: str
     for field in single_json:
         if field in desired_fields:
-
             # If categories, get each category name:
             if field == "categories":
                 cat_info_dict: dict
