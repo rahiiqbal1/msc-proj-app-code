@@ -212,8 +212,8 @@ def generate_jsons_from_single_ndjson(
         json_line: str
         try:
             for json_line in ndjson_to_read:
-                # If the desired batch size has been reached, yield the batch and
-                # clear the list:
+                # If the desired batch size has been reached, yield the batch 
+                # and clear the list:
                 if len(json_batch) == desired_batch_size:
                     yield json_batch
                     json_batch.clear()
