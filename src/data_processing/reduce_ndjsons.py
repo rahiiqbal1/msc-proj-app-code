@@ -10,7 +10,7 @@ def main() -> None:
     full_ndjson_load_dir: str = "fully-processed-ndjsons"
 
     # Name of directory in which to store reduced ndjson files:
-    reduced_ndjson_save_dir: str = "reduced-fully-processed-ndjsons"
+    reduced_ndjson_save_dir: str = "reduced-ndjsons"
 
     # Creating directory to store reduced .ndjson files: 
     try:
@@ -19,26 +19,22 @@ def main() -> None:
     except FileExistsError:
         pass
 
-    reduce_all_ndjsons(full_ndjson_load_dir, reduced_ndjson_save_dir)
+    # Fields which we want to keep within the ndjsons:
+    desired_fields: tuple[str, ...] = ("name", "abstract", "wikitext")
+
+    reduce_all_ndjsons(
+        full_ndjson_load_dir, reduced_ndjson_save_dir, desired_fields
+    )
 
 def reduce_single_json(
     single_json: dict[str, Any],
     list_of_str_jsons: list[str],
+    desired_fields: tuple[str, ...] | list[str]
     ) -> None:
     '''
     Reduces a single JSON as python dictionary to only the chosen fields. 
     Appends string JSON to given list.
     '''
-    # Want name, abstract, category names numerical subfields, and article body
-    # wikitext subfield:
-    desired_fields: tuple[str, ...] = (
-            "name",
-            "abstract",
-            "categories",
-            "article_body",
-            "url"
-    )
-
     # Initialising dictionary to store reduced json object:
     reduced_json: dict[str, Any] = {}
     field: str
@@ -70,7 +66,8 @@ def reduce_single_json(
 
 def reduce_all_jsons_in_ndjson(
     ndjson_file_path: str,
-    storage_dir: str
+    storage_dir: str,
+    desired_fields: tuple[str, ...] | list[str]
     ) -> None:
     '''
     Reduces all json objects in a .ndjson file to the desired fields.
@@ -88,7 +85,7 @@ def reduce_all_jsons_in_ndjson(
     # for single_json in tqdm(json_list, "Reducing JSONs"):
     for single_json in json_list:
         try:
-            reduce_single_json(single_json, list_of_str_jsons)
+            reduce_single_json(single_json, list_of_str_jsons, desired_fields)
         except KeyError:
             fail_count += 1
 
@@ -104,7 +101,11 @@ def reduce_all_jsons_in_ndjson(
     with open(reduced_ndjson_store_path, 'a') as reduced_ndjson_file:
         reduced_ndjson_file.write(ndjson_to_write)
 
-def reduce_all_ndjsons(dir_to_read: str, dir_to_store: str) -> None:
+def reduce_all_ndjsons(
+    dir_to_read: str,
+    dir_to_store: str,
+    desired_fields: tuple[str, ...] | list[str]
+    ) -> None:
     '''
     Reduces all .ndjson files in the given directory.
     '''
@@ -115,7 +116,7 @@ def reduce_all_ndjsons(dir_to_read: str, dir_to_store: str) -> None:
     for ndjson_file_name in tqdm(file_names, "Reducing NDJSONs"):
         # Getting full (relative) path of file:
         file_path: str = os.path.join(dir_to_read, ndjson_file_name)
-        reduce_all_jsons_in_ndjson(file_path, dir_to_store)
+        reduce_all_jsons_in_ndjson(file_path, dir_to_store, desired_fields)
     
     print("NDJSON files in directory successfully reduced.\n" +
           "--------------------")
