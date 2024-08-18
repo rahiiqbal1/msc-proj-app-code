@@ -9,6 +9,7 @@ from tqdm import tqdm
 import data_manipulation as dm
 
 NDJSON_NUM_LINES = 6947320
+JSON_LOAD_BATCH_SIZE = 2**16  
 
 def main() -> None:
     # Path to .ndjson containing all the desired json data to index:
@@ -81,11 +82,8 @@ def index_single_ndjson(
     """
     Indexes all json objects in an ndjson. 
     """
-    # Specifying batch size to generate jsons in:
-    batch_size: int = 8192
-
     # Calculating the number of iterations the loop should see:
-    num_iterations: int = NDJSON_NUM_LINES // batch_size
+    num_iterations: int = NDJSON_NUM_LINES // JSON_LOAD_BATCH_SIZE
 
     # Initialise list to store indexes for each json in the ndjson:
     list_of_indexes: list[dict[str, dict[int, int]]] = []
@@ -97,7 +95,9 @@ def index_single_ndjson(
     # Indexing each json and adding the index to the list of them all:
     json_batch: list[dict[str, str]]
     for json_batch in tqdm(
-        dm.generate_jsons_from_single_ndjson(ndjson_file_path, batch_size),
+        dm.generate_jsons_from_single_ndjson(
+            ndjson_file_path, JSON_LOAD_BATCH_SIZE
+        ),
         total = num_iterations):
         # For each json in the batch, index it, add it to the list of indexes,
         # and then increment the index keeping track of which json we are at
@@ -169,4 +169,3 @@ def test_combine_indexes() -> None:
 
 if __name__ == "__main__":
     main()
-    # test_index_single_ndjson()
