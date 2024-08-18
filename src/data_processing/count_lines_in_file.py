@@ -7,7 +7,7 @@ def main() -> None:
     )
 
     file_to_count_path: str = os.path.join(
-        all_data_dir, "combined_processed.ndjson"
+        all_data_dir, sys.argv[1]
     )
 
     print(count_lines_in_file(file_to_count_path))
