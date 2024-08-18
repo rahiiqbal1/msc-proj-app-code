@@ -10,6 +10,7 @@ def main() -> None:
         all_data_dir, sys.argv[1]
     )
 
+    print("Counting lines...")
     print(count_lines_in_file(file_to_count_path))
 
     sys.exit(0)

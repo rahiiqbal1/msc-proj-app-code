@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 import data_manipulation as dm
 
-NDJSON_NUM_LINES = 6946949
+NUM_LINES_IN_NDJSON = 6946949
 JSON_LOAD_BATCH_SIZE = 2**16  
 
 def main() -> None:
@@ -83,7 +83,7 @@ def index_single_ndjson(
     Indexes all json objects in an ndjson. 
     """
     # Calculating the number of iterations the loop should see:
-    num_iterations: int = NDJSON_NUM_LINES // JSON_LOAD_BATCH_SIZE
+    num_iterations: int = NUM_LINES_IN_NDJSON // JSON_LOAD_BATCH_SIZE
 
     # Initialise list to store indexes for each json in the ndjson:
     list_of_indexes: list[dict[str, dict[int, int]]] = []
