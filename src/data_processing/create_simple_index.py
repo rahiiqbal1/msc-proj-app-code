@@ -1,7 +1,6 @@
 import sys
 import os
 import json
-import math
 import time
 
 from nltk.tokenize import word_tokenize
@@ -14,18 +13,11 @@ NDJSON_NUM_LINES = 6947320
 def main() -> None:
     # Path to .ndjson containing all the desired json data to index:
     ndjson_filepath: str = os.path.join(
-        os.pardir, os.pardir, "data", "combined_processed.ndjson"
+        os.pardir, os.pardir, "data", "poc_combined_processed.ndjson"
     )
-    # ndjson_filepath: str = os.path.join(
-    #     os.pardir,
-    #     os.pardir,
-    #     "data",
-    #     "fully-processed-ndjsons",
-    #     "processed_ndjson_0"
-    # )
 
     # Name for index file and directory in which to store it:
-    index_filename: str = "simple.index"
+    index_filename: str = "poc_simple.index"
     index_store_dir: str = os.path.join(os.pardir, os.pardir, "data")
 
     # Indexing:
