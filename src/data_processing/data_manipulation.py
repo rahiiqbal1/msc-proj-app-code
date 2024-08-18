@@ -210,18 +210,18 @@ def generate_jsons_from_single_ndjson(
 
     with open(ndjson_path, 'r') as ndjson_to_read:
         json_line: str
-        try:
-            for json_line in ndjson_to_read:
-                # If the desired batch size has been reached, yield the batch 
-                # and clear the list:
-                if len(json_batch) == desired_batch_size:
-                    yield json_batch
-                    json_batch.clear()
+        for json_line in ndjson_to_read:
+            # If the desired batch size has been reached, yield the batch 
+            # and clear the list:
+            if len(json_batch) == desired_batch_size:
+                yield json_batch
+                json_batch.clear()
 
-                # Continue adding jsons to the list:
+            # Continue adding jsons to the list:
+            try:
                 json_batch.append(json.loads(json_line))
-        except json.decoder.JSONDecodeError:
-            json_batch.append({})
+            except json.decoder.JSONDecodeError:
+                json_batch.append({})
 
         # If we have left the for loop reading lines and there is still some
         # elements in json_batch, then we have some leftover before the full
