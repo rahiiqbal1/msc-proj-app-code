@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 import data_manipulation as dm
 
-NDJSON_NUM_LINES = 6947320
+NDJSON_NUM_LINES = 6946949
 JSON_LOAD_BATCH_SIZE = 2**16  
 
 def main() -> None:
