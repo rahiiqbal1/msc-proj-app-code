@@ -3,38 +3,23 @@ import os
 import json
 from tqdm import tqdm
 
+import data_manipulation as dm
+
 def main() -> None:
+    # Name of directory in which ndjsons to process are stored:
+    full_ndjson_load_dir: str = "fully-processed-ndjsons"
+
+    # Name of directory in which to store reduced ndjson files:
+    reduced_ndjson_save_dir: str = "reduced-fully-processed-ndjsons"
+
     # Creating directory to store reduced .ndjson files: 
     try:
         # Total bodge:
-        os.mkdir("reduced-ndjsons")
+        os.mkdir(reduced_ndjson_save_dir)
     except FileExistsError:
         pass
 
-    reduce_all_ndjsons("ndjsons", "reduced-ndjsons")
-
-def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
-    '''
-    Loads in json objects from a .ndjson file. Stores as python dictionaries in
-    a python list.
-    '''
-    # Initialising list to store json objects:
-    json_list: list[dict[str, Any]] = []
-    # Opening file:
-    with open(ndjson_file_path, 'r') as ndjson_file:
-        # Reading .ndjson line-by-line, converting each line (json) to python
-        # dictionary, and storing in list:
-        json_line: str
-        try:
-            # Uncomment below for status bar:
-            # for json_line in tqdm(ndjson_file, "Loading data"):
-            for json_line in ndjson_file:
-                json_list.append(json.loads(json_line))
-        except json.decoder.JSONDecodeError:
-            pass
-
-    # print("Data loaded Successfully.\n--------------------")
-    return json_list
+    reduce_all_ndjsons(full_ndjson_load_dir, reduced_ndjson_save_dir)
 
 def reduce_single_json(
     single_json: dict[str, Any],
@@ -91,7 +76,9 @@ def reduce_all_jsons_in_ndjson(
     Reduces all json objects in a .ndjson file to the desired fields.
     '''
     # Getting list of json dictionaries:
-    json_list: list[dict[str, Any]] = load_jsons_from_ndjson(ndjson_file_path)
+    json_list: list[dict[str, Any]] = dm.load_jsons_from_ndjson(
+        ndjson_file_path
+    )
     # Initialising list to store json strings:
     list_of_str_jsons: list[str] = []
 
