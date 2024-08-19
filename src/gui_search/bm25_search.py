@@ -2,6 +2,12 @@ import os
 import sys
 import math
 
+from nltk import word_tokenize
+
+# Bodge:
+sys.path.append(os.path.abspath(".."))
+from data_processing import data_manipulation as dm
+
 # Model:
 def bm25GetResultsSF(
     jsonData: list[dict[str, str]],
@@ -21,16 +27,42 @@ def bm25GetResultsSF(
     return results
 
 def _singleDocBM25Score(
-    singleJson: dict[str, str],
     singleJsonIdxInColl: int,
     dataIndex: dict[str, dict[int, int]],
-    searchQuery: str,
-    avgDocLength: float
+    searchQueryWords: list[str],
+    avgDocLength: float,
+    numDocsInCollection: int
     ) -> float:
     """
     Returns the bm25 score of a search query for a single document.
     """
-    return 1.0
+    # Initialising variable to keep track of score, this will be added to 
+    # sequentially as we calculate the sum for each word in the query:
+    bm25Score: float = 0
+
+    # Setting values of constants:
+    k: float = 1.5
+    b: float = 0.75
+
+    queryWord: str
+    for queryWord in searchQueryWords:
+        # Getting the number of times that the current word appears in the
+        # current document:
+        numTimesWordInDoc: int = dataIndex[queryWord][singleJsonIdxInColl]
+
+        # Getting the IDF for the current word:
+        thisWordIDF: float = _singleWordIDF(
+            queryWord, dataIndex, numDocsInCollection
+        )
+
+        bm25Numerator: float = numTimesWordInDoc * (k + 1)
+        bm25Denominator: float = numTimesWordInDoc + k * (
+            1 - b + (b * len(searchQueryWords)) / avgDocLength
+        )
+
+        bm25Score += thisWordIDF * (bm25Numerator / bm25Denominator)
+
+    return bm25Score
 
 def _singleWordIDF(
     word: str,
