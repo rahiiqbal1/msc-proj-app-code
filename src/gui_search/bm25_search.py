@@ -12,7 +12,10 @@ from data_processing import data_manipulation as dm
 def bm25GetResultsSF(
     jsonData: list[dict[str, str]],
     dataIndex: dict[str, dict[int, int]],
-    searchQuery: str
+    searchQuery: str,
+    avgDocLength: float,
+    numDocsInCollection: int,
+    num_results_to_show: int
     ) -> list[dict[str, str]]:
     """
     Searches through given data using bm25 algorithm. Returns results with all
@@ -24,7 +27,59 @@ def bm25GetResultsSF(
     # Initialising list to store readable results:
     results: list[dict[str, str]] = []
 
+    # Getting jsons as strings to process:
+    jsonsAsStrings: list[str] = dm.stringify_dictionaries(jsonData)
+
+    # Initialising dictionary to store bm25 scores of each document. The keys
+    # are the index of the document in the given list, and the value is their
+    # score:
+    bm25Scores: dict[int, float] = {}
+
+    # Looping over the index of each document in the collection:
+    docIdxInColl: int
+    for docIdxInColl in range(len(jsonsAsStrings)):
+        # Calculating bm25 score for current document and query and adding to
+        # dictionary:
+        bm25Scores[docIdxInColl] = _singleDocBM25Score(
+            docIdxInColl,
+            dataIndex,
+            word_tokenize(searchQuery),
+            avgDocLength,
+            numDocsInCollection
+        )
+
     return results
+
+def _collectionOfDocsBM25Scores(
+    documents: list[str],
+    dataIndex: dict[str, dict[int, int]],
+    searchQuery: str,
+    avgDocLength, float,
+    numDocsInCollection: int
+    ) -> dict[int, float]:
+    """
+    Calculates the bm25 scores for a collection of documents.
+
+    Returns a dictionary with the document index as key, and the bm25 score as
+    value.
+    """
+    # Initialising dictionary to store bm25 scores:
+    bm25Scores: dict[int, float] = {}
+
+    # Looping over the index of each document in the collection:
+    docIdxInColl: int
+    for docIdxInColl in range(len(documents)):
+        # Calculating bm25 score for current document and query and adding to 
+        # dictionary:
+        bm25Scores[docIdxInColl] = _singleDocBM25Score(
+            docIdxInColl,
+            dataIndex,
+            word_tokenize(searchQuery),
+            avgDocLength,
+            numDocsInCollection
+        )
+
+    return bm25Scores
 
 def _singleDocBM25Score(
     singleJsonIdxInColl: int,
