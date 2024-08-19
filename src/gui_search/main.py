@@ -23,7 +23,7 @@ def main() -> None:
         wikidataDir, "embeddings_subset_6947320"
     )
     
-    transformerSearch(transformerPocGetResults, jsonDataPath, embeddingsPath)
+    transformerSearch(transformerGetResultsSF, jsonDataPath, embeddingsPath)
 
     sys.exit(0)
 
@@ -77,7 +77,7 @@ def transformerSearch(
               embeddings)
         
 # Model:
-def transformerPocGetResults(
+def transformerGetResultsSF(
     data: list[dict[str, str]],
     embeddings: Embeddings,
     searchQuery: str
@@ -105,7 +105,7 @@ def transformerPocGetResults(
     return results
 
 # Model:
-def transformerFullGetResults(
+def transformerGetResultsMF(
     dataDir: str,
     embeddings: Embeddings,
     searchQuery: str
@@ -139,6 +139,26 @@ def transformerFullGetResults(
         results.append(findDataGivenIndex(dataDir, resultIndex))
 
     return results
+
+def loadDataAndTxtaiEmbeddings(
+    dataPath: str,
+    embeddingsPath: str
+    ) -> tuple[list[dict[str, str]], Embeddings]:
+    '''
+    Loads data with joblib (pickle) and it's associated txtai embeddings.
+
+    Returns a tuple of data and embeddings.
+    '''
+    # Getting data:
+    data: list[dict[str, str]] = dm.load_data(dataPath)
+
+    # Getting embeddings:
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    )
+    embeddings.load(embeddingsPath)
+
+    return data, embeddings
 
 def findDataGivenIndex(dataDir: str, index: int) -> dict[str, str]:
     """
@@ -201,26 +221,6 @@ def testFindDataGivenIndex() -> None:
         dm.save_data(listToPickle, f"{fileIdx}.pkl", testPickledListsDir)
 
     print(findDataGivenIndex(testPickledListsDir, testIndex))
-
-def loadDataAndTxtaiEmbeddings(
-    dataPath: str,
-    embeddingsPath: str
-    ) -> tuple[list[dict[str, str]], Embeddings]:
-    '''
-    Loads data with joblib (pickle) and it's associated txtai embeddings.
-
-    Returns a tuple of data and embeddings.
-    '''
-    # Getting data:
-    data: list[dict[str, str]] = dm.load_data(dataPath)
-
-    # Getting embeddings:
-    embeddings = Embeddings(
-        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
-    )
-    embeddings.load(embeddingsPath)
-
-    return data, embeddings
 
 if __name__ == "__main__":
     main()
