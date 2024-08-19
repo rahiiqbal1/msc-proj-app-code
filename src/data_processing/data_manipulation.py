@@ -198,16 +198,6 @@ def generate_jsons_from_single_ndjson(
     # Initialise list to store batches of jsons:
     json_batch: list[dict[str, str]] = []
 
-    # with open(ndjson_file_path, 'r') as ndjson_file:
-    #     # Reading .ndjson line-by-line, converting each line (json) to python
-    #     # dictionary, and storing in list:
-    #     json_line: str
-    #     try:
-    #         for json_line in ndjson_file:
-    #             json_list.append(json.loads(json_line))
-    #     except json.decoder.JSONDecodeError:
-    #         json_list.append({})
-
     with open(ndjson_path, 'r') as ndjson_to_read:
         json_line: str
         for json_line in ndjson_to_read:

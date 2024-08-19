@@ -9,7 +9,7 @@ from tqdm import tqdm
 import data_manipulation as dm
 
 NUM_LINES_IN_NDJSON = 6946949
-JSON_LOAD_BATCH_SIZE = 2**11  
+JSON_LOAD_BATCH_SIZE = 2**16  
 
 def main() -> None:
     # Path to .ndjson containing all the desired json data to index:
