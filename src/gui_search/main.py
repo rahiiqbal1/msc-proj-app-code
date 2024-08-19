@@ -14,11 +14,16 @@ sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
 
 def main() -> None:
-    transformerSearch(
-        transformerPocGetResults,
-        "poc_json_data.pkl",
-        "embeddings_subset_6947320"
+    # Directory where relevant data is stored:
+    wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
+
+    # Paths to desired pickled json data and txtai embeddings:
+    jsonDataPath: str = os.path.join(wikidataDir, "poc_json_data.pkl")
+    embeddingsPath: str = os.path.join(
+        wikidataDir, "embeddings_subset_6947320"
     )
+    
+    transformerSearch(transformerPocGetResults, jsonDataPath, embeddingsPath)
 
     sys.exit(0)
 
@@ -28,17 +33,14 @@ def transformerSearch(
     embeddingsPath: str
     ) -> None:
     """
-    Uses the pickled json data and the txtai embeddings at the given paths.
+    Uses the pickled json data and the txtai index at the given paths.
     """
-    # Directory where relevant data is stored:
-    wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
     # Get data and saved embeddings:
     entryJsons: list[dict[str, str]]
     embeddings: Embeddings
     entryJsons, embeddings = loadDataAndEmbeddings(
-        os.path.join(wikidataDir, jsonDataPath),
-        os.path.join(wikidataDir, embeddingsPath)
+         jsonDataPath, embeddingsPath
     )
 
     # Search using transformer:
