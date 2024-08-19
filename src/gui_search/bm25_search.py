@@ -30,23 +30,14 @@ def bm25GetResultsSF(
     # Getting jsons as strings to process:
     jsonsAsStrings: list[str] = dm.stringify_dictionaries(jsonData)
 
-    # Initialising dictionary to store bm25 scores of each document. The keys
-    # are the index of the document in the given list, and the value is their
-    # score:
-    bm25Scores: dict[int, float] = {}
-
-    # Looping over the index of each document in the collection:
-    docIdxInColl: int
-    for docIdxInColl in range(len(jsonsAsStrings)):
-        # Calculating bm25 score for current document and query and adding to
-        # dictionary:
-        bm25Scores[docIdxInColl] = _singleDocBM25Score(
-            docIdxInColl,
-            dataIndex,
-            word_tokenize(searchQuery),
-            avgDocLength,
-            numDocsInCollection
-        )
+    # Getting bm25 scores for documents:
+    bm25Scores: dict[int, float] = _collectionOfDocsBM25Scores(
+        jsonsAsStrings,
+        dataIndex,
+        searchQuery,
+        avgDocLength,
+        numDocsInCollection
+    )
 
     return results
 
@@ -54,7 +45,7 @@ def _collectionOfDocsBM25Scores(
     documents: list[str],
     dataIndex: dict[str, dict[int, int]],
     searchQuery: str,
-    avgDocLength, float,
+    avgDocLength: float,
     numDocsInCollection: int
     ) -> dict[int, float]:
     """

@@ -1,6 +1,5 @@
 import os
 import sys
-import math
 from typing import Callable
 
 from txtai import Embeddings
