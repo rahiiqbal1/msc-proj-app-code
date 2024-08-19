@@ -1,8 +1,7 @@
 import os
 import sys
 import math
-import pickle
-from typing import Any, Callable
+from typing import Callable
 
 from txtai import Embeddings
 from PyQt5.QtWidgets import (
@@ -18,14 +17,13 @@ NUM_ENTRIES = 6947320
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
-    testFindDataGivenIndex()
-    # use_poc_data(pocTransformerGetResults)
+    usePocData(transformerPocGetResults)
 
     sys.exit(0)
 
-def use_full_data(model: Callable) -> None:
+def useFullData(model: Callable) -> None:
     """
-    Uses any other specified data.
+    Uses any other specified data. NOT IMPLEMENTED
     """
     numEntriesUsed: int = math.floor(NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE)
 
@@ -45,7 +43,7 @@ def use_full_data(model: Callable) -> None:
               entryJsons,
               embeddings)
 
-def use_poc_data(model: Callable) -> None:
+def usePocData(model: Callable) -> None:
     """
     Uses the data used for the proof of concept.
     """
@@ -94,7 +92,7 @@ def guiSearch(
     sys.exit(searchApp.exec())
 
 # Model:
-def pocTransformerGetResults(
+def transformerPocGetResults(
     data: list[dict[str, str]],
     embeddings: Embeddings,
     searchQuery: str
@@ -121,7 +119,7 @@ def pocTransformerGetResults(
 
     return results
 
-def fullTransformerGetResults(
+def transformerFullGetResults(
     dataDir: str,
     embeddings: Embeddings,
     searchQuery: str
