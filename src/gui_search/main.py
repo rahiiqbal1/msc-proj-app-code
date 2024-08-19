@@ -27,27 +27,6 @@ def main() -> None:
 
     sys.exit(0)
 
-def transformerSearch(
-    model: Callable,
-    jsonDataPath: str,
-    embeddingsPath: str
-    ) -> None:
-    """
-    Uses the pickled json data and the txtai index at the given paths.
-    """
-
-    # Get data and saved embeddings:
-    entryJsons: list[dict[str, str]]
-    embeddings: Embeddings
-    entryJsons, embeddings = loadDataAndEmbeddings(
-         jsonDataPath, embeddingsPath
-    )
-
-    # Search using transformer:
-    guiSearch(model,
-              entryJsons,
-              embeddings)
-        
 def guiSearch(
     searchModelToUse: Callable,
     *argsOfSearchModelToUse
@@ -76,6 +55,27 @@ def guiSearch(
     searchWindow.show()
     sys.exit(searchApp.exec())
 
+def transformerSearch(
+    model: Callable,
+    jsonDataPath: str,
+    embeddingsPath: str
+    ) -> None:
+    """
+    Uses the pickled json data and the txtai index at the given paths.
+    """
+
+    # Get data and saved embeddings:
+    entryJsons: list[dict[str, str]]
+    embeddings: Embeddings
+    entryJsons, embeddings = loadDataAndTxtaiEmbeddings(
+         jsonDataPath, embeddingsPath
+    )
+
+    # Search using transformer:
+    guiSearch(model,
+              entryJsons,
+              embeddings)
+        
 # Model:
 def transformerPocGetResults(
     data: list[dict[str, str]],
@@ -104,6 +104,7 @@ def transformerPocGetResults(
 
     return results
 
+# Model:
 def transformerFullGetResults(
     dataDir: str,
     embeddings: Embeddings,
@@ -201,7 +202,7 @@ def testFindDataGivenIndex() -> None:
 
     print(findDataGivenIndex(testPickledListsDir, testIndex))
 
-def loadDataAndEmbeddings(
+def loadDataAndTxtaiEmbeddings(
     dataPath: str,
     embeddingsPath: str
     ) -> tuple[list[dict[str, str]], Embeddings]:
