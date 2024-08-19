@@ -19,3 +19,34 @@ def bm25GetResultsSF(
     results: list[dict[str, str]] = []
 
     return results
+
+def _singleDocBM25Score(
+    singleJson: dict[str, str],
+    singleJsonIdxInColl: int,
+    dataIndex: dict[str, dict[int, int]],
+    searchQuery: str,
+    avgDocLength: float
+    ) -> float:
+    """
+    Returns the bm25 score of a search query for a single document.
+    """
+    return 1.0
+
+def _singleWordIDF(
+    word: str,
+    dataIndex: dict[str, dict[int, int]],
+    numDocsInCollection: int
+    ) -> float:
+    """
+    Returns the IDF score for a single word with a given index and collection
+    of data.
+    """
+    # Number of documents in the collection which contain the word:
+    numDocsWithWord: int = len(dataIndex[word])
+
+    return math.log(
+        (
+         (numDocsInCollection - numDocsWithWord + 0.5) /
+         (numDocsWithWord + 0.5)
+        ) + 1
+    )
