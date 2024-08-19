@@ -13,39 +13,22 @@ from qt_gui import NUM_RESULTS_TO_SHOW, SearchWindow, SearchController
 sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
 
-NUM_ENTRIES = 6947320
-PROPORTION_ENTRIES_TO_USE = 1
-
 def main() -> None:
-    usePocData(transformerPocGetResults)
+    transformerSearch(
+        transformerPocGetResults,
+        "poc_json_data.pkl",
+        "embeddings_subset_6947320"
+    )
 
     sys.exit(0)
 
-def useFullData(model: Callable) -> None:
+def transformerSearch(
+    model: Callable,
+    jsonDataPath: str,
+    embeddingsPath: str
+    ) -> None:
     """
-    Uses any other specified data. NOT IMPLEMENTED
-    """
-    numEntriesUsed: int = math.floor(NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE)
-
-    # Directory where relevant data is stored:
-    wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
-
-    # Get data and saved embeddings:
-    entryJsons: list[dict[str, str]]
-    embeddings: Embeddings
-    entryJsons, embeddings = loadDataAndEmbeddings(
-        os.path.join(wikidataDir, "poc_json_data.pkl"),
-        os.path.join(wikidataDir, f"embeddings_subset_{numEntriesUsed}")
-    )
-
-    # Search using transformer:
-    guiSearch(model,
-              entryJsons,
-              embeddings)
-
-def usePocData(model: Callable) -> None:
-    """
-    Uses the data used for the proof of concept.
+    Uses the pickled json data and the txtai embeddings at the given paths.
     """
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
@@ -54,8 +37,8 @@ def usePocData(model: Callable) -> None:
     entryJsons: list[dict[str, str]]
     embeddings: Embeddings
     entryJsons, embeddings = loadDataAndEmbeddings(
-        os.path.join(wikidataDir, "poc_json_data.pkl"),
-        os.path.join(wikidataDir, "poc_embeddings_subset_6947320")
+        os.path.join(wikidataDir, jsonDataPath),
+        os.path.join(wikidataDir, embeddingsPath)
     )
 
     # Search using transformer:
