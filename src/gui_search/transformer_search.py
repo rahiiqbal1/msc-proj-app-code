@@ -74,25 +74,18 @@ def transformerGetResultsMF(
 
     return results
 
-def loadDataAndTxtaiEmbeddings(
-    dataPath: str,
-    embeddingsPath: str
-    ) -> tuple[list[dict[str, str]], Embeddings]:
-    '''
-    Loads data with joblib (pickle) and it's associated txtai embeddings.
-
-    Returns a tuple of data and embeddings.
-    '''
-    # Getting data:
-    data: list[dict[str, str]] = dm.load_data(dataPath)
-
+def loadEmbeddings(embeddingsPath: str) -> Embeddings:
+    """
+    Loads in the txtai embeddings at the given path.
+    """
     # Getting embeddings:
     embeddings = Embeddings(
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
     embeddings.load(embeddingsPath)
 
-    return data, embeddings
+    return embeddings
+
 
 def findDataGivenIndex(dataDir: str, index: int) -> dict[str, str]:
     """
