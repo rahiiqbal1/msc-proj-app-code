@@ -161,6 +161,7 @@ class SearchWindow(QMainWindow):
             # Creating QLabel with string to show and adding to layout:
             resultLabelWidget = QLabel(currentResultStringToShow)
             resultLabelWidget.setTextFormat(Qt.RichText)
+            resultLabelWidget.setFont(self.fontToUse)
             resultLabelWidget.setTextInteractionFlags(
                 Qt.LinksAccessibleByMouse
             )
