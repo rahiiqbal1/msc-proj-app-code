@@ -16,14 +16,13 @@ def main() -> None:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
     # Paths to desired pickled json data and txtai embeddings:
-    jsonDataDir: str = os.path.join(wikidataDir, "pickled-lists-of-cut-jsons")
-    # jsonDataPath: str = os.path.join(wikidataDir, "poc_json_data.pkl")
+    jsonDataPath: str = os.path.join(wikidataDir, "poc_json_data.pkl")
     embeddingsPath: str = os.path.join(
-        wikidataDir, "embeddings_subset_6947320"
+        wikidataDir, "poc_embeddings_subset_6947320"
     )
 
     # Loading json data and embeddings:
-    documentJsons: list[dict[str, str]] = dm.load_data(jsonDataDir)
+    documentJsons: list[dict[str, str]] = dm.load_data(jsonDataPath)
     embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
     
     guiSearch(ts.transformerGetResultsSF, documentJsons, embeddings)
