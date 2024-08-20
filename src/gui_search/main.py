@@ -7,6 +7,9 @@ from PyQt5.QtWidgets import QApplication
 
 from qt_gui import SearchWindow, SearchController
 import transformer_search as ts
+# Dirty hack!
+sys.path.append(os.path.abspath(".."))
+from data_processing import data_manipulation as dm
 
 def main() -> None:
     # Directory where relevant data is stored:
@@ -63,16 +66,11 @@ def transformerSearchSF(
     """
 
     # Get data and saved embeddings:
-    entryJsons: list[dict[str, str]]
-    embeddings: Embeddings
-    entryJsons, embeddings = ts.loadDataAndTxtaiEmbeddings(
-         jsonDataPath, embeddingsPath
-    )
+    entryJsons: list[dict[str, str]] = dm.load_data(jsonDataPath)
+    embeddings: Embeddings = ts.loadEmbeddings(embeddingsPath)
 
     # Search using transformer:
-    guiSearch(model,
-              entryJsons,
-              embeddings)
+    guiSearch(model, entryJsons, embeddings)
         
 def transformerSearchMF(
     model: Callable,
@@ -83,6 +81,9 @@ def transformerSearchMF(
     Uses the pickled json data in the given directory and the txtai index at
     the given path.
     """
+    embeddings: Embeddings = ts.loadEmbeddings(embeddingsPath)
+
+    guiSearch(model, jsonDataDir, embeddings)
 
 if __name__ == "__main__":
     main()
