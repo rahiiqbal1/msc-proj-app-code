@@ -7,9 +7,6 @@ from PyQt5.QtWidgets import QApplication
 
 from qt_gui import SearchWindow, SearchController
 import transformer_search as ts
-# Dirty hack!
-sys.path.append(os.path.abspath(".."))
-from data_processing import data_manipulation as dm
 
 def main() -> None:
     # Directory where relevant data is stored:

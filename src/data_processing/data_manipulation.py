@@ -4,7 +4,6 @@ aswell as dictionaries in general in some cases.
 """
 import os
 import sys   
-import io
 import json
 import pickle
 from typing import Any, Generator
