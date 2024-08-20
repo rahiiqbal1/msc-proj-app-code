@@ -22,6 +22,7 @@ WINDOW_HEIGHT = 480
 WINDOW_TITLE = "Wikipedia Search Engine"
 # Search box:
 SEARCH_BOX_HEIGHT = 64
+SEARCH_BOX_WIDTH = 1024
 SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 # Search button:
 SEARCH_BUTTON_TEXT = "&Search"
@@ -89,13 +90,22 @@ class SearchWindow(QMainWindow):
 
         # Formatting for widgets:
         searchBoxLabel.setText(SEARCH_BOX_LABEL)
-        searchBox.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        searchBoxLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        searchBox.setFixedWidth(SEARCH_BOX_WIDTH)
         searchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
 
+        searchButton.setFixedWidth(SEARCH_BOX_WIDTH)
+        searchButton.setFixedHeight(SEARCH_BOX_HEIGHT)
+
+        overallLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
         # Adding to layout:
+        overallLayout.addStretch()
         overallLayout.addWidget(searchBoxLabel)
         overallLayout.addWidget(searchBox)
         overallLayout.addWidget(searchButton)
+        overallLayout.addStretch()
 
         centralWidget = QWidget()
         centralWidget.setLayout(overallLayout)
