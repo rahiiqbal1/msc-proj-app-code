@@ -1,6 +1,7 @@
 import os
 import sys
 import math
+import copy
 
 from nltk import word_tokenize
 
@@ -15,7 +16,7 @@ def bm25GetResultsSF(
     searchQuery: str,
     avgDocLength: float,
     numDocsInCollection: int,
-    num_results_to_show: int
+    numResultsToShow: int
     ) -> list[dict[str, str]]:
     """
     Searches through given data using bm25 algorithm. Returns results with all
@@ -40,6 +41,42 @@ def bm25GetResultsSF(
     )
 
     return results
+
+def _sortScores(
+    scores: dict[int, float],
+    numScoresWanted: int
+    ) -> list[tuple[int, float]]:
+    """
+    Sorts scores in the format of {data_index: score}. 
+
+    Returns a list of (index, score) pairs.
+    """
+    # Copying input dictionary to prevent mutation:
+    scoresCopy: dict[int, float] = copy.deepcopy(scores)
+
+    # Initialising list to store sorted scores:
+    sortedScores: list[tuple[int, float]] = []
+
+    while len(sortedScores) != numScoresWanted:
+        # Initialising variable to keep track of top score and it's index:
+        topIdxAndScore: tuple[int, float] = (0, 0)
+
+        docIdx: int
+        for docIdx in scoresCopy:
+            # If the score for the current document is higher than the tracked
+            # top score, set it as the top score:
+            if scoresCopy[docIdx] > topIdxAndScore[1]:
+                topIdxAndScore = (docIdx, scoresCopy[docIdx])
+
+        # Should have the top score in the dictionary, so add it to the list of
+        # top scores:
+        sortedScores.append(topIdxAndScore)
+
+        # Remove the top score found this iteration from the dictionary to 
+        # search again:
+        del scoresCopy[topIdxAndScore[0]]
+
+    return sortedScores
 
 def _collectionOfDocsBM25Scores(
     documents: list[str],
