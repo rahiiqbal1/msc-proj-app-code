@@ -128,7 +128,7 @@ class SearchWindow(QMainWindow):
         Shows results page using given search function and query.
         """
         # List of keys within the results which we want to see:
-        fields_to_show: tuple[str, ...] = ("name", "url")
+        FieldsToShow: tuple[str, ...] = ("name", "url")
 
         # Evaluating results:
         results: list[dict[str, str]] = searchFunction()
@@ -137,33 +137,43 @@ class SearchWindow(QMainWindow):
         overallLayout = QVBoxLayout()
 
         # Adding results to widget, only showing NUM_RESULTS_TO_SHOW results:
-        for result_idx in range(NUM_RESULTS_TO_SHOW):
+        for resultIdx in range(NUM_RESULTS_TO_SHOW):
+            # Vertical box layout to contain all information for the current
+            # result. This will be added to the overallLayout when ready:
+            thisResultLayout = QVBoxLayout()
+
             # Only showing desired fields. Here we construct the string which
             # will be the label, and then add it to the layout when it is fully
             # constructed:
-            current_result_string_to_show: str = ""
+            currentResultStringToShow: str = ""
             field: str
-            for field in fields_to_show:
+            for field in FieldsToShow:
                 if field == "name":
-                    current_result_string_to_show += (
-                        f"<h3>{results[result_idx][field]}</h3><br>"
+                    currentResultStringToShow += (
+                        f"<b>{results[resultIdx][field]}</b><br>"
                     )
                 # Inserting url as hyperlink:
                 elif field == "url":
-                    current_result_string_to_show += (
-                        f"<a href='{results[result_idx][field]}'>" + 
-                        f"{results[result_idx][field]}</a>"
+                    currentResultStringToShow += (
+                        f"<a href='{results[resultIdx][field]}'>" + 
+                        f"{results[resultIdx][field]}</a>"
                     )
 
             # Creating QLabel with string to show and adding to layout:
-            resultLabelWidget = QLabel(current_result_string_to_show)
+            resultLabelWidget = QLabel(currentResultStringToShow)
             resultLabelWidget.setTextFormat(Qt.RichText)
             resultLabelWidget.setTextInteractionFlags(
                 Qt.LinksAccessibleByMouse
             )
             resultLabelWidget.setOpenExternalLinks(True)
 
-            overallLayout.addWidget(resultLabelWidget)
+            # Adding the desired result outputs to this result's layout, then
+            # adding that layout to the overall layout. Uses a sub-widget to
+            # make this possible:
+            thisResultLayout.addWidget(resultLabelWidget)
+            subWidget = QWidget()
+            subWidget.setLayout(thisResultLayout)
+            overallLayout.addWidget(subWidget)
 
         # Creating central widget:
         centralWidget = QWidget()
