@@ -28,6 +28,25 @@ SEARCH_BUTTON_TEXT = "&Search"
 # Data and results:
 NUM_RESULTS_TO_SHOW = 10
 
+def main() -> None:
+    # Initialise app:
+    searchApp = QApplication([])
+    # Initialise window:
+    searchWindow = SearchWindow()
+
+    # Creating controller. Does not need to be stored as a variable as it holds
+    # references to the model and view:
+    def testSearchFunction(_: str) -> list[dict[str, str]]:
+        return [
+            {"name": "blah",      "url": "here.com"},
+            {"name": "more blah", "url": "there.org"}
+        ] * 5
+    SearchController(testSearchFunction, searchWindow)
+
+    # Display and event loop:
+    searchWindow.show()
+    sys.exit(searchApp.exec())
+
 class SearchWindow(QMainWindow):
     """
     Main window for search engine.
@@ -43,13 +62,13 @@ class SearchWindow(QMainWindow):
         # page should always be at index 0 within the stacked widget:
         self.searchWidgets: dict[str, Any] = self.showSearchPage() 
 
-        # Basic window formatting:
-        self.setGeometry(
-            math.floor(0.4 * DISPLAY_WIDTH),
-            math.floor(0.4 * DISPLAY_HEIGHT),
-            WINDOW_WIDTH,
-            WINDOW_HEIGHT
-        )
+        # # Basic window formatting:
+        # self.setGeometry(
+        #     math.floor(0.4 * DISPLAY_WIDTH),
+        #     math.floor(0.4 * DISPLAY_HEIGHT),
+        #     WINDOW_WIDTH,
+        #     WINDOW_HEIGHT
+        # )
         self.setWindowTitle(WINDOW_TITLE)
 
         # Set layout:
@@ -190,25 +209,6 @@ class SearchController:
                 self._searchFunction
             )
         )
-
-def main() -> None:
-    # Initialise app:
-    searchApp = QApplication([])
-    # Initialise window:
-    searchWindow = SearchWindow()
-
-    # Creating controller. Does not need to be stored as a variable as it holds
-    # references to the model and view:
-    def testSearchFunction():
-        return [
-            {"name": "blah",      "url": "here.com"},
-            {"name": "more blah", "url": "there.org"}
-        ]
-    SearchController(testSearchFunction, searchWindow)
-
-    # Display and event loop:
-    searchWindow.show()
-    sys.exit(searchApp.exec())
 
 if __name__ == "__main__":
     main()
