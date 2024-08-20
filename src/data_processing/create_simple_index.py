@@ -141,7 +141,7 @@ def combine_indexes(
     combined_index: dict[str, dict[int, int]] = {}
 
     single_index: dict[str, dict[int, int]]
-    for single_index in indexes_to_combine:
+    for single_index in tqdm(indexes_to_combine, "Combining indexes"):
         # Copying index to prevent mutation:
         single_index_copy: dict[str, dict[int, int]] = copy.deepcopy(
             single_index
