@@ -85,8 +85,7 @@ def index_single_ndjson(
     # Calculating the number of iterations the loop should see:
     num_iterations: int = NUM_LINES_IN_NDJSON // JSON_LOAD_BATCH_SIZE
 
-    # Initialise list to store indexes for each json in the ndjson:
-    list_of_indexes: list[dict[str, dict[int, int]]] = []
+    combined_index: dict[str, dict[int, int]] = {}
 
     # Initialising variable to keep track of json index (i.e. line number - 1)
     # within .ndjson:
@@ -99,6 +98,9 @@ def index_single_ndjson(
             ndjson_file_path, JSON_LOAD_BATCH_SIZE
         ),
         total = num_iterations):
+        # Initialise list to store indexes for each json in the ndjson:
+        list_of_indexes: list[dict[str, dict[int, int]]] = []
+
         # For each json in the batch, index it, add it to the list of indexes,
         # and then increment the index keeping track of which json we are at
         # in the file (the ndjson):
@@ -107,8 +109,12 @@ def index_single_ndjson(
             list_of_indexes.append(index_single_json(single_json, json_idx))
             json_idx += 1
 
+        # Combine the indexes from the current batch with the overall index to
+        # return:
+        combined_index = combine_indexes(list_of_indexes + [combined_index])
+
     # Combining the indexes and returning:
-    return combine_indexes(list_of_indexes)
+    return combined_index
 
 def test_index_single_ndjson() -> None:
     test_ndjson_path: str = os.path.join(
@@ -167,5 +173,13 @@ def test_combine_indexes() -> None:
     print(f"Actual value: {combine_indexes([idx3, idx4])}")
     print("----------")
 
+    idx5 = {}
+
+    # 1 + 5:
+    print("Expected value: {'this': {1: 12}}")
+    print(f"Actual value: {combine_indexes([idx1, idx5])}")
+    print("----------")
+
 if __name__ == "__main__":
-    main()
+    test_combine_indexes()
+    # main()
