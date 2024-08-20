@@ -123,8 +123,6 @@ class SearchWindow(QMainWindow):
     def showResultsPage(
         self,
         searchFunction: Callable,
-        # searchQuery: str
-        # results: list[dict[str, str]]
         ) -> dict[str, Any]:
         """
         Shows results page using given search function and query.
@@ -137,6 +135,7 @@ class SearchWindow(QMainWindow):
 
         # Widgets:
         overallLayout = QVBoxLayout()
+
         # Adding results to widget, only showing NUM_RESULTS_TO_SHOW results:
         for result_idx in range(NUM_RESULTS_TO_SHOW):
             # Only showing desired fields. Here we construct the string which
