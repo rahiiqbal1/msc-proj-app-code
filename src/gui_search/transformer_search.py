@@ -74,19 +74,6 @@ def transformerGetResultsMF(
 
     return results
 
-def loadEmbeddings(embeddingsPath: str) -> Embeddings:
-    """
-    Loads in the txtai embeddings at the given path.
-    """
-    # Getting embeddings:
-    embeddings = Embeddings(
-        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
-    )
-    embeddings.load(embeddingsPath)
-
-    return embeddings
-
-
 def findDataGivenIndex(dataDir: str, index: int) -> dict[str, str]:
     """
     For a directory containing numerically-sorted pickled lists of data, and a

@@ -9,6 +9,7 @@ import pickle
 from typing import Any, Generator
 
 from tqdm import tqdm
+from txtai import Embeddings
 
 NUM_ENTRIES = 6947320
 
@@ -35,6 +36,18 @@ def load_data(file_path: str) -> Any:
     '''
     with open(file_path, "rb") as file_to_read:
         return pickle.load(file_to_read)
+
+def load_embeddings(embeddings_path: str) -> Embeddings:
+    """
+    Loads in the txtai embeddings at the given path.
+    """
+    # Getting embeddings:
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    )
+    embeddings.load(embeddings_path)
+
+    return embeddings
 
 def stringify_dictionaries(
     dicts_to_stringify: list[dict[str, str]]
