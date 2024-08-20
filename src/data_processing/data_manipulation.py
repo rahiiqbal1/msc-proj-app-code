@@ -273,9 +273,8 @@ def create_pickled_cut_jsons(
         current_ndjson += 1
 
 def generate_list_of_jsons_from_pickles(
-    pickled_data_dir: str,
-    yield_as_strings: bool = False
-    ) -> Generator[list[dict[str, str]] | list[str], None, None]:
+    pickled_data_dir: str
+) -> Generator[list[dict[str, str]], None, None]:
     """
     Yields at each step a list of json objects as python dictionaries. Data 
     must be pickled.
@@ -301,10 +300,7 @@ def generate_list_of_jsons_from_pickles(
 
         # Reading pickle and yielding:
         with open(pickled_data_fullpath, "rb") as file_to_read:
-            if yield_as_strings == True:
-                yield stringify_dictionaries(pickle.load(file_to_read))
-            else:
-                yield pickle.load(file_to_read)
+            yield pickle.load(file_to_read)
 
 def get_num_from_string(str_to_parse: str) -> int:
     """
