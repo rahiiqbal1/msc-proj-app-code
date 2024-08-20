@@ -21,10 +21,12 @@ def main() -> None:
     embeddingsPath: str = os.path.join(
         wikidataDir, "embeddings_subset_6947320"
     )
+
+    # Loading json data and embeddings:
+    documentJsons: list[dict[str, str]] = dm.load_data(jsonDataDir)
+    embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
     
-    transformerSearchMF(
-        ts.transformerGetResultsMF, jsonDataDir, embeddingsPath
-    )
+    guiSearch(ts.transformerGetResultsSF, documentJsons, embeddings)
 
     sys.exit(0)
 
@@ -55,35 +57,6 @@ def guiSearch(
     # Display and event loop:
     searchWindow.show()
     sys.exit(searchApp.exec())
-
-def transformerSearchSF(
-    model: Callable,
-    jsonDataPath: str,
-    embeddingsPath: str
-    ) -> None:
-    """
-    Uses the pickled json data and the txtai index at the given paths.
-    """
-
-    # Get data and saved embeddings:
-    entryJsons: list[dict[str, str]] = dm.load_data(jsonDataPath)
-    embeddings: Embeddings = ts.loadEmbeddings(embeddingsPath)
-
-    # Search using transformer:
-    guiSearch(model, entryJsons, embeddings)
-        
-def transformerSearchMF(
-    model: Callable,
-    jsonDataDir: str,
-    embeddingsPath: str
-    ) -> None:
-    """
-    Uses the pickled json data in the given directory and the txtai index at
-    the given path.
-    """
-    embeddings: Embeddings = ts.loadEmbeddings(embeddingsPath)
-
-    guiSearch(model, jsonDataDir, embeddings)
 
 if __name__ == "__main__":
     main()
