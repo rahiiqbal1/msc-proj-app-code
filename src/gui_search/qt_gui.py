@@ -13,6 +13,8 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QStackedWidget,
 )
+from PyQt5.QtGui import QFont
+
 # Display:
 DISPLAY_WIDTH = 3840    
 DISPLAY_HEIGHT = 2160
@@ -57,19 +59,13 @@ class SearchWindow(QMainWindow):
 
         # Widgets:
         self.generalWidget = QStackedWidget()
+        self.fontToUse = QFont("Times New Roman", 12)
 
         # Getting layout for search page and adding to the generalWidget, 
         # retrieving search button widget for use in controller. The search 
         # page should always be at index 0 within the stacked widget:
         self.searchWidgets: dict[str, Any] = self.showSearchPage() 
 
-        # # Basic window formatting:
-        # self.setGeometry(
-        #     math.floor(0.4 * DISPLAY_WIDTH),
-        #     math.floor(0.4 * DISPLAY_HEIGHT),
-        #     WINDOW_WIDTH,
-        #     WINDOW_HEIGHT
-        # )
         self.setWindowTitle(WINDOW_TITLE)
 
         # Set layout:
@@ -91,12 +87,15 @@ class SearchWindow(QMainWindow):
         # Formatting for widgets:
         searchBoxLabel.setText(SEARCH_BOX_LABEL)
         searchBoxLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        searchBoxLabel.setFont(self.fontToUse)
 
         searchBox.setFixedWidth(SEARCH_BOX_WIDTH)
         searchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
+        searchBox.setFont(self.fontToUse)
 
         searchButton.setFixedWidth(SEARCH_BOX_WIDTH)
         searchButton.setFixedHeight(SEARCH_BOX_HEIGHT)
+        searchButton.setFont(self.fontToUse)
 
         overallLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
