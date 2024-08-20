@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import time
+import copy
 
 from nltk.tokenize import word_tokenize
 from tqdm import tqdm
@@ -141,15 +142,22 @@ def combine_indexes(
 
     single_index: dict[str, dict[int, int]]
     for single_index in indexes_to_combine:
+        # Copying index to prevent mutation:
+        single_index_copy: dict[str, dict[int, int]] = copy.deepcopy(
+            single_index
+        )
+
         word: str
-        for word in single_index:
+        for word in single_index_copy:
             # For each word in the current index, set the value in the combined
             # index to be itself if it already exists, or the value for the
             # current index if not:
-            combined_index[word] = combined_index.get(word, single_index[word])
+            combined_index[word] = combined_index.get(
+                word, single_index_copy[word]
+            )
             # Then add the value for the current index to the dictionary for
             # the current word in the combined index:
-            combined_index[word].update(single_index[word])
+            combined_index[word].update(single_index_copy[word])
 
     return combined_index
 
