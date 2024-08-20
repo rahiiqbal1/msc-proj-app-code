@@ -40,6 +40,17 @@ def bm25GetResultsSF(
         numDocsInCollection
     )
 
+    # Getting top scores along with the index of the documents which achieve
+    # them:
+    topIdxsAndScores: list[tuple[int, float]] = _sortScores(
+        bm25Scores, numResultsToShow
+    )
+
+    # Getting relevant documents and adding to results:
+    idxAndScore: tuple[int, float]
+    for idxAndScore in topIdxsAndScores:
+        results.append(jsonData[idxAndScore[0]])
+
     return results
 
 def _sortScores(
