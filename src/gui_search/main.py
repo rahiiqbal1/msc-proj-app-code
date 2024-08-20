@@ -13,12 +13,15 @@ def main() -> None:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
     # Paths to desired pickled json data and txtai embeddings:
-    jsonDataPath: str = os.path.join(wikidataDir, "poc_json_data.pkl")
+    jsonDataDir: str = os.path.join(wikidataDir, "pickled-lists-of-cut-jsons")
+    # jsonDataPath: str = os.path.join(wikidataDir, "poc_json_data.pkl")
     embeddingsPath: str = os.path.join(
         wikidataDir, "embeddings_subset_6947320"
     )
     
-    transformerSearch(ts.transformerGetResultsSF, jsonDataPath, embeddingsPath)
+    transformerSearchMF(
+        ts.transformerGetResultsMF, jsonDataDir, embeddingsPath
+    )
 
     sys.exit(0)
 
@@ -50,7 +53,7 @@ def guiSearch(
     searchWindow.show()
     sys.exit(searchApp.exec())
 
-def transformerSearch(
+def transformerSearchSF(
     model: Callable,
     jsonDataPath: str,
     embeddingsPath: str
@@ -71,5 +74,15 @@ def transformerSearch(
               entryJsons,
               embeddings)
         
+def transformerSearchMF(
+    model: Callable,
+    jsonDataDir: str,
+    embeddingsPath: str
+    ) -> None:
+    """
+    Uses the pickled json data in the given directory and the txtai index at
+    the given path.
+    """
+
 if __name__ == "__main__":
     main()
