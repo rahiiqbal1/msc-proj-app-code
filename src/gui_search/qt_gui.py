@@ -30,7 +30,7 @@ SEARCH_BUTTON_TEXT = "&Search"
 # Data and results:
 NUM_RESULTS_TO_SHOW = 10
 # Search again button:
-SEARCH_AGAIN_BUTTON_TEXT = "Make a new search"
+SEARCH_AGAIN_BUTTON_TEXT = "&Make a new search"
 
 def main() -> None:
     # Initialise app:
