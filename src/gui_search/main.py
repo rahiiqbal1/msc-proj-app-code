@@ -5,8 +5,9 @@ from typing import Callable
 from txtai import Embeddings
 from PyQt5.QtWidgets import QApplication
 
-from qt_gui import SearchWindow, SearchController
+from qt_gui import SearchWindow, SearchController, NUM_RESULTS_TO_SHOW
 import transformer_search as ts
+import bm25_search as bm25
 # Dirty hack!
 sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
@@ -15,17 +16,28 @@ def main() -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-    # Paths to desired pickled json data and txtai embeddings:
-    jsonDataPath: str = os.path.join(wikidataDir, "poc_json_data.pkl")
-    embeddingsPath: str = os.path.join(
-        wikidataDir, "poc_embeddings_subset_6947320"
-    )
+    # # Paths to desired pickled json data and txtai embeddings:
+    # jsonDataPath: str = os.path.join(wikidataDir, "poc_json_data.pkl")
+    # embeddingsPath: str = os.path.join(
+    #     wikidataDir, "poc_embeddings_subset_6947320"
+    # )
 
-    # Loading json data and embeddings:
-    documentJsons: list[dict[str, str]] = dm.load_data(jsonDataPath)
-    embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
+    # # Loading json data and embeddings:
+    # documentJsons: list[dict[str, str]] = dm.load_data(jsonDataPath)
+    # embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
+
+    # Path to .ndjson which was used to index and which we will read from:
+    ndjsonPath: str = os.path.join(
+        wikidataDir, "poc_combined_processed.ndjson"
+    )
+    # Path to index:
+    indexPath: str = os.path.join(wikidataDir, "poc_simple.index")
+
+    # Average document length in the given ndjson:
+    avgDocLength: float = 43.42
     
-    guiSearch(ts.transformerGetResultsSF, documentJsons, embeddings)
+    # Number of documents (jsons) in the given ndjson:
+    numDocsInCollection: int = 2
 
     sys.exit(0)
 
