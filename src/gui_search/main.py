@@ -16,28 +16,17 @@ def main() -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-    # # Paths to desired pickled json data and txtai embeddings:
-    # jsonDataPath: str = os.path.join(wikidataDir, "poc_json_data.pkl")
-    # embeddingsPath: str = os.path.join(
-    #     wikidataDir, "poc_embeddings_subset_6947320"
-    # )
-
-    # # Loading json data and embeddings:
-    # documentJsons: list[dict[str, str]] = dm.load_data(jsonDataPath)
-    # embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
-
-    # Path to .ndjson which was used to index and which we will read from:
-    ndjsonPath: str = os.path.join(
-        wikidataDir, "poc_combined_processed.ndjson"
+    # Paths to desired pickled (nd)json data and txtai embeddings:
+    jsonDataPath: str = os.path.join(wikidataDir, "poc-reduced-ndjsons.pkl")
+    embeddingsPath: str = os.path.join(
+        wikidataDir, "poc-txtai-embeddings-1"
     )
-    # Path to index:
-    indexPath: str = os.path.join(wikidataDir, "poc_simple.index")
 
-    # Average document length in the given ndjson:
-    avgDocLength: float = 43.42
-    
-    # Number of documents (jsons) in the given ndjson:
-    numDocsInCollection: int = 2
+    # Loading json data and embeddings:
+    documentJsons: list[dict[str, str]] = dm.load_data(jsonDataPath)
+    embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
+
+    guiSearch(ts.transformerGetResultsSF, documentJsons, embeddings) 
 
     sys.exit(0)
 
