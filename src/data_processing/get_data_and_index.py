@@ -24,7 +24,7 @@ def main() -> None:
 
     # Path to save index at:
     index_save_path: str = os.path.join(
-        wikidata_dir, f"txtai_embeddings_{PROPORTION_ENTRIES_TO_USE}"
+        wikidata_dir, f"txtai-embeddings-{PROPORTION_ENTRIES_TO_USE}"
     )
 
     index_single_pickle(pickled_data_path, index_save_path)
