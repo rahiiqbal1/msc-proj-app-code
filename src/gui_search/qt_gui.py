@@ -59,7 +59,7 @@ class SearchWindow(QMainWindow):
 
         # Widgets:
         self.generalWidget = QStackedWidget()
-        self.fontToUse = QFont("Times New Roman", 12)
+        self.fontToUse = QFont("Times New Roman", 14)
 
         # Getting layout for search page and adding to the generalWidget, 
         # retrieving search button widget for use in controller. The search 
