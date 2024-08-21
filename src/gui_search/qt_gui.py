@@ -1,5 +1,4 @@
 import sys
-import math
 from typing import Callable, Any 
 from functools import partial
 from PyQt5.QtCore import Qt
