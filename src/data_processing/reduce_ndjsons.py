@@ -26,7 +26,7 @@ def main() -> None:
         pass
 
     # Fields which we want to keep within the ndjsons:
-    desired_fields: tuple[str, ...] = ("name", "abstract")
+    desired_fields: tuple[str, ...] = ("name", "abstract", "url")
 
     reduce_all_ndjsons(
         full_ndjson_load_dir, reduced_ndjson_save_dir, desired_fields
@@ -85,14 +85,11 @@ def reduce_all_jsons_in_ndjson(
     list_of_str_jsons: list[str] = []
 
     # Getting only desired fields:
-    fail_count: int = 0
-    # Uncomment below for status bar:
-    # for single_json in tqdm(json_list, "Reducing JSONs"):
     for single_json in json_list:
         try:
             reduce_single_json(single_json, list_of_str_jsons, desired_fields)
         except KeyError:
-            fail_count += 1
+            pass
 
     # Name of .ndjson file to append to full storage path for reduced version:
     ndjson_file_name: str = os.path.basename(ndjson_file_path)
