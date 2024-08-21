@@ -226,7 +226,6 @@ class SearchController:
         searchQuery: str = self._view.searchWidgets["searchBox"].text()
         # Passing given modelArgs to model along with search query present in
         # text box:
-        print(searchQuery)
         return self._model(*(self._modelArgs + (searchQuery, )))
 
     def _connectSignalsAndSlots(self) -> None:
