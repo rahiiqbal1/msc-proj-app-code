@@ -17,7 +17,7 @@ def main() -> None:
     # use the files which have already had their unrelated fields and html 
     # removed:
     unprocessed_ndjson_store_dir: str = os.path.join(
-        os.pardir, "poc-reduced-nohtml-ndjsons"
+        os.pardir, "poc-reduced-nourl-ndjsons"
     )
     # Directory within which to store fully processed .ndjson files:
     processed_ndjson_store_dir: str = os.path.join(
