@@ -27,13 +27,17 @@ def main() -> None:
         wikidata_dir, f"txtai-embeddings-{PROPORTION_ENTRIES_TO_USE}"
     )
 
-    index_single_pickle(pickled_data_path, index_save_path)
+    # Selecting fields we want to use to index the data:
+    fields_to_use: tuple[str, ...] = ("name", "abstract")
+
+    index_single_pickle(pickled_data_path, index_save_path, fields_to_use)
 
     sys.exit(0)
 
 def index_single_pickle(
     pickled_data_path: str,
-    index_save_path: str
+    index_save_path: str,
+    fields_to_use: tuple[str, ...]
     ) -> None:
     """
     Indexes the data in the given pickled list of jsons (list[dict[str, str]]).
@@ -45,13 +49,16 @@ def index_single_pickle(
         {"path": "sentence-transformers/all-MiniLM-L6-v2"}
     )
 
-    # Loading in data and converting to strings:
-    json_data_as_strings: list[str] = dm.stringify_dictionaries(
-        dm.load_data(pickled_data_path)
+    # Loading in data, selecting only desired fields, and converting to
+    # strings:
+    json_data_as_strings_chosen_fields: list[str] = dm.stringify_dictionaries(
+        dm.cut_list_of_dicts(
+            dm.load_data(pickled_data_path), fields_to_use
+        )
     )
 
     # Index data:
-    embeddings.index(tqdm(json_data_as_strings))
+    embeddings.index(tqdm(json_data_as_strings_chosen_fields))
 
     # Save index:
     embeddings.save(index_save_path)
