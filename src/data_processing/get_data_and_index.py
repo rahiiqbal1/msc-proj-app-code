@@ -29,11 +29,11 @@ def main() -> None:
         wikidata_dir, f"embeddings_subset_{num_entries_used}"
     )
 
-    index_sf(ndjson_dir, index_save_path)
+    index_single_pickle(ndjson_dir, index_save_path)
 
     sys.exit(0)
 
-def index_sf(
+def index_single_pickle(
     ndjson_dir: str,
     index_save_path: str
     ) -> None:
@@ -58,7 +58,7 @@ def index_sf(
     # Save index:
     embeddings.save(index_save_path)
 
-def index_mf(
+def index_multi_pickle(
     wikidata_dir: str,
     ndjson_dir: str,
     pickled_jsons_dir: str,
