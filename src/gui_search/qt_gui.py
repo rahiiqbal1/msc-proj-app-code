@@ -29,6 +29,8 @@ SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 SEARCH_BUTTON_TEXT = "&Search"
 # Data and results:
 NUM_RESULTS_TO_SHOW = 10
+# Search again button:
+SEARCH_AGAIN_BUTTON_TEXT = "Make a new search"
 
 def main() -> None:
     # Initialise app:
@@ -118,10 +120,7 @@ class SearchWindow(QMainWindow):
             "centralWidget": centralWidget
         }
 
-    def showResultsPage(
-        self,
-        searchFunction: Callable,
-        ) -> dict[str, Any]:
+    def showResultsPage(self, searchFunction: Callable) -> dict[str, Any]:
         """
         Shows results page using given search function and query.
         """
@@ -131,8 +130,13 @@ class SearchWindow(QMainWindow):
         # Evaluating results:
         results: list[dict[str, str]] = searchFunction()
 
-        # Widgets:
+        # Layout and widgets:
         overallLayout = QVBoxLayout()
+        searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
+        searchAgainButton.setFont(self.fontToUse)
+
+        # Adding search again button to layout:
+        overallLayout.addWidget(searchAgainButton)
 
         # Adding results to widget, only showing NUM_RESULTS_TO_SHOW results:
         for resultIdx in range(NUM_RESULTS_TO_SHOW):
