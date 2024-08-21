@@ -6,6 +6,7 @@ import os
 import sys   
 import json
 import pickle
+import copy
 from typing import Any, Generator
 
 from tqdm import tqdm
@@ -82,14 +83,17 @@ def cut_single_dict(
 
     Returned dictionary must have both keys and values as strings.
     """
+    # Copying dict_to_cut to prevent unwanted mutation:
+    dict_to_cut_copy = copy.deepcopy(dict_to_cut)
+
     cut_dict_for_return: dict[str, str] = {}
 
     # Loop over fields in dictionary and if they are desired, add them to the
     # dictionary which will be returned:
     field: str
-    for field in dict_to_cut:
+    for field in dict_to_cut_copy:
         if field in fields_to_use:
-            cut_dict_for_return[field] = dict_to_cut[field]
+            cut_dict_for_return[field] = dict_to_cut_copy[field]
 
     return cut_dict_for_return
 
