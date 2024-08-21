@@ -35,10 +35,32 @@ def main() -> None:
         wikidata_dir, f"embeddings_subset_{num_entries_used}"
     )
 
-    # Fields of the data which we want to use:
-    fields_to_use: tuple[str, ...] = ("name", "abstract", "wikitext", "url")
-
     sys.exit(0)
+
+def index_sf(
+    ndjson_path: str,
+    index_save_path: str
+    ) -> None:
+    """
+    Indexes the jsons in the given .ndjson file.
+
+    Uses the transformer model specified within.
+    """
+    # Want to generate word embeddings using specified model:
+    embeddings = Embeddings(
+        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+    )
+
+    # Loading in data and converting to strings:
+    json_data_as_strings: list[str] = dm.stringify_dictionaries(
+        dm.load_jsons_from_ndjson(ndjson_path)
+    )
+
+    # Index data:
+    embeddings.index(tqdm(json_data_as_strings))
+
+    # Save index:
+    embeddings.save(index_save_path)
 
 def index_mf(
     wikidata_dir: str,
