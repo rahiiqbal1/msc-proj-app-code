@@ -24,7 +24,7 @@ def main() -> None:
 
     # Path to save index at:
     index_save_path: str = os.path.join(
-        wikidata_dir, f"txtai-embeddings-{PROPORTION_ENTRIES_TO_USE}"
+        wikidata_dir, f"poc-txtai-embeddings-{PROPORTION_ENTRIES_TO_USE}"
     )
 
     # Selecting fields we want to use to index the data:
