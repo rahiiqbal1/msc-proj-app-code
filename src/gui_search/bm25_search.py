@@ -13,10 +13,10 @@ from data_processing import data_manipulation as dm
 def bm25GetResultsSF(
     jsonData: list[dict[str, str]],
     dataIndex: dict[str, dict[int, int]],
-    searchQuery: str,
     avgDocLength: float,
     numDocsInCollection: int,
-    numResultsToShow: int
+    numResultsToShow: int,
+    searchQuery: str
     ) -> list[dict[str, str]]:
     """
     Searches through given data using bm25 algorithm. Returns results with all
