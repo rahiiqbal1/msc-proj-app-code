@@ -31,8 +31,7 @@ def main() -> int:
     entry_jsons: list[dict[str, str]] = dm.load_data(pickled_json_path)
 
     # Get embeddings:
-    embeddings = Embeddings()
-    embeddings.load(embeddings_path)
+    embeddings = dm.load_embeddings(embeddings_path)
 
     cli_search(entry_jsons, embeddings)
 
