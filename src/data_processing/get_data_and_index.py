@@ -7,7 +7,6 @@ from tqdm import tqdm
 
 import data_manipulation as dm
 
-NUMBER_OF_NDJSONS = 372
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
@@ -25,24 +24,21 @@ def main() -> None:
     # Path to wikipedia data:
     ndjson_dir: str = os.path.join(wikidata_dir, "poc-reduced-nourl-ndjsons")
 
-    # Directory in which pickled lists of cut jsons are stored:
-    pickled_jsons_dir: str = os.path.join(
-        wikidata_dir, "pickled-lists-of-cut-jsons"
-    )
-
     # Path to save index at:
     index_save_path: str = os.path.join(
         wikidata_dir, f"embeddings_subset_{num_entries_used}"
     )
 
+    index_sf(ndjson_dir, index_save_path)
+
     sys.exit(0)
 
 def index_sf(
-    ndjson_path: str,
+    ndjson_dir: str,
     index_save_path: str
     ) -> None:
     """
-    Indexes the jsons in the given .ndjson file.
+    Indexes the jsons in the .ndjson files in the given directory.
 
     Uses the transformer model specified within.
     """

@@ -11,6 +11,7 @@ from typing import Any, Generator
 from tqdm import tqdm
 from txtai import Embeddings
 
+NUMBER_OF_NDJSONS = 372
 NUM_ENTRIES = 6947320
 
 def main() -> None:
