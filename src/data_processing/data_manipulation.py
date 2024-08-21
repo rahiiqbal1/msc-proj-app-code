@@ -116,6 +116,24 @@ def cut_list_of_dicts(
 
     return list_of_cut_dicts
 
+def save_ndjsons_as_single_pickle(
+    ndjsons_dir: str,
+    pickle_save_name: str,
+    pickle_save_dir: str
+    ) -> None:
+    """
+    Reads all ndjsons in the given directory and saves their contents as a 
+    single pickled list of dictionaries (deserialised json objects).
+    """
+    # Initialising list to store jsons:
+    list_of_jsons: list[dict[str, str]] = []
+
+    batch_of_jsons: list[dict[str, str]]
+    for batch_of_jsons in generate_jsons_from_ndjsons(ndjsons_dir):
+        list_of_jsons += batch_of_jsons
+
+    save_data(list_of_jsons, pickle_save_name, pickle_save_dir)
+
 def combine_indexes(
     indexes_to_combine: list[dict[str, dict[int, int]]]
     ) -> dict[str, dict[int, int]]:
