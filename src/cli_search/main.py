@@ -11,7 +11,7 @@ from data_processing import data_manipulation as dm
 
 
 
-def main() -> int:
+def main() -> None:
     # Directory where relevant data is stored:
     wikidata_dir: str = os.path.join(
         os.pardir,
@@ -20,22 +20,24 @@ def main() -> int:
     )
 
     # Path to pickled json data:
-    pickled_json_path: str = os.path.join(wikidata_dir, "poc_json_data.pkl")
+    pickled_ndjsons_path: str = os.path.join(
+        wikidata_dir, "poc-reduced-ndjsons.pkl"
+    )
 
     # Path to txtai embeddings:
     embeddings_path: str = os.path.join(
-        wikidata_dir, "poc_embeddings_subset_6947320"
+        wikidata_dir, "poc-txtai-embeddings-1"
     )
 
     # Get json data:
-    entry_jsons: list[dict[str, str]] = dm.load_data(pickled_json_path)
+    entry_jsons: list[dict[str, str]] = dm.load_data(pickled_ndjsons_path)
 
     # Get embeddings:
     embeddings = dm.load_embeddings(embeddings_path)
 
     cli_search(entry_jsons, embeddings)
 
-    return 0
+    sys.exit(0)
         
 def cli_search(data: list[dict[str, str]], embeddings: Embeddings) -> None:
     '''

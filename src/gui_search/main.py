@@ -5,7 +5,7 @@ from typing import Callable
 from txtai import Embeddings
 from PyQt5.QtWidgets import QApplication
 
-from qt_gui import SearchWindow, SearchController, NUM_RESULTS_TO_SHOW
+from qt_gui import SearchWindow, SearchController
 import transformer_search as ts
 import bm25_search as bm25
 # Dirty hack!
