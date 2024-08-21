@@ -11,6 +11,10 @@ NUMBER_OF_NDJSONS = 372
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
+    num_entries_used: int = math.floor(
+        dm.NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
+    )
+
     # Path to directory where all data is stored:
     wikidata_dir: str = os.path.join(
         os.pardir,
@@ -19,15 +23,11 @@ def main() -> None:
     )
 
     # Path to wikipedia data:
-    ndjson_dir: str = os.path.join(wikidata_dir, "reduced-nohtml-ndjsons")
+    ndjson_dir: str = os.path.join(wikidata_dir, "poc-reduced-nourl-ndjsons")
 
     # Directory in which pickled lists of cut jsons are stored:
     pickled_jsons_dir: str = os.path.join(
         wikidata_dir, "pickled-lists-of-cut-jsons"
-    )
-
-    num_entries_used: int = math.floor(
-        dm.NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
     )
 
     # Path to save index at:
