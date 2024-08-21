@@ -1,10 +1,15 @@
 import os
 import sys
-import math
 import subprocess
 from typing import Any
-import joblib
+
 from txtai import Embeddings
+
+# Bodge:
+sys.path.append(os.path.abspath(".."))
+from data_processing import data_manipulation as dm
+
+
 
 def main() -> int:
     # Directory where relevant data is stored:
@@ -14,13 +19,20 @@ def main() -> int:
         "data"
     )
 
-    # Get data and saved embeddings:
-    entry_jsons: list[dict[str, str]]
-    embeddings: Embeddings
-    entry_jsons, embeddings = load_data_and_embeddings(
-        os.path.join(wikidata_dir, "poc_json_data.pkl"),
-        os.path.join(wikidata_dir, "poc_embeddings_subset_6947320")
+    # Path to pickled json data:
+    pickled_json_path: str = os.path.join(wikidata_dir, "poc_json_data.pkl")
+
+    # Path to txtai embeddings:
+    embeddings_path: str = os.path.join(
+        wikidata_dir, "poc_embeddings_subset_6947320"
     )
+
+    # Get json data:
+    entry_jsons: list[dict[str, str]] = dm.load_data(pickled_json_path)
+
+    # Get embeddings:
+    embeddings = Embeddings()
+    embeddings.load(embeddings_path)
 
     cli_search(entry_jsons, embeddings)
 
@@ -87,32 +99,6 @@ def test_semantic_search() -> None:
     embeddings.index(test_data)
 
     # print(test_data[embeddings.search("breakfast", 1)[0][0]])
-
-def load_data_and_embeddings(
-    data_path: str,
-    embeddings_path: str
-    ) -> tuple[list[dict[str, str]], Embeddings]:
-    '''
-    Loads data with joblib (pickle) and it's associated txtai embeddings.
-
-    Returns a tuple of data and embeddings.
-    '''
-    # Getting data:
-    data: list[dict[str, str]] = load_data(data_path)
-
-    # Getting embeddings:
-    embeddings = Embeddings(
-        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
-    )
-    embeddings.load(embeddings_path)
-
-    return data, embeddings
-
-def load_data(file_path: str) -> Any:
-    '''
-    Loads given object as python object using joblib.
-    '''
-    return joblib.load(file_path)
 
 if __name__ == "__main__":
     sys.exit(main())
