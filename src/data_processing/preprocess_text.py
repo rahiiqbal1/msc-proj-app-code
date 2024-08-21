@@ -5,23 +5,23 @@ import json
 from multiprocessing import Pool
 from typing import Any
 
-from remove_html import generate_jsons_from_ndjsons
-
 from nltk import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from tqdm import tqdm
+
+import data_manipulation as dm
 
 def main() -> None:
     # Directory in which the .ndjson files to be processed are stored. Here we
     # use the files which have already had their unrelated fields and html 
     # removed:
     unprocessed_ndjson_store_dir: str = os.path.join(
-        os.pardir, "reduced-nohtml-ndjsons"
+        os.pardir, "poc-reduced-nohtml-ndjsons"
     )
     # Directory within which to store fully processed .ndjson files:
     processed_ndjson_store_dir: str = os.path.join(
-        os.pardir, "fully-processed-ndjsons"
+        os.pardir, "poc-fully-processed-ndjsons"
     )
 
     process_ndjsons(unprocessed_ndjson_store_dir, processed_ndjson_store_dir)
@@ -42,7 +42,9 @@ def process_ndjsons(
 
     # Looping over all unprocessed .ndjson files in the given directory:
     jsons_in_ndjson: list[dict[str, Any]]
-    for jsons_in_ndjson in generate_jsons_from_ndjsons(unprocessed_ndjson_dir):
+    for jsons_in_ndjson in dm.generate_jsons_from_ndjsons(
+            unprocessed_ndjson_dir
+    ):
         # Getting list of processed jsons for the current ndjson as lines of 
         # text:
         processed_json_list: list[str] = process_single_ndjson(

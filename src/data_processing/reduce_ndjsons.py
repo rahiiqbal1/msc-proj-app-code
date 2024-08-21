@@ -11,7 +11,7 @@ def main() -> None:
 
     # Name of directory in which ndjsons to process are stored:
     full_ndjson_load_dir: str = os.path.join(
-        all_data_dir, "fully-processed-ndjsons" 
+        all_data_dir, "raw-ndjsons" 
     )
 
     # Name of directory in which to store reduced ndjson files:
@@ -21,7 +21,6 @@ def main() -> None:
 
     # Creating directory to store reduced .ndjson files: 
     try:
-        # Total bodge:
         os.mkdir(reduced_ndjson_save_dir)
     except FileExistsError:
         pass

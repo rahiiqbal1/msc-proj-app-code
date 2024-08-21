@@ -11,8 +11,8 @@ def main() -> int:
     wikidata_dir: str = os.getcwd()
 
     clean_html_from_wikitext(
-        os.path.join(wikidata_dir, "reduced-ndjsons"),
-        os.path.join(wikidata_dir, "reduced-nohtml-ndjsons")
+        os.path.join(wikidata_dir, "poc-reduced-ndjsons"),
+        os.path.join(wikidata_dir, "poc-reduced-nohtml-ndjsons")
     )
 
     return 0
