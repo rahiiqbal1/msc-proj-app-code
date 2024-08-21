@@ -10,10 +10,6 @@ import data_manipulation as dm
 PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
-    num_entries_used: int = math.floor(
-        dm.NUM_ENTRIES * PROPORTION_ENTRIES_TO_USE
-    )
-
     # Path to directory where all data is stored:
     wikidata_dir: str = os.path.join(
         os.pardir,
@@ -28,7 +24,7 @@ def main() -> None:
 
     # Path to save index at:
     index_save_path: str = os.path.join(
-        wikidata_dir, f"embeddings_subset_{num_entries_used}"
+        wikidata_dir, f"txtai_embeddings_{PROPORTION_ENTRIES_TO_USE}"
     )
 
     index_single_pickle(pickled_data_path, index_save_path)
