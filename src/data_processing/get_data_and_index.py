@@ -21,24 +21,26 @@ def main() -> None:
         "data"
     )
 
-    # Path to wikipedia data:
-    ndjson_dir: str = os.path.join(wikidata_dir, "poc-reduced-nourl-ndjsons")
+    # Path to pickled data:
+    pickled_data_path: str = os.path.join(
+        wikidata_dir, "poc-reduced-ndjsons.pkl"
+    )
 
     # Path to save index at:
     index_save_path: str = os.path.join(
         wikidata_dir, f"embeddings_subset_{num_entries_used}"
     )
 
-    index_single_pickle(ndjson_dir, index_save_path)
+    index_single_pickle(pickled_data_path, index_save_path)
 
     sys.exit(0)
 
 def index_single_pickle(
-    ndjson_dir: str,
+    pickled_data_path: str,
     index_save_path: str
     ) -> None:
     """
-    Indexes the jsons in the .ndjson files in the given directory.
+    Indexes the data in the given pickled list of jsons (list[dict[str, str]]).
 
     Uses the transformer model specified within.
     """
@@ -49,7 +51,7 @@ def index_single_pickle(
 
     # Loading in data and converting to strings:
     json_data_as_strings: list[str] = dm.stringify_dictionaries(
-        dm.load_jsons_from_ndjson(ndjson_path)
+        dm.load_data(pickled_data_path)
     )
 
     # Index data:
