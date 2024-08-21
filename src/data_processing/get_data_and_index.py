@@ -12,18 +12,18 @@ PROPORTION_ENTRIES_TO_USE = 1
 
 def main() -> None:
     # Path to directory where all data is stored:
-    all_data_dir: str = os.path.join(
+    wikidata_dir: str = os.path.join(
         os.pardir,
         os.pardir,
         "data"
     )
 
     # Path to wikipedia data:
-    wikidata_dir: str = os.path.join(all_data_dir, "reduced-nohtml-ndjsons")
+    ndjson_dir: str = os.path.join(wikidata_dir, "reduced-nohtml-ndjsons")
 
     # Directory in which pickled lists of cut jsons are stored:
     pickled_jsons_dir: str = os.path.join(
-        all_data_dir, "pickled-lists-of-cut-jsons"
+        wikidata_dir, "pickled-lists-of-cut-jsons"
     )
 
     num_entries_used: int = math.floor(
@@ -32,16 +32,33 @@ def main() -> None:
 
     # Path to save index at:
     index_save_path: str = os.path.join(
-        all_data_dir, f"embeddings_subset_{num_entries_used}"
+        wikidata_dir, f"embeddings_subset_{num_entries_used}"
     )
 
     # Fields of the data which we want to use:
     fields_to_use: tuple[str, ...] = ("name", "abstract", "wikitext", "url")
 
+    sys.exit(0)
+
+def index_mf(
+    wikidata_dir: str,
+    ndjson_dir: str,
+    pickled_jsons_dir: str,
+    fields_to_use: tuple[str],
+    index_save_path: str
+    ) -> None:
+    """
+    Indexes the json data stored as separate pickled files in
+    pickled_jsons_dir. Considers only fields_to_use in index, and saves at
+    index_save_path.
+
+    The files in ndjson_dir must correspond to those in pickled_jsons_dir. That
+    is, each pickled file corresponds to each ndjson in the directory.
+    """
     # Attempt to create the pickled data:
     if len(os.listdir(pickled_jsons_dir)) == 0:
         dm.create_pickled_cut_jsons(
-            wikidata_dir, pickled_jsons_dir, fields_to_use
+            ndjson_dir, pickled_jsons_dir, fields_to_use
         )
 
     # Number ndjson to begin at. This allows us to index the data within the 
@@ -49,7 +66,7 @@ def main() -> None:
     start_position_save_name: str = "start_position.pkl"
     try:
         start_position: int = dm.load_data(
-            os.path.join(all_data_dir, start_position_save_name)
+            os.path.join(wikidata_dir, start_position_save_name)
         )
 
     except FileNotFoundError:
@@ -59,7 +76,7 @@ def main() -> None:
     cut_jsons: list[dict[str, str]]
     for idx, cut_jsons in enumerate(
             dm.generate_list_of_jsons_from_pickles(pickled_jsons_dir)
-    ):
+        ):
         # If we are not at the desired start position, continue to the next
         # iteration of the loop i.e. the next file in the list:
         if idx != start_position:
@@ -69,9 +86,7 @@ def main() -> None:
 
         # Updating start position within list and saving:
         start_position += 1
-        dm.save_data(start_position, start_position_save_name, all_data_dir)
-
-    sys.exit(0)
+        dm.save_data(start_position, start_position_save_name, wikidata_dir)
 
 def upsert_jsons_text_to_index(
     jsons_to_upsert: list[dict[str, str]],
