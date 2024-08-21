@@ -66,6 +66,8 @@ class SearchWindow(QMainWindow):
         # retrieving search button widget for use in controller. The search 
         # page should always be at index 0 within the stacked widget:
         self.searchWidgets: dict[str, Any] = self.showSearchPage() 
+        # Adding search again button to widgets for class:
+        self.searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
 
         self.setWindowTitle(WINDOW_TITLE)
 
@@ -119,6 +121,15 @@ class SearchWindow(QMainWindow):
             "searchButton": searchButton,
             "centralWidget": centralWidget
         }
+    
+    def switchToSearchPage(self) -> None:
+        """
+        Switches to the search page, given that it's index is 0 in the stacked
+        widget that is the generalWidget. Clears the search bar before 
+        switching.
+        """
+        self.searchWidgets["searchBox"].setText("")
+        self.generalWidget.setCurrentIndex(0)
 
     def showResultsPage(self, searchFunction: Callable) -> dict[str, Any]:
         """
@@ -132,11 +143,10 @@ class SearchWindow(QMainWindow):
 
         # Layout and widgets:
         overallLayout = QVBoxLayout()
-        searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
-        searchAgainButton.setFont(self.fontToUse)
+        self.searchAgainButton.setFont(self.fontToUse)
 
         # Adding search again button to layout:
-        overallLayout.addWidget(searchAgainButton)
+        overallLayout.addWidget(self.searchAgainButton)
 
         # Adding results to widget, only showing NUM_RESULTS_TO_SHOW results:
         for resultIdx in range(NUM_RESULTS_TO_SHOW):
@@ -230,6 +240,12 @@ class SearchController:
                 self._view.showResultsPage, 
                 self._searchFunction
             )
+        )
+
+        # Connecting search again button to a lambda function that switches 
+        # back to the search page by it's index in the general(stacked) widget:
+        self._view.searchAgainButton.clicked.connect(
+            self._view.switchToSearchPage
         )
 
 if __name__ == "__main__":
