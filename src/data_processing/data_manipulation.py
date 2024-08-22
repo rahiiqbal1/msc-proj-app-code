@@ -12,6 +12,8 @@ from typing import Any, Generator
 from tqdm import tqdm
 from txtai import Embeddings
 
+from count_lines_in_file import count_lines_in_file
+
 NUMBER_OF_NDJSONS = 372
 NUM_ENTRIES = 6947320
 
@@ -399,6 +401,71 @@ def test_sort_filenames_with_numbers() -> None:
 
     print(sort_filenames_with_numbers(test_names))
 
+def find_data_given_index_ndjsons(
+    ndjsons_dir: str,
+    index: int
+    ) -> dict[str, str]:
+    """
+    For a given directory containing numerically-sorted .ndjson files, and a 
+    given index, returns the json object specified by that index, treating all
+    .ndjsons as a single corpus.
+    """
+    # Retrieving filenames within directory and sorting. Requires that each
+    # ndjson filename contains exactly one number to sort by:
+    sorted_ndjson_filenames: list[str] = sort_filenames_with_numbers(
+        os.listdir(ndjsons_dir)
+    )
+
+    # Getting lengths of files by line number, i.e. the number of jsons:
+    ndjson_line_counts: list[int] = []
+    single_ndjson_filename: str
+    for single_ndjson_filename in sorted_ndjson_filenames:
+        # Getting full filepath as filename is only the name:
+        full_single_ndjson_filepath: str = os.path.join(
+            ndjsons_dir, single_ndjson_filename
+        )
+
+        # Getting length of file and adding it to the list of lengths:
+        ndjson_line_counts.append(
+            count_lines_in_file(full_single_ndjson_filepath)
+        )
+
+    # Initialising variable to keep track of which file within the directory
+    # we are in the scope of through the for loop. Starting from 0 as we can 
+    # use the list of sorted filenames to load the file:
+    batch_counter: int = 0
+    # Searching through lengths till the index is contained:
+    single_ndjson_line_count: int
+    for single_ndjson_line_count in ndjson_line_counts:
+        if index - single_ndjson_line_count >= 0:
+            # Subtracting from the index so that we can simply use this
+            # variable to index into the correct file when it is found as this
+            # will given the index within that file:
+            index -= single_ndjson_line_count
+            batch_counter += 1
+        else:
+            break
+
+    # Full path to file which contains the desired data point: 
+    containing_ndjson_path: str = os.path.join(
+        ndjsons_dir, sorted_ndjson_filenames[batch_counter]
+    )
+
+    # Initialising variable which will be set to the desired json if it is 
+    # found:
+    desired_json: dict[str, str] = {}
+
+    # Reading ndjson at filepath found and retrieving the json at the required
+    # index:
+    with open(containing_ndjson_path, 'r') as ndjson_to_read:
+        single_json: str
+        for i, single_json in enumerate(ndjson_to_read):
+            if i == index:
+                desired_json = json.loads(single_json)
+                break
+
+    return desired_json
+
 def find_data_given_index_pickles(data_dir: str, index: int) -> dict[str, str]:
     """
     For a directory containing numerically-sorted pickled lists of data, and a
@@ -430,6 +497,9 @@ def find_data_given_index_pickles(data_dir: str, index: int) -> dict[str, str]:
     list_length: int
     for list_length in file_list_lengths:
         if index - list_length >= 0:
+            # Subtracting from the index so that we can simply use this
+            # variable to index into the correct file when it is found as this
+            # will given the index within that file:
             index -= list_length
             batch_counter += 1
 
