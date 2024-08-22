@@ -72,7 +72,7 @@ def transformerGetResultsMF(
         resultIndex: int = numResult[0]
         
         # Getting result from directory:
-        results.append(findDataGivenIndex(dataDir, resultIndex))
+        results.append(dm.find_data_given_index_pickles(dataDir, resultIndex))
 
     return results
 
