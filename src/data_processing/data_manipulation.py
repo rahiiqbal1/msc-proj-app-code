@@ -401,7 +401,7 @@ def test_sort_filenames_with_numbers() -> None:
 
     print(sort_filenames_with_numbers(test_names))
 
-def find_data_given_index_ndjsons(
+def find_json_given_index_ndjsons(
     ndjsons_dir: str,
     index: int
     ) -> dict[str, str]:
