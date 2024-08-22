@@ -70,7 +70,7 @@ class SearchWindow(QMainWindow):
         self.searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
 
         # Basic window formatting:
-        self.showMaximised()
+        self.showMaximized()
         self.setWindowTitle(WINDOW_TITLE)
 
         # Set layout:
