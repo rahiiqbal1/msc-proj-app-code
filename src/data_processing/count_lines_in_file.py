@@ -1,6 +1,8 @@
 import sys
 import os
 
+import data_manipulation as dm
+
 def main() -> None:
     all_data_dir: str = os.path.join(
         os.pardir, os.pardir, "data"
@@ -11,18 +13,9 @@ def main() -> None:
     )
 
     print("Counting lines...")
-    print(count_lines_in_file(file_to_count_path))
+    print(dm.count_lines_in_file(file_to_count_path))
 
     sys.exit(0)
-
-def count_lines_in_file(file_path: str) -> int:
-    line_count: int = 0
-
-    with open(file_path, 'r') as file_to_count:
-        for _ in file_to_count:
-            line_count += 1
-
-    return line_count
 
 if __name__ == "__main__":
     main()

@@ -12,8 +12,6 @@ from typing import Any, Generator
 from tqdm import tqdm
 from txtai import Embeddings
 
-from count_lines_in_file import count_lines_in_file
-
 NUMBER_OF_NDJSONS = 372
 NUM_ENTRIES = 6947320
 
@@ -545,6 +543,15 @@ def test_find_data_given_index_pickles() -> None:
         save_data(list_to_pickle, f"{fileIdx}.pkl", test_pickled_lists_dir)
 
     print(find_data_given_index_pickles(test_pickled_lists_dir, test_index))
+
+def count_lines_in_file(file_path: str) -> int:
+    line_count: int = 0
+
+    with open(file_path, 'r') as file_to_count:
+        for _ in file_to_count:
+            line_count += 1
+
+    return line_count
 
 if __name__ == "__main__":
     main()
