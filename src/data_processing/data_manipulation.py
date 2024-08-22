@@ -212,11 +212,15 @@ def generate_jsons_from_ndjsons(
     Yields at each step a list of all deserialised json objects from a given
     file.
     '''
-    # Get all filenames in ndjsons_dir to read through them:
-    ndjson_filenames: list[str] = os.listdir(ndjsons_dir)
+    # Get all filenames in ndjsons_dir to read through them, and sorting them
+    # numerically (requires exactly one number in the filename of each ndjson):
+    ndjson_filenames: list[str] = sort_filenames_with_numbers(
+        os.listdir(ndjsons_dir)
+    )
 
     ndjson_filename: str
     for ndjson_filename in tqdm(ndjson_filenames, "Reading .ndjsons"):
+        print(ndjson_filename)
         # Getting full filepath as ndjson_filename is only the filename:
         ndjson_filepath: str = os.path.join(ndjsons_dir, ndjson_filename)
 
