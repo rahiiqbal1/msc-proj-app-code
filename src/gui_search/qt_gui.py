@@ -69,6 +69,8 @@ class SearchWindow(QMainWindow):
         # Adding search again button to widgets for class:
         self.searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
 
+        # Basic window formatting:
+        self.showMaximised()
         self.setWindowTitle(WINDOW_TITLE)
 
         # Set layout:
