@@ -20,6 +20,7 @@ NUM_ENTRIES = 6947320
 def main() -> None:
     # test_get_num_from_string()
     # test_sort_filenames_with_numbers()
+    test_find_jsons_given_index_ndjsons()
 
     sys.exit(0)
 
@@ -465,6 +466,21 @@ def find_json_given_index_ndjsons(
                 break
 
     return desired_json
+
+def test_find_jsons_given_index_ndjsons() -> None:
+    test_ndjsons_dir: str = os.path.join(
+        os.pardir, os.pardir, "data", "testing", "find-index-ndjsons-test"
+    )
+
+    print("TEST 1")
+    print("Expected: {'this': 'hello'}")
+    print(f"Actual: {find_json_given_index_ndjsons(test_ndjsons_dir, 0)}")
+    print('-' * 30)
+
+    print("TEST 2")
+    print("Expected: {'this': 'cool'}")
+    print(f"Actual: {find_json_given_index_ndjsons(test_ndjsons_dir, 2)}")
+    print('-' * 30)
 
 def find_data_given_index_pickles(data_dir: str, index: int) -> dict[str, str]:
     """
