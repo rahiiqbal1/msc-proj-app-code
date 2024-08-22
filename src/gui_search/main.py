@@ -16,17 +16,16 @@ def main() -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-    # Paths to desired pickled (nd)json data and txtai embeddings:
-    jsonDataPath: str = os.path.join(wikidataDir, "poc-reduced-ndjsons.pkl")
+    # Paths to ndjsons used for indexing and txtai embeddings:
+    ndjsonsDir: str = os.path.join(wikidataDir, "poc-reduced-ndjsons")
     embeddingsPath: str = os.path.join(
         wikidataDir, "poc-txtai-embeddings-1"
     )
 
-    # Loading json data and embeddings:
-    documentJsons: list[dict[str, str]] = dm.load_data(jsonDataPath)
+    # Loading embeddings:
     embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
 
-    guiSearch(ts.transformerGetResultsSF, documentJsons, embeddings) 
+    guiSearch(ts.transformerGetResultsSF, ndjsonsDir, embeddings) 
 
     sys.exit(0)
 
