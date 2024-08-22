@@ -6,7 +6,7 @@ from tqdm import tqdm
 def main() -> None:
     # Directories to load and save processed data:
     ndjsons_dir: str = os.path.join(
-        os.pardir, os.pardir, "data", "poc-reduced-ndjsons"
+        os.pardir, os.pardir, "data", "poc-fully-processed-ndjsons"
     )
     combined_ndjson_save_path: str = os.path.join(
         os.pardir, os.pardir, "data", "poc_combined_processed.ndjson"
