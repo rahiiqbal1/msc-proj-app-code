@@ -98,7 +98,7 @@ def process_single_json(
 
     Returns as serialised json string with newline character at it's end.
     """
-    fields_to_process: tuple[str, ...] = ("name", "abstract", "wikitext")
+    fields_to_process: tuple[str, ...] = ("name", "abstract")
 
     # Creating new json to store processed fields:
     processed_json: dict[str, Any] = {}
