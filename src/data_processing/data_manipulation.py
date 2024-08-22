@@ -399,67 +399,67 @@ def test_sort_filenames_with_numbers() -> None:
 
     print(sort_filenames_with_numbers(test_names))
 
-def findDataGivenIndex(dataDir: str, index: int) -> dict[str, str]:
+def find_data_given_index(data_dir: str, index: int) -> dict[str, str]:
     """
     For a directory containing numerically-sorted pickled lists of data, and a
     given index, return the data point from within the file specified by that
     index.
     """
     # Retrieving filenames within directory and sorting:
-    sortedFilenames: list[str] = sort_filenames_with_numbers(
-        os.listdir(dataDir)
+    sorted_filenames: list[str] = sort_filenames_with_numbers(
+        os.listdir(data_dir)
     )
 
     # Getting lengths of files:
-    fileListLengths: list[int] = []
+    file_list_lengths: list[int] = []
     filename: str
-    for filename in sortedFilenames:
+    for filename in sorted_filenames:
         # Getting full filepath as filename is only the name:
-        filepathFull: str = os.path.join(dataDir, filename)
+        filepath_full: str = os.path.join(data_dir, filename)
 
         # Loading data and adding it's length to the list of lengths:
-        fileListLengths.append(
-            len(load_data(filepathFull))
+        file_list_lengths.append(
+            len(load_data(filepath_full))
         )
 
     # Initialising variable to keep track of which file within the directory
     # we are in the scope of through the for loop. Starting from 0 as we can 
     # use the list of sorted filenames to load the file:
-    batchCounter: int = 0
+    batch_counter: int = 0
     # Searching through lengths till the index is contained:
-    listLength: int
-    for listLength in fileListLengths:
-        if index - listLength >= 0:
-            index -= listLength
-            batchCounter += 1
+    list_length: int
+    for list_length in file_list_lengths:
+        if index - list_length >= 0:
+            index -= list_length
+            batch_counter += 1
 
         else:
             break
 
     # Full path to file which contains the desired data point: 
-    containingFilePath: str = os.path.join(
-        dataDir, sortedFilenames[batchCounter]
+    containing_file_path: str = os.path.join(
+        data_dir, sorted_filenames[batch_counter]
     )
 
     # Loading correct data in directory and getting json at required index:
-    return load_data(containingFilePath)[index]
+    return load_data(containing_file_path)[index]
 
-def testFindDataGivenIndex() -> None:
-    testPickledListsDir: str = os.path.join(
+def test_find_data_given_index() -> None:
+    test_pickled_lists_dir: str = os.path.join(
         os.pardir, os.pardir, "data", "test-pickled-list-retrieval"
     )
-    testIndex: int = 7
+    test_index: int = 7
 
-    listsToPickle: tuple[list[int], ...] = (
+    lists_to_pickle: tuple[list[int], ...] = (
         [1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11, 12]
     )
 
     # Pickling data:
-    listToPickle: list[int]
-    for fileIdx, listToPickle in enumerate(listsToPickle):
-        save_data(listToPickle, f"{fileIdx}.pkl", testPickledListsDir)
+    list_to_pickle: list[int]
+    for fileIdx, list_to_pickle in enumerate(lists_to_pickle):
+        save_data(list_to_pickle, f"{fileIdx}.pkl", test_pickled_lists_dir)
 
-    print(findDataGivenIndex(testPickledListsDir, testIndex))
+    print(find_data_given_index(test_pickled_lists_dir, test_index))
 
 if __name__ == "__main__":
     main()
