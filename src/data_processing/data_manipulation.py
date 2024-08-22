@@ -399,7 +399,7 @@ def test_sort_filenames_with_numbers() -> None:
 
     print(sort_filenames_with_numbers(test_names))
 
-def find_data_given_index(data_dir: str, index: int) -> dict[str, str]:
+def find_data_given_index_pickle(data_dir: str, index: int) -> dict[str, str]:
     """
     For a directory containing numerically-sorted pickled lists of data, and a
     given index, return the data point from within the file specified by that
@@ -444,7 +444,7 @@ def find_data_given_index(data_dir: str, index: int) -> dict[str, str]:
     # Loading correct data in directory and getting json at required index:
     return load_data(containing_file_path)[index]
 
-def test_find_data_given_index() -> None:
+def test_find_data_given_index_pickle() -> None:
     test_pickled_lists_dir: str = os.path.join(
         os.pardir, os.pardir, "data", "test-pickled-list-retrieval"
     )
@@ -459,7 +459,7 @@ def test_find_data_given_index() -> None:
     for fileIdx, list_to_pickle in enumerate(lists_to_pickle):
         save_data(list_to_pickle, f"{fileIdx}.pkl", test_pickled_lists_dir)
 
-    print(find_data_given_index(test_pickled_lists_dir, test_index))
+    print(find_data_given_index_pickle(test_pickled_lists_dir, test_index))
 
 if __name__ == "__main__":
     main()
