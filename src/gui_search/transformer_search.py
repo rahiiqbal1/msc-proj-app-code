@@ -10,7 +10,7 @@ from data_processing import data_manipulation as dm
 
 # Model:
 def transformerGetResultsSF(
-    data: list[dict[str, str]],
+    ndjsonsDir: str,
     embeddings: Embeddings,
     searchQuery: str
     ) -> list[dict[str, str]]:
@@ -33,7 +33,9 @@ def transformerGetResultsSF(
     # Getting results in readable format:
     numResult: tuple[int, float]
     for numResult in numResults:
-        readableResult: dict[str, str] = data[numResult[0]]
+        readableResult: dict[str, str] = dm.find_json_given_index_ndjsons(
+            ndjsonsDir, numResult[0]
+        )
         results.append(readableResult)
 
     return results
