@@ -48,11 +48,7 @@ def guiSearch(
     # arguments of the searchModel except the search query, which must be taken
     # from the searchWindow and so is not known initially. This is taken care
     # of within the SearchController:
-    SearchController(
-        searchModelToUse,
-        searchWindow,
-        *argsOfSearchModelToUse
-    )
+    SearchController(searchModelToUse, searchWindow, *argsOfSearchModelToUse)
 
     # Display and event loop:
     searchWindow.show()
