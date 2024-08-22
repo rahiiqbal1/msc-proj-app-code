@@ -18,9 +18,8 @@ NUMBER_OF_NDJSONS = 372
 NUM_ENTRIES = 6947320
 
 def main() -> None:
-    # test_get_num_from_string()
-    # test_sort_filenames_with_numbers()
-    test_find_jsons_given_index_ndjsons()
+    all_data_dir: str = os.path.join(os.pardir, os.pardir, "data")
+    ndjsons_dir: str = os.path.join(all_data_dir, "poc-reduced-ndjsons")
 
     sys.exit(0)
 
