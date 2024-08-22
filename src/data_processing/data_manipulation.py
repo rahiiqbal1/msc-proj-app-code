@@ -227,6 +227,21 @@ def generate_jsons_from_ndjsons(
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
 
+def load_ndjsons_as_single_dict(ndjsons_dir: str) -> list[dict[str, Any]]:
+    """
+    Loads in all ndjson files in the given directory and return a single 
+    dictionary containing all their jsons.
+    """
+    # Initialising list which will store json dictionaries:
+    list_of_jsons: list[dict[str, Any]] = []
+
+    # Getting each batch and adding it to the list:
+    json_batch: list[dict[str, Any]]
+    for json_batch in generate_jsons_from_ndjsons(ndjsons_dir):
+        list_of_jsons += json_batch
+
+    return list_of_jsons
+
 def generate_jsons_from_single_ndjson(
     ndjson_path: str,
     desired_batch_size: int = 64
