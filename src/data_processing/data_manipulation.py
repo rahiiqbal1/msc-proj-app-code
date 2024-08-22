@@ -399,5 +399,67 @@ def test_sort_filenames_with_numbers() -> None:
 
     print(sort_filenames_with_numbers(test_names))
 
+def findDataGivenIndex(dataDir: str, index: int) -> dict[str, str]:
+    """
+    For a directory containing numerically-sorted pickled lists of data, and a
+    given index, return the data point from within the file specified by that
+    index.
+    """
+    # Retrieving filenames within directory and sorting:
+    sortedFilenames: list[str] = sort_filenames_with_numbers(
+        os.listdir(dataDir)
+    )
+
+    # Getting lengths of files:
+    fileListLengths: list[int] = []
+    filename: str
+    for filename in sortedFilenames:
+        # Getting full filepath as filename is only the name:
+        filepathFull: str = os.path.join(dataDir, filename)
+
+        # Loading data and adding it's length to the list of lengths:
+        fileListLengths.append(
+            len(load_data(filepathFull))
+        )
+
+    # Initialising variable to keep track of which file within the directory
+    # we are in the scope of through the for loop. Starting from 0 as we can 
+    # use the list of sorted filenames to load the file:
+    batchCounter: int = 0
+    # Searching through lengths till the index is contained:
+    listLength: int
+    for listLength in fileListLengths:
+        if index - listLength >= 0:
+            index -= listLength
+            batchCounter += 1
+
+        else:
+            break
+
+    # Full path to file which contains the desired data point: 
+    containingFilePath: str = os.path.join(
+        dataDir, sortedFilenames[batchCounter]
+    )
+
+    # Loading correct data in directory and getting json at required index:
+    return load_data(containingFilePath)[index]
+
+def testFindDataGivenIndex() -> None:
+    testPickledListsDir: str = os.path.join(
+        os.pardir, os.pardir, "data", "test-pickled-list-retrieval"
+    )
+    testIndex: int = 7
+
+    listsToPickle: tuple[list[int], ...] = (
+        [1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11, 12]
+    )
+
+    # Pickling data:
+    listToPickle: list[int]
+    for fileIdx, listToPickle in enumerate(listsToPickle):
+        save_data(listToPickle, f"{fileIdx}.pkl", testPickledListsDir)
+
+    print(findDataGivenIndex(testPickledListsDir, testIndex))
+
 if __name__ == "__main__":
     main()
