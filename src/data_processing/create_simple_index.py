@@ -19,7 +19,7 @@ def main() -> None:
     )
 
     # Name for index file and directory in which to store it:
-    index_filename: str = "poc_simple.index"
+    index_filename: str = "poc_simple_full.index"
     index_store_dir: str = os.path.join(os.pardir, os.pardir, "data")
 
     # Indexing:

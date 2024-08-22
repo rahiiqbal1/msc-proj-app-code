@@ -13,15 +13,19 @@ from tqdm import tqdm
 import data_manipulation as dm
 
 def main() -> None:
+    # Directory in which all data is stored:
+    wikidata_dir: str = os.path.join(
+        os.pardir, os.pardir, "data"
+    )
     # Directory in which the .ndjson files to be processed are stored. Here we
     # use the files which have already had their unrelated fields and html 
     # removed:
     unprocessed_ndjson_store_dir: str = os.path.join(
-        os.pardir, "poc-reduced-nourl-ndjsons"
+        wikidata_dir, "poc-reduced-ndjsons"
     )
     # Directory within which to store fully processed .ndjson files:
     processed_ndjson_store_dir: str = os.path.join(
-        os.pardir, "poc-fully-processed-ndjsons"
+        wikidata_dir, "poc-fully-processed-ndjsons"
     )
 
     process_ndjsons(unprocessed_ndjson_store_dir, processed_ndjson_store_dir)
