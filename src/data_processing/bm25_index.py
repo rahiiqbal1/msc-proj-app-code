@@ -24,12 +24,12 @@ def main() -> None:
 
     # Indexing:
     dm.save_data(
-        index_single_ndjson(ndjson_filepath), index_filename, index_store_dir
+        bm25_index_single_ndjson(ndjson_filepath), index_filename, index_store_dir
     )
 
     sys.exit(0)
 
-def index_single_json(
+def bm25_index_single_json(
     json_to_index: dict[str, str],
     idx_of_json: int # The index of the given json within the collection.
     ) -> dict[str, dict[int, int]]:
@@ -61,7 +61,7 @@ def index_single_json(
 
     return index
 
-def test_index_single_json() -> None:
+def test_bm25_index_single_json() -> None:
     test_json_path: str = os.path.join(
         os.pardir, os.pardir, "data", "testing.json"
     )
@@ -70,14 +70,14 @@ def test_index_single_json() -> None:
         test_json: dict[str, str] = json.loads(json_to_read.readline())
 
         start_time: float = time.time()
-        test_index: dict[str, dict[int, int]] = index_single_json(test_json, 0)
+        test_index: dict[str, dict[int, int]] = bm25_index_single_json(test_json, 0)
         end_time: float = time.time()
 
         print(test_index, '\n', end_time - start_time)
 
     sys.exit(0)
 
-def index_single_ndjson(
+def bm25_index_single_ndjson(
     ndjson_file_path: str
     ) -> dict[str, dict[int, int]]:
     """
@@ -107,28 +107,28 @@ def index_single_ndjson(
         # in the file (the ndjson):
         single_json: dict[str, str]
         for single_json in tqdm(json_batch, "Indexing batch"):
-            list_of_indexes.append(index_single_json(single_json, json_idx))
+            list_of_indexes.append(bm25_index_single_json(single_json, json_idx))
             json_idx += 1
 
         # Combine the indexes from the current batch with the overall index to
         # return:
-        combined_index = combine_indexes(list_of_indexes + [combined_index])
+        combined_index = combine_bm25_indexes(list_of_indexes + [combined_index])
 
     # Combining the indexes and returning:
     return combined_index
 
-def test_index_single_ndjson() -> None:
+def bm25_test_index_single_ndjson() -> None:
     test_ndjson_path: str = os.path.join(
         os.pardir, os.pardir, "data", "testing.ndjson"
     )
 
     print("Expected value: {'for1': {0: 1}, 'that2': {0: 1, 1: 1}," +
                            "'these3': {0: 2, 1: 1}, 'those4': {1: 4}}")
-    print(f"Actual value: {index_single_ndjson(test_ndjson_path)}")
+    print(f"Actual value: {bm25_index_single_ndjson(test_ndjson_path)}")
 
     sys.exit(0)
 
-def combine_indexes(
+def combine_bm25_indexes(
     indexes_to_combine: list[dict[str, dict[int, int]]]
     ) -> dict[str, dict[int, int]]:
     """
@@ -161,7 +161,7 @@ def combine_indexes(
 
     return combined_index
 
-def test_combine_indexes() -> None:
+def test_combine_bm25_indexes() -> None:
     print("Testing combine_indexes:\n")
 
     idx1 = {"this": {1: 12}}
@@ -169,7 +169,7 @@ def test_combine_indexes() -> None:
 
     # 1 + 2:
     print("Expected value: {'this': {1: 12, 2: 12}}")
-    print(f"Actual value: {combine_indexes([idx1, idx2])}")
+    print(f"Actual value: {combine_bm25_indexes([idx1, idx2])}")
     print("----------")
 
     idx3 = {"this": {1: 12, 2: 4}, "that": {1: 2, 2: 8}}
@@ -178,14 +178,14 @@ def test_combine_indexes() -> None:
     # 3 + 4:
     print("Expected value: {'this': {1: 12, 2: 4}, 'there': {3: 3, 4: 5}, " +
                            "'that': {1: 2, 2: 8, 3: 2, 4: 6}}")
-    print(f"Actual value: {combine_indexes([idx3, idx4])}")
+    print(f"Actual value: {combine_bm25_indexes([idx3, idx4])}")
     print("----------")
 
     idx5 = {}
 
     # 1 + 5:
     print("Expected value: {'this': {1: 12}}")
-    print(f"Actual value: {combine_indexes([idx1, idx5])}")
+    print(f"Actual value: {combine_bm25_indexes([idx1, idx5])}")
     print("----------")
 
 if __name__ == "__main__":
