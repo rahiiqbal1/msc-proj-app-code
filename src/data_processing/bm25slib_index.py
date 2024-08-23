@@ -10,7 +10,7 @@ def main() -> None:
     all_data_dir: str = os.path.join(os.pardir, os.pardir, "data")
     # Path to pickled data which we want to index:
     pickled_data_path: str = os.path.join(
-        all_data_dir, "poc-fully-reduced-processed-ndjsons.pkl"
+        all_data_dir, "poc-fully-processed-ndjsons.pkl"
     )
 
     # Fields within the data which we want to consider for the index:
