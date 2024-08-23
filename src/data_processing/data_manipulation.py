@@ -244,7 +244,7 @@ def load_ndjsons_as_single_dict(ndjsons_dir: str) -> list[dict[str, Any]]:
 
 def generate_jsons_from_single_ndjson(
     ndjson_path: str,
-    desired_batch_size: int = 64
+    desired_batch_size: int = 1024
     ) -> Generator[list[dict[str, str]], None, None]:
     """
     Reads a single .ndjson file and returns lists of it's jsons in batches of
