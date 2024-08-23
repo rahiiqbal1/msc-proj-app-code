@@ -4,11 +4,13 @@ from typing import Callable
 
 from txtai import Embeddings
 from PyQt5.QtWidgets import QApplication
+from bm25s import BM25
 
 from qt_gui import SearchWindow, SearchController
 import transformer_search as ts
 import bm25_search as bm25
-# Dirty hack!
+import bm25slib_search as bm25slib
+# Bodge:
 sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
 
@@ -16,16 +18,29 @@ def main() -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-    # Paths to ndjsons used for indexing and txtai embeddings:
-    ndjsonsDir: str = os.path.join(wikidataDir, "poc-reduced-ndjsons")
-    embeddingsPath: str = os.path.join(
-        wikidataDir, "poc-txtai-embeddings-1"
-    )
+    # # TRANSFORMER-BASED SEARCH:
+    # # Paths to ndjsons used for indexing and txtai embeddings:
+    # ndjsonsDir: str = os.path.join(wikidataDir, "poc-reduced-ndjsons")
+    # embeddingsPath: str = os.path.join(
+    #     wikidataDir, "poc-txtai-embeddings-1"
+    # )
 
-    # Loading embeddings:
-    embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
+    # # Loading embeddings:
+    # embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
 
-    guiSearch(ts.transformerGetResultsSF, ndjsonsDir, embeddings) 
+    # guiSearch(ts.transformerGetResultsSF, ndjsonsDir, embeddings) 
+
+    # BM25 SEARCH WITH LIBRARY (BM25S):
+    # Path to ndjsons used for indexing:
+    ndjsonsDir: str = os.path.join(wikidataDir, "poc-fully-processed-ndjsons")
+    # Directory in which bm25s index is stored:
+    bm25IndexDir: str = os.path.join(wikidataDir, "bm25s-index")
+
+    # Initialising and loading bm25s index:
+    bm25Model = BM25()
+    bm25Model.load(bm25IndexDir)
+
+    guiSearch(bm25slib.bm25slibGetResultsSF, ndjsonsDir, bm25Model) 
 
     sys.exit(0)
 
