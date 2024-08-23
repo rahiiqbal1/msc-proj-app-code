@@ -24,7 +24,9 @@ def main() -> None:
 
     # Indexing:
     dm.save_data(
-        bm25_index_single_ndjson(ndjson_filepath), index_filename, index_store_dir
+        bm25_index_single_ndjson(ndjson_filepath),
+        index_filename,
+        index_store_dir
     )
 
     sys.exit(0)
@@ -70,7 +72,9 @@ def test_bm25_index_single_json() -> None:
         test_json: dict[str, str] = json.loads(json_to_read.readline())
 
         start_time: float = time.time()
-        test_index: dict[str, dict[int, int]] = bm25_index_single_json(test_json, 0)
+        test_index: dict[str, dict[int, int]] = bm25_index_single_json(
+            test_json, 0
+        )
         end_time: float = time.time()
 
         print(test_index, '\n', end_time - start_time)
@@ -107,12 +111,16 @@ def bm25_index_single_ndjson(
         # in the file (the ndjson):
         single_json: dict[str, str]
         for single_json in tqdm(json_batch, "Indexing batch"):
-            list_of_indexes.append(bm25_index_single_json(single_json, json_idx))
+            list_of_indexes.append(
+                bm25_index_single_json(single_json, json_idx)
+            )
             json_idx += 1
 
         # Combine the indexes from the current batch with the overall index to
         # return:
-        combined_index = combine_bm25_indexes(list_of_indexes + [combined_index])
+        combined_index = combine_bm25_indexes(
+            list_of_indexes + [combined_index]
+        )
 
     # Combining the indexes and returning:
     return combined_index
