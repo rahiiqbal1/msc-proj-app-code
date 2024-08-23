@@ -30,11 +30,11 @@ def main() -> None:
     # Selecting fields we want to use to index the data:
     fields_to_use: tuple[str, ...] = ("name", "abstract")
 
-    index_single_pickle(pickled_data_path, index_save_path, fields_to_use)
+    txtai_index_pickle(pickled_data_path, index_save_path, fields_to_use)
 
     sys.exit(0)
 
-def index_single_pickle(
+def txtai_index_pickle(
     pickled_data_path: str,
     index_save_path: str,
     fields_to_use: tuple[str, ...]
@@ -63,7 +63,7 @@ def index_single_pickle(
     # Save index:
     embeddings.save(index_save_path)
 
-def index_multi_pickle(
+def txtai_index_multi_pickle(
     wikidata_dir: str,
     ndjson_dir: str,
     pickled_jsons_dir: str,
@@ -105,13 +105,13 @@ def index_multi_pickle(
         if idx != start_position:
             continue
 
-        upsert_jsons_text_to_index(cut_jsons, index_save_path)
+        txtai_upsert_jsons_text_to_index(cut_jsons, index_save_path)
 
         # Updating start position within list and saving:
         start_position += 1
         dm.save_data(start_position, start_position_save_name, wikidata_dir)
 
-def upsert_jsons_text_to_index(
+def txtai_upsert_jsons_text_to_index(
     jsons_to_upsert: list[dict[str, str]],
     index_save_path: str 
     ) -> None:
