@@ -12,12 +12,14 @@ def main() -> None:
     pickled_data_path: str = os.path.join(
         all_data_dir, "poc-fully-processed-ndjsons.pkl"
     )
+    # Directory in which to save index:
+    index_save_dir: str = os.path.join(all_data_dir, "bm25s-index")
 
     # Fields within the data which we want to consider for the index:
     fields_to_use: tuple[str, ...] = ("name", "abstract")
 
     # Indexing:
-    bm25slib_index_pickle(pickled_data_path, all_data_dir, fields_to_use)
+    bm25slib_index_pickle(pickled_data_path, index_save_dir, fields_to_use)
 
     sys.exit(0)
     
