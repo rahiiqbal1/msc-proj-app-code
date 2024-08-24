@@ -40,7 +40,6 @@ def txtaiBM25GetResultsSF(
 
     # There may be LSP errors here, but it works:
     for numericalResult in allSearchResults:
-        print(allSearchResults)
         results.append(jsonsIndexed[numericalResult[0]])
 
     return results

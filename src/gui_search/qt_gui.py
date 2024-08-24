@@ -150,8 +150,16 @@ class SearchWindow(QMainWindow):
         # Adding search again button to layout:
         overallLayout.addWidget(self.searchAgainButton)
 
-        # Adding results to widget, only showing NUM_RESULTS_TO_SHOW results:
-        for resultIdx in range(NUM_RESULTS_TO_SHOW):
+        # Adding results to widget, only showing a maximum of 
+        # NUM_RESULTS_TO_SHOW results, although there may be less than this for
+        # some queries:
+        resultIdx: int
+        singleResult: dict[str, str]
+        for resultIdx, singleResult in enumerate(results):
+            # Leave if we have already reached the required number of results
+            # to show (in the previous iteration):
+            if resultIdx == NUM_RESULTS_TO_SHOW:
+                break
             # Vertical box layout to contain all information for the current
             # result. This will be added to the overallLayout when ready:
             thisResultLayout = QVBoxLayout()
@@ -164,13 +172,13 @@ class SearchWindow(QMainWindow):
             for field in FieldsToShow:
                 if field == "name":
                     currentResultStringToShow += (
-                        f"<b>{results[resultIdx][field]}</b><br>"
+                        f"<b>{singleResult[field]}</b><br>"
                     )
                 # Inserting url as hyperlink:
                 elif field == "url":
                     currentResultStringToShow += (
-                        f"<a href='{results[resultIdx][field]}'>" + 
-                        f"{results[resultIdx][field]}</a>"
+                        f"<a href='{singleResult[field]}'>" + 
+                        f"{singleResult[field]}</a>"
                     )
 
             # Creating QLabel with string to show and adding to layout:
