@@ -4,11 +4,9 @@ from typing import Callable
 
 from txtai import Embeddings
 from PyQt5.QtWidgets import QApplication
-from bm25s import BM25
 
 from qt_gui import SearchWindow, SearchController
 import transformer_get_results as ts
-import bm25_get_results as bm25
 import txtai_bm25_get_results as txtaibm25
 # Bodge:
 sys.path.append(os.path.abspath(".."))
