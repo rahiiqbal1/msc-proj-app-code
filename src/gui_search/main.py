@@ -18,31 +18,7 @@ def main() -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-    # # TRANSFORMER-BASED SEARCH:
-    # # Paths to ndjsons used for indexing and txtai embeddings:
-    # ndjsonsDir: str = os.path.join(wikidataDir, "poc-reduced-ndjsons")
-    # embeddingsPath: str = os.path.join(
-    #     wikidataDir, "poc-txtai-embeddings-1"
-    # )
-
-    # # Loading embeddings:
-    # embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
-
-    # guiSearch(ts.transformerGetResultsSF, ndjsonsDir, embeddings) 
-
-    # BM25 SEARCH WITH TXTAI:
-    # Path to pickled jsons used for indexing:
-    jsonsPickleSavePath: str = os.path.join(
-        wikidataDir, "poc-fully-processed-ndjsons.pkl"
-    )
-    # Path to index:
-    txtaiBM25IndexPath: str = os.path.join(wikidataDir, "txtai_bm25_index.pkl")
-
-    guiSearch(
-        txtaibm25.txtaiBM25GetResultsSF,
-        jsonsPickleSavePath,
-        txtaiBM25IndexPath
-    ) 
+    txtaiBM25Search(wikidataDir)
 
     sys.exit(0)
 
@@ -69,6 +45,38 @@ def guiSearch(
     # Display and event loop:
     searchWindow.show()
     sys.exit(searchApp.exec())
+
+def transformerSearch(wikidataDir: str) -> None:
+    """
+    Gui search using transformer embeddings.
+    """
+    # Paths to ndjsons used for indexing and txtai embeddings:
+    ndjsonsDir: str = os.path.join(wikidataDir, "poc-reduced-ndjsons")
+    embeddingsPath: str = os.path.join(
+        wikidataDir, "poc-txtai-embeddings-1"
+    )
+
+    # Loading embeddings:
+    embeddings: Embeddings = dm.load_embeddings(embeddingsPath)
+
+    guiSearch(ts.transformerGetResultsSF, ndjsonsDir, embeddings) 
+
+def txtaiBM25Search(wikidataDir: str) -> None:
+    """
+    Gui search using txtai bm25 implementation for results.
+    """
+    # Path to pickled jsons used for indexing:
+    jsonsPickleSavePath: str = os.path.join(
+        wikidataDir, "poc-fully-processed-ndjsons.pkl"
+    )
+    # Path to index:
+    txtaiBM25IndexPath: str = os.path.join(wikidataDir, "txtai_bm25_index.pkl")
+
+    guiSearch(
+        txtaibm25.txtaiBM25GetResultsSF,
+        jsonsPickleSavePath,
+        txtaiBM25IndexPath
+    ) 
 
 if __name__ == "__main__":
     main()
