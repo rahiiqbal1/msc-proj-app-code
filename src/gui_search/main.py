@@ -17,6 +17,7 @@ def main() -> None:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
     txtaiBM25Search(wikidataDir)
+    # transformerSearch(wikidataDir)
 
     sys.exit(0)
 
