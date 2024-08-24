@@ -4,7 +4,7 @@ import sys
 from txtai import Embeddings
 
 from qt_gui import NUM_RESULTS_TO_SHOW
-# Dirty hack!
+# Bodge:
 sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
 

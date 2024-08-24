@@ -9,7 +9,7 @@ from bm25s import BM25
 from qt_gui import SearchWindow, SearchController
 import transformer_search as ts
 import bm25_search as bm25
-import bm25slib_search as bm25slib
+import txtai_bm25_search as txtaibm25
 # Bodge:
 sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
@@ -30,17 +30,19 @@ def main() -> None:
 
     # guiSearch(ts.transformerGetResultsSF, ndjsonsDir, embeddings) 
 
-    # BM25 SEARCH WITH LIBRARY (BM25S):
-    # Path to ndjsons used for indexing:
-    ndjsonsDir: str = os.path.join(wikidataDir, "poc-fully-processed-ndjsons")
-    # Directory in which bm25s index is stored:
-    bm25IndexDir: str = os.path.join(wikidataDir, "bm25s-index")
+    # BM25 SEARCH WITH TXTAI:
+    # Path to pickled jsons used for indexing:
+    jsonsPickleSavePath: str = os.path.join(
+        wikidataDir, "poc-fully-processed-ndjsons.pkl"
+    )
+    # Path to index:
+    txtaiBM25IndexPath: str = os.path.join(wikidataDir, "txtai_bm25_index.pkl")
 
-    # Initialising and loading bm25s index:
-    bm25Model = BM25()
-    bm25Model.load(bm25IndexDir)
-
-    guiSearch(bm25slib.bm25slibGetResultsSF, ndjsonsDir, bm25Model) 
+    guiSearch(
+        txtaibm25.txtaiBM25GetResultsSF,
+        jsonsPickleSavePath,
+        txtaiBM25IndexPath
+    ) 
 
     sys.exit(0)
 
