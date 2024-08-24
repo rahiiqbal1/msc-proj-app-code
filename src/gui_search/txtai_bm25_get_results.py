@@ -35,11 +35,13 @@ def txtaiBM25GetResultsSF(
     results: list[dict[str, str]] = []
 
     # Getting search results. This is a list of the form
-    # [{"id": int, "text", str, "score", float}, ...]:
+    # [(id: int, score: float), ...]:
     allSearchResults = bm25Scoring.search(searchQuery, NUM_RESULTS_TO_SHOW)
 
-    for result in allSearchResults:
-        results.append(jsonsIndexed[result["id"]])
+    # There may be LSP errors here, but it works:
+    for numericalResult in allSearchResults:
+        print(allSearchResults)
+        results.append(jsonsIndexed[numericalResult[0]])
 
     return results
 
