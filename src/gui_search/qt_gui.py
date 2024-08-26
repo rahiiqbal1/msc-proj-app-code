@@ -195,7 +195,7 @@ class SearchWindow(QMainWindow):
             resultLabelWidget = QLabel(currentResultStringToShow)
             resultLabelWidget.setTextFormat(Qt.RichText)
             resultLabelWidget.setFont(
-                QFont(FONT_TO_USE, SEARCH_BOX_LABEL_FONT_SIZE)
+                QFont(FONT_TO_USE, RESULT_LABEL_FONT_SIZE)
             )
             resultLabelWidget.setTextInteractionFlags(
                 Qt.LinksAccessibleByMouse
