@@ -36,8 +36,8 @@ SEARCH_BUTTON_FONT_SIZE = 22
 # Search again button:
 SEARCH_AGAIN_BUTTON_TEXT = "&Search again"
 SEARCH_AGAIN_BUTTON_FONT_SIZE = 22
-# Results label:
-RESULT_LABEL_FONT_SIZE = 22
+# Results name:
+RESULT_NAME_FONT_SIZE = 22
 # Results url:
 RESULT_URL_FONT_SIZE = 22
 
@@ -185,15 +185,13 @@ class SearchWindow(QMainWindow):
                 currentFieldStringToShow: str = ""
                 if field == "name":
                     currentFieldStringToShow += (
-                        f"<font size='12'> {singleResult[field]}</font>"
-                            
-                        #f"<b>{singleResult[field]}</b><br>"
+                        f"<b>{singleResult[field]}</b><br>"
                     )
                     # For the name (i.e. title) set the font size to the 
                     # chosen size:
                     thisFieldLabelWidget = QLabel(currentFieldStringToShow)
                     thisFieldLabelWidget.setFont(
-                        QFont(FONT_TO_USE, RESULT_LABEL_FONT_SIZE)
+                        QFont(FONT_TO_USE, RESULT_NAME_FONT_SIZE)
                     )
 
                 # Inserting url as hyperlink:
