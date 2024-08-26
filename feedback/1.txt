@@ -1,0 +1,10 @@
+Bigger font in search bar done
+Bigger title font done
+Bigger title font for search results
+Search bar at top of results page
+Show what the search is in the results page
+Add first bit of abstract in search results
+Boxes around results
+Loading page
+Night mode
+Rebrand 'search again' to a home button
