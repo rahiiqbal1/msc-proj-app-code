@@ -21,16 +21,25 @@ DISPLAY_HEIGHT = 2160
 WINDOW_WIDTH = 720
 WINDOW_HEIGHT = 480
 WINDOW_TITLE = "Wikipedia Search Engine"
+# All-widgets:
+FONT_TO_USE = "Times New Roman"
+# Search box label:
+SEARCH_BOX_LABEL_FONT_SIZE = 28
 # Search box:
 SEARCH_BOX_HEIGHT = 64
 SEARCH_BOX_WIDTH = 1024
 SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
+SEARCH_BOX_FONT_SIZE = 22
 # Search button:
 SEARCH_BUTTON_TEXT = "&Search"
-# Data and results:
-NUM_RESULTS_TO_SHOW = 10
+SEARCH_BUTTON_FONT_SIZE = 22
 # Search again button:
 SEARCH_AGAIN_BUTTON_TEXT = "&Search again"
+SEARCH_AGAIN_BUTTON_FONT_SIZE = 22
+# Results label:
+RESULT_LABEL_FONT_SIZE = 22
+# Data and results:
+NUM_RESULTS_TO_SHOW = 10
 
 def main() -> None:
     # Initialise app:
@@ -60,7 +69,6 @@ class SearchWindow(QMainWindow):
 
         # Widgets:
         self.generalWidget = QStackedWidget()
-        self.fontToUse = QFont("Times New Roman", 14)
 
         # Getting layout for search page and adding to the generalWidget, 
         # retrieving search button widget for use in controller. The search 
@@ -92,15 +100,15 @@ class SearchWindow(QMainWindow):
         # Formatting for widgets:
         searchBoxLabel.setText(SEARCH_BOX_LABEL)
         searchBoxLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        searchBoxLabel.setFont(self.fontToUse)
+        searchBoxLabel.setFont(QFont(FONT_TO_USE, SEARCH_BOX_LABEL_FONT_SIZE))
 
         searchBox.setFixedWidth(SEARCH_BOX_WIDTH)
         searchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
-        searchBox.setFont(self.fontToUse)
+        searchBox.setFont(QFont(FONT_TO_USE, SEARCH_BOX_FONT_SIZE))
 
         searchButton.setFixedWidth(SEARCH_BOX_WIDTH)
         searchButton.setFixedHeight(SEARCH_BOX_HEIGHT)
-        searchButton.setFont(self.fontToUse)
+        searchButton.setFont((QFont(FONT_TO_USE, SEARCH_BUTTON_FONT_SIZE)))
 
         overallLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -145,7 +153,9 @@ class SearchWindow(QMainWindow):
 
         # Layout and widgets:
         overallLayout = QVBoxLayout()
-        self.searchAgainButton.setFont(self.fontToUse)
+        self.searchAgainButton.setFont(
+            QFont(FONT_TO_USE, SEARCH_AGAIN_BUTTON_FONT_SIZE)
+        )
 
         # Adding search again button to layout:
         overallLayout.addWidget(self.searchAgainButton)
@@ -184,7 +194,9 @@ class SearchWindow(QMainWindow):
             # Creating QLabel with string to show and adding to layout:
             resultLabelWidget = QLabel(currentResultStringToShow)
             resultLabelWidget.setTextFormat(Qt.RichText)
-            resultLabelWidget.setFont(self.fontToUse)
+            resultLabelWidget.setFont(
+                QFont(FONT_TO_USE, SEARCH_BOX_LABEL_FONT_SIZE)
+            )
             resultLabelWidget.setTextInteractionFlags(
                 Qt.LinksAccessibleByMouse
             )
