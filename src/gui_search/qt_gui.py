@@ -38,6 +38,9 @@ SEARCH_AGAIN_BUTTON_TEXT = "&Search again"
 SEARCH_AGAIN_BUTTON_FONT_SIZE = 22
 # Results label:
 RESULT_LABEL_FONT_SIZE = 22
+# Results url:
+RESULT_URL_FONT_SIZE = 22
+
 # Data and results:
 NUM_RESULTS_TO_SHOW = 10
 
@@ -146,7 +149,7 @@ class SearchWindow(QMainWindow):
         Shows results page using given search function and query.
         """
         # List of keys within the results which we want to see:
-        FieldsToShow: tuple[str, ...] = ("name", "url")
+        fieldsToShow: tuple[str, ...] = ("name", "url")
 
         # Evaluating results:
         results: list[dict[str, str]] = searchFunction()
@@ -174,38 +177,49 @@ class SearchWindow(QMainWindow):
             # result. This will be added to the overallLayout when ready:
             thisResultLayout = QVBoxLayout()
 
-            # Only showing desired fields. Here we construct the string which
-            # will be the label, and then add it to the layout when it is fully
-            # constructed:
-            currentResultStringToShow: str = ""
+            # Only showing desired fields:
             field: str
-            for field in FieldsToShow:
+            for field in fieldsToShow:
+                # Initialising string which will be added to a QLabel and then
+                # to the layout for the current result:
+                currentFieldStringToShow: str = ""
                 if field == "name":
-                    currentResultStringToShow += (
-                        f"<b>{singleResult[field]}</b><br>"
+                    currentFieldStringToShow += (
+                        f"<font size='12'> {singleResult[field]}</font>"
+                            
+                        #f"<b>{singleResult[field]}</b><br>"
                     )
+                    # For the name (i.e. title) set the font size to the 
+                    # chosen size:
+                    thisFieldLabelWidget = QLabel(currentFieldStringToShow)
+                    thisFieldLabelWidget.setFont(
+                        QFont(FONT_TO_USE, RESULT_LABEL_FONT_SIZE)
+                    )
+
                 # Inserting url as hyperlink:
                 elif field == "url":
-                    currentResultStringToShow += (
+                    currentFieldStringToShow += (
                         f"<a href='{singleResult[field]}'>" + 
                         f"{singleResult[field]}</a>"
                     )
 
-            # Creating QLabel with string to show and adding to layout:
-            resultLabelWidget = QLabel(currentResultStringToShow)
-            resultLabelWidget.setTextFormat(Qt.RichText)
-            resultLabelWidget.setFont(
-                QFont(FONT_TO_USE, RESULT_LABEL_FONT_SIZE)
-            )
-            resultLabelWidget.setTextInteractionFlags(
-                Qt.LinksAccessibleByMouse
-            )
-            resultLabelWidget.setOpenExternalLinks(True)
+                    # Creating Qlabel widget with the string for the current
+                    # field as the text:
+                    thisFieldLabelWidget = QLabel(currentFieldStringToShow)
+                    thisFieldLabelWidget.setTextFormat(Qt.RichText)
+                    thisFieldLabelWidget.setTextInteractionFlags(
+                        Qt.LinksAccessibleByMouse
+                    )
+                    thisFieldLabelWidget.setOpenExternalLinks(True)
+                    thisFieldLabelWidget.setFont(
+                        QFont(FONT_TO_USE, RESULT_URL_FONT_SIZE)
+                    )
 
-            # Adding the desired result outputs to this result's layout, then
-            # adding that layout to the overall layout. Uses a sub-widget to
+                # Adding the current field's label to the result's layout:
+                thisResultLayout.addWidget(thisFieldLabelWidget)
+
+            # Adding that layout to the overall layout. Uses a sub-widget to
             # make this possible:
-            thisResultLayout.addWidget(resultLabelWidget)
             subWidget = QWidget()
             subWidget.setLayout(thisResultLayout)
             overallLayout.addWidget(subWidget)
