@@ -234,6 +234,66 @@ class SearchWindow(QMainWindow):
             "overallLayout": overallLayout
         }
 
+def _getResultLabelWidget(
+    singleResult: dict[str, str],
+    fieldsToShow: tuple[str, ...]
+    ) -> QVBoxLayout:
+    """
+    Gets the desired text fields from the result given and returns them as a 
+    QVBoxLayout object with each field it's own QLabel within the layout.
+    """
+    # Initialising VBoxLayout which will be returned:
+    thisResultVBoxLayout = QVBoxLayout()
+
+    # Only showing desired fields:
+    field: str
+    for field in fieldsToShow:
+        # Initialising string which will be added to a QLabel object and then
+        # to the layout for the current result:
+        currentFieldStringToShow: str = ""
+
+        if field == "name":
+             currentFieldStringToShow += (
+                 f"<b>{singleResult[field]}</b><br>"
+             )
+             # For the name (i.e. title) set the font size to the 
+             # chosen size:
+             thisFieldLabelWidget = QLabel(currentFieldStringToShow)
+             thisFieldLabelWidget.setFont(
+                 QFont(FONT_TO_USE, RESULT_NAME_FONT_SIZE)
+             )
+
+        # Inserting url as hyperlink:
+        elif field == "url":
+            currentFieldStringToShow += (
+                f"<a href='{singleResult[field]}'>" + 
+                f"{singleResult[field]}</a>"
+            )
+
+            # Creating Qlabel widget with the string for the current
+            # field as the text:
+            thisFieldLabelWidget = QLabel(currentFieldStringToShow)
+            # thisFieldLabelWidget.setTextFormat(Qt.RichText)
+            thisFieldLabelWidget.setTextInteractionFlags(
+                Qt.LinksAccessibleByMouse
+            )
+            thisFieldLabelWidget.setOpenExternalLinks(True)
+            thisFieldLabelWidget.setFont(
+                QFont(FONT_TO_USE, RESULT_URL_FONT_SIZE)
+            )
+
+        else:
+            # Setting string to the text of the field:
+            currentFieldStringToShow += f"{singleResult[field]}"
+
+            # Creating a label with the string as text:
+            thisFieldLabelWidget = QLabel(currentFieldStringToShow)
+
+        # Adding the current field's label to the result's layout:
+        thisResultVBoxLayout.addWidget(thisFieldLabelWidget)
+
+        return thisResultVBoxLayout
+
 class SearchController:
     """
     Controller class for the search engine app window.
