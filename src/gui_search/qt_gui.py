@@ -22,7 +22,7 @@ WINDOW_TITLE = "Wikipedia Search Engine"
 # All-widgets:
 FONT_TO_USE = "Times New Roman"
 # Search box label:
-SEARCH_BOX_LABEL_FONT_SIZE = 21
+SEARCH_BOX_LABEL_FONT_SIZE = 22
 # Search box:
 SEARCH_BOX_HEIGHT = 64
 SEARCH_BOX_WIDTH = 1024
@@ -30,12 +30,12 @@ SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 SEARCH_BOX_FONT_SIZE = 18
 # Search button:
 SEARCH_BUTTON_TEXT = "&Search"
-SEARCH_BUTTON_FONT_SIZE = 22
+SEARCH_BUTTON_FONT_SIZE = 18
 # Search again button:
 SEARCH_AGAIN_BUTTON_TEXT = "&Search again"
-SEARCH_AGAIN_BUTTON_FONT_SIZE = 22
+SEARCH_AGAIN_BUTTON_FONT_SIZE = 18
 # Results name:
-RESULT_NAME_FONT_SIZE = 18
+RESULT_NAME_FONT_SIZE = 22
 # Results url:
 RESULT_URL_FONT_SIZE = 18
 # Results scrollbar:
