@@ -34,6 +34,8 @@ SEARCH_BUTTON_FONT_SIZE = 18
 # Search again button:
 SEARCH_AGAIN_BUTTON_TEXT = "&Search again"
 SEARCH_AGAIN_BUTTON_FONT_SIZE = 18
+# General font size for results text:
+RESULT_GENERAL_FONT_SIZE = 18
 # Results name:
 RESULT_NAME_FONT_SIZE = 22
 # Results url:
@@ -54,8 +56,8 @@ def main() -> None:
     # references to the model and view:
     def testSearchFunction(_: str) -> list[dict[str, str]]:
         return [
-            {"name": "blah",      "url": "here.com"},
-            {"name": "more blah", "url": "there.org"}
+            {"name": "blah",      "abstract": "cool stuff", "url": "here.com"},
+            {"name": "more blah", "abstract": "very nice",  "url": "there.org"}
         ] * (NUM_RESULTS_TO_SHOW // 2)
     SearchController(testSearchFunction, searchWindow)
 
@@ -149,7 +151,7 @@ class SearchWindow(QMainWindow):
         Shows results page using given search function and query.
         """
         # List of keys within the results which we want to see:
-        fieldsToShow: tuple[str, ...] = ("name", "url")
+        fieldsToShow: tuple[str, ...] = ("name", "abstract", "url")
 
         # Evaluating results:
         results: list[dict[str, str]] = searchFunction()
@@ -244,7 +246,6 @@ def _getResultVBoxLayout(
             # Creating Qlabel widget with the string for the current field as
             # the text:
             thisFieldLabelWidget = QLabel(currentFieldStringToShow)
-            thisFieldLabelWidget.setTextFormat(Qt.RichText)
             thisFieldLabelWidget.setTextInteractionFlags(
                 Qt.LinksAccessibleByMouse
             )
@@ -258,6 +259,9 @@ def _getResultVBoxLayout(
             currentFieldStringToShow += f"{singleResult[field]}"
             # Creating a label with the string as text:
             thisFieldLabelWidget = QLabel(currentFieldStringToShow)
+            thisFieldLabelWidget.setFont(
+                QFont(FONT_TO_USE, RESULT_GENERAL_FONT_SIZE)
+            )
 
         # Adding the current field's label to the result's layout:
         thisResultVBoxLayout.addWidget(thisFieldLabelWidget)
