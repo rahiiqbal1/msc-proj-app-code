@@ -38,6 +38,8 @@ SEARCH_AGAIN_BUTTON_FONT_SIZE = 22
 RESULT_NAME_FONT_SIZE = 18
 # Results url:
 RESULT_URL_FONT_SIZE = 18
+# Results scrollbar:
+RESULTS_SCROLL_AREA_HEIGHT = 2500
 # Data and results:
 NUM_RESULTS_TO_SHOW = 20
 RESULT_TEXT_SPACING = 2
@@ -184,14 +186,14 @@ class SearchWindow(QMainWindow):
             subWidget.setLayout(thisResultVBoxLayout)
             overallVBoxLayout.addWidget(subWidget)
 
-        # Creating scroll layout:
+        # Creating scroll layout, using a subwidget to be able to add to the
+        # scroll area:
         scrollArea = QScrollArea()
-        scrollArea.setLayout(overallVBoxLayout)
+        subWidget = QWidget()
+        subWidget.setLayout(overallVBoxLayout)
+        scrollArea.setWidget(subWidget)
         scrollArea.setWidgetResizable(True)
-        scrollArea.setFixedHeight(3000)
-        # # Creating central widget:
-        # centralWidget = QWidget()
-        # centralWidget.setLayout(overallLayout)
+        scrollArea.setFixedHeight(RESULTS_SCROLL_AREA_HEIGHT)
 
         # Adding to general stacked widget of class instance. Placing at index
         # 1:
