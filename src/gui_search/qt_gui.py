@@ -223,17 +223,17 @@ def _getResultVBoxLayout(
         currentFieldStringToShow: str = ""
 
         if field == "name":
-             currentFieldStringToShow += (
-                 f"<b>{singleResult[field]}</b><br>"
-             )
-             # For the name (i.e. title) set the font size to the chosen size:
-             thisFieldLabelWidget = QLabel(currentFieldStringToShow)
-             thisFieldLabelWidget.setFont(
-                 QFont(FONT_TO_USE, RESULT_NAME_FONT_SIZE)
-             )
+            currentFieldStringToShow += (
+                f"<b>{singleResult[field]}</b><br>"
+            )
+            # For the name (i.e. title) set the font size to the chosen size:
+            thisFieldLabelWidget = QLabel(currentFieldStringToShow)
+            thisFieldLabelWidget.setFont(
+                QFont(FONT_TO_USE, RESULT_NAME_FONT_SIZE)
+            )
 
-        # Inserting url as hyperlink:
         elif field == "url":
+            # Inserting url as hyperlink:
             currentFieldStringToShow += (
                 f"<a href='{singleResult[field]}'>" + 
                 f"{singleResult[field]}</a>"
@@ -260,7 +260,7 @@ def _getResultVBoxLayout(
         # Adding the current field's label to the result's layout:
         thisResultVBoxLayout.addWidget(thisFieldLabelWidget)
 
-        return thisResultVBoxLayout
+    return thisResultVBoxLayout
 
 class SearchController:
     """
