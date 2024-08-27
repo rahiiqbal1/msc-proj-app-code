@@ -153,13 +153,13 @@ class SearchWindow(QMainWindow):
         results: list[dict[str, str]] = searchFunction()
 
         # Layout and widgets:
-        overallLayout = QVBoxLayout()
+        overallVBoxLayout = QVBoxLayout()
         self.searchAgainButton.setFont(
             QFont(FONT_TO_USE, SEARCH_AGAIN_BUTTON_FONT_SIZE)
         )
 
-        # Adding search again button to layout:
-        overallLayout.addWidget(self.searchAgainButton)
+        # Adding search again button to overall layout:
+        overallVBoxLayout.addWidget(self.searchAgainButton)
 
         # Adding results to widget, only showing a maximum of
         # NUM_RESULTS_TO_SHOW results, although there may be less than this for
@@ -182,11 +182,11 @@ class SearchWindow(QMainWindow):
             # make this possible:
             subWidget = QWidget()
             subWidget.setLayout(thisResultVBoxLayout)
-            overallLayout.addWidget(subWidget)
+            overallVBoxLayout.addWidget(subWidget)
 
         # Creating scroll layout:
         scrollArea = QScrollArea()
-        scrollArea.setLayout(overallLayout)
+        scrollArea.setLayout(overallVBoxLayout)
         scrollArea.setWidgetResizable(True)
         scrollArea.setFixedHeight(3000)
         # # Creating central widget:
@@ -201,7 +201,7 @@ class SearchWindow(QMainWindow):
         self.generalWidget.setCurrentIndex(1)
 
         return {
-            "overallLayout": overallLayout
+            "overallLayout": overallVBoxLayout
         }
 
 def _getResultVBoxLayout(
