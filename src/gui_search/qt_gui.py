@@ -234,7 +234,7 @@ class SearchWindow(QMainWindow):
             "overallLayout": overallLayout
         }
 
-def _getResultLabelWidget(
+def _getResultVBoxLayout(
     singleResult: dict[str, str],
     fieldsToShow: tuple[str, ...]
     ) -> QVBoxLayout:
