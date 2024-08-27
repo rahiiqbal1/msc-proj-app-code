@@ -203,7 +203,7 @@ class SearchWindow(QMainWindow):
         self.generalWidget.setCurrentIndex(1)
 
         return {
-            "overallLayout": overallVBoxLayout
+            "scrollArea": scrollArea
         }
 
 def _getResultVBoxLayout(
