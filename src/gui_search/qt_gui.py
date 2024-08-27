@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QPushButton,
     QStackedWidget,
+    QScrollArea
 )
 from PyQt5.QtGui import QFont
 
@@ -21,12 +22,12 @@ WINDOW_TITLE = "Wikipedia Search Engine"
 # All-widgets:
 FONT_TO_USE = "Times New Roman"
 # Search box label:
-SEARCH_BOX_LABEL_FONT_SIZE = 28
+SEARCH_BOX_LABEL_FONT_SIZE = 21
 # Search box:
 SEARCH_BOX_HEIGHT = 64
 SEARCH_BOX_WIDTH = 1024
 SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
-SEARCH_BOX_FONT_SIZE = 22
+SEARCH_BOX_FONT_SIZE = 18
 # Search button:
 SEARCH_BUTTON_TEXT = "&Search"
 SEARCH_BUTTON_FONT_SIZE = 22
@@ -34,12 +35,12 @@ SEARCH_BUTTON_FONT_SIZE = 22
 SEARCH_AGAIN_BUTTON_TEXT = "&Search again"
 SEARCH_AGAIN_BUTTON_FONT_SIZE = 22
 # Results name:
-RESULT_NAME_FONT_SIZE = 22
+RESULT_NAME_FONT_SIZE = 18
 # Results url:
-RESULT_URL_FONT_SIZE = 22
-
+RESULT_URL_FONT_SIZE = 18
 # Data and results:
-NUM_RESULTS_TO_SHOW = 10
+NUM_RESULTS_TO_SHOW = 20
+RESULT_TEXT_SPACING = 2
 
 def main() -> None:
     # Initialise app:
@@ -53,7 +54,7 @@ def main() -> None:
         return [
             {"name": "blah",      "url": "here.com"},
             {"name": "more blah", "url": "there.org"}
-        ] * 5
+        ] * (NUM_RESULTS_TO_SHOW // 2)
     SearchController(testSearchFunction, searchWindow)
 
     # Display and event loop:
@@ -122,7 +123,7 @@ class SearchWindow(QMainWindow):
         centralWidget = QWidget()
         centralWidget.setLayout(overallLayout)
 
-        self.generalWidget.addWidget(centralWidget)
+        self.generalWidget.insertWidget(0, centralWidget)
 
         return {
             "overallLayout": overallLayout,
@@ -160,7 +161,7 @@ class SearchWindow(QMainWindow):
         # Adding search again button to layout:
         overallLayout.addWidget(self.searchAgainButton)
 
-        # Adding results to widget, only showing a maximum of 
+        # Adding results to widget, only showing a maximum of
         # NUM_RESULTS_TO_SHOW results, although there may be less than this for
         # some queries:
         resultIdx: int
@@ -170,62 +171,31 @@ class SearchWindow(QMainWindow):
             # to show (in the previous iteration):
             if resultIdx == NUM_RESULTS_TO_SHOW:
                 break
-            # Vertical box layout to contain all information for the current
-            # result. This will be added to the overallLayout when ready:
-            thisResultLayout = QVBoxLayout()
 
-            # Only showing desired fields:
-            field: str
-            for field in fieldsToShow:
-                # Initialising string which will be added to a QLabel and then
-                # to the layout for the current result:
-                currentFieldStringToShow: str = ""
-                if field == "name":
-                    currentFieldStringToShow += (
-                        f"<b>{singleResult[field]}</b><br>"
-                    )
-                    # For the name (i.e. title) set the font size to the 
-                    # chosen size:
-                    thisFieldLabelWidget = QLabel(currentFieldStringToShow)
-                    thisFieldLabelWidget.setFont(
-                        QFont(FONT_TO_USE, RESULT_NAME_FONT_SIZE)
-                    )
+            # Getting QVBoxLayout for this result containing QLabels with each
+            # desired field as text:
+            thisResultVBoxLayout: QVBoxLayout = _getResultVBoxLayout(
+                singleResult, fieldsToShow
+            )
 
-                # Inserting url as hyperlink:
-                elif field == "url":
-                    currentFieldStringToShow += (
-                        f"<a href='{singleResult[field]}'>" + 
-                        f"{singleResult[field]}</a>"
-                    )
-
-                    # Creating Qlabel widget with the string for the current
-                    # field as the text:
-                    thisFieldLabelWidget = QLabel(currentFieldStringToShow)
-                    thisFieldLabelWidget.setTextFormat(Qt.RichText)
-                    thisFieldLabelWidget.setTextInteractionFlags(
-                        Qt.LinksAccessibleByMouse
-                    )
-                    thisFieldLabelWidget.setOpenExternalLinks(True)
-                    thisFieldLabelWidget.setFont(
-                        QFont(FONT_TO_USE, RESULT_URL_FONT_SIZE)
-                    )
-
-                # Adding the current field's label to the result's layout:
-                thisResultLayout.addWidget(thisFieldLabelWidget)
-
-            # Adding that layout to the overall layout. Uses a sub-widget to
+            # Adding result layout to the overall layout. Uses a sub-widget to
             # make this possible:
             subWidget = QWidget()
-            subWidget.setLayout(thisResultLayout)
+            subWidget.setLayout(thisResultVBoxLayout)
             overallLayout.addWidget(subWidget)
 
-        # Creating central widget:
-        centralWidget = QWidget()
-        centralWidget.setLayout(overallLayout)
+        # Creating scroll layout:
+        scrollArea = QScrollArea()
+        scrollArea.setLayout(overallLayout)
+        scrollArea.setWidgetResizable(True)
+        scrollArea.setFixedHeight(3000)
+        # # Creating central widget:
+        # centralWidget = QWidget()
+        # centralWidget.setLayout(overallLayout)
 
         # Adding to general stacked widget of class instance. Placing at index
         # 1:
-        self.generalWidget.insertWidget(1, centralWidget)
+        self.generalWidget.insertWidget(1, scrollArea)
 
         # Switching general stacked widget's index to display results:
         self.generalWidget.setCurrentIndex(1)
@@ -256,8 +226,7 @@ def _getResultVBoxLayout(
              currentFieldStringToShow += (
                  f"<b>{singleResult[field]}</b><br>"
              )
-             # For the name (i.e. title) set the font size to the 
-             # chosen size:
+             # For the name (i.e. title) set the font size to the chosen size:
              thisFieldLabelWidget = QLabel(currentFieldStringToShow)
              thisFieldLabelWidget.setFont(
                  QFont(FONT_TO_USE, RESULT_NAME_FONT_SIZE)
@@ -270,10 +239,10 @@ def _getResultVBoxLayout(
                 f"{singleResult[field]}</a>"
             )
 
-            # Creating Qlabel widget with the string for the current
-            # field as the text:
+            # Creating Qlabel widget with the string for the current field as
+            # the text:
             thisFieldLabelWidget = QLabel(currentFieldStringToShow)
-            # thisFieldLabelWidget.setTextFormat(Qt.RichText)
+            thisFieldLabelWidget.setTextFormat(Qt.RichText)
             thisFieldLabelWidget.setTextInteractionFlags(
                 Qt.LinksAccessibleByMouse
             )
@@ -285,7 +254,6 @@ def _getResultVBoxLayout(
         else:
             # Setting string to the text of the field:
             currentFieldStringToShow += f"{singleResult[field]}"
-
             # Creating a label with the string as text:
             thisFieldLabelWidget = QLabel(currentFieldStringToShow)
 
