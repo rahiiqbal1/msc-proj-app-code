@@ -14,9 +14,6 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QFont
 
-# Display:
-DISPLAY_WIDTH = 3840    
-DISPLAY_HEIGHT = 2160
 # Window:
 WINDOW_WIDTH = 720
 WINDOW_HEIGHT = 480
