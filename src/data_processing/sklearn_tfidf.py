@@ -2,6 +2,7 @@ import sys
 import os
 
 from sklearn.feature_extraction.text import TfidfVectorizer
+from tqdm import tqdm
 
 from data_manipulation import (
     load_ndjsons_as_single_list,
@@ -42,7 +43,7 @@ def get_corpus_tfidf(corpus: list[str]):
     """
     vectoriser = TfidfVectorizer()
 
-    return vectoriser.fit_transform(corpus)
+    return vectoriser.fit_transform(tqdm(corpus))
 
 def test_get_corpus_tfidf() -> None:
     corpus = ["a line of text", "another piece of textual information"]
