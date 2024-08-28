@@ -229,10 +229,10 @@ def generate_jsons_from_ndjsons(
         # Yielding list of json dictionaries from the current file:
         yield load_jsons_from_ndjson(ndjson_filepath)
 
-def load_ndjsons_as_single_dict(ndjsons_dir: str) -> list[dict[str, Any]]:
+def load_ndjsons_as_single_list(ndjsons_dir: str) -> list[dict[str, Any]]:
     """
-    Loads in all ndjson files in the given directory and return a single 
-    dictionary containing all their jsons.
+    Loads in all ndjson files in the given directory and return a single list
+    containing all their jsons.
     """
     # Initialising list which will store json dictionaries:
     list_of_jsons: list[dict[str, Any]] = []
