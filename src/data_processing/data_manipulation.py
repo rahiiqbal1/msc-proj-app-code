@@ -222,7 +222,6 @@ def generate_jsons_from_ndjsons(
 
     ndjson_filename: str
     for ndjson_filename in tqdm(ndjson_filenames, "Reading .ndjsons"):
-        print(ndjson_filename)
         # Getting full filepath as ndjson_filename is only the filename:
         ndjson_filepath: str = os.path.join(ndjsons_dir, ndjson_filename)
 
