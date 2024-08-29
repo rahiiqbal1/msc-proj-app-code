@@ -158,6 +158,7 @@ class SearchWindow(QMainWindow):
 
         # Layout and widgets:
         overallVBoxLayout = QVBoxLayout()
+        overallVBoxLayout.setSpacing(0)
         self.searchAgainButton.setFont(
             QFont(FONT_TO_USE, SEARCH_AGAIN_BUTTON_FONT_SIZE)
         )
@@ -218,6 +219,7 @@ def _getResultVBoxLayout(
     """
     # Initialising VBoxLayout which will be returned:
     thisResultVBoxLayout = QVBoxLayout()
+    thisResultVBoxLayout.setSpacing(0)
 
     # Only showing desired fields:
     field: str
