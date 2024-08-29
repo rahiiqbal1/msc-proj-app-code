@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QApplication
 
 from qt_gui import SearchWindow, SearchController
 import transformer_get_results as ts
-import txtai_bm25_get_results as txtaibm25
+import txtai_classical_get_results as txtaiclassical
 # Bodge:
 sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
@@ -75,11 +75,12 @@ def txtaiClassicalSearch(wikidataDir: str, searchMethod: str) -> None:
     txtaiClassicalIndexPath: str = os.path.join(
         wikidataDir, f"poc_txtai_{searchMethod}_index.pkl"
     )
-
+    
     guiSearch(
-        txtaibm25.txtaiBM25GetResultsSF,
+        txtaiclassical.txtaiClassicalGetResultsSF,
         jsonsPickleSavePath,
-        txtaiClassicalIndexPath
+        txtaiClassicalIndexPath,
+        searchMethod
     ) 
 
 if __name__ == "__main__":
