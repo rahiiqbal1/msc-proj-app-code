@@ -413,9 +413,11 @@ def _get_ndjson_line_counts(
     function calculates the line count of each .ndjson file in the given 
     directory, saves the list in the given directory, and returns.
     """
+    # Filename of (potentially) saved pickle:
+    ndjson_line_counts_pickle_filename: str = f"{ndjsons_dir}-line-counts.pkl"
     # Full path to pickled file of line counts (list[int]):
     ndjson_line_counts_pickle_fullpath: str = os.path.join(
-        ndjson_line_counts_pickle_save_dir, f"{ndjsons_dir}-line-counts.pkl"
+        ndjson_line_counts_pickle_save_dir, ndjson_line_counts_pickle_filename
     )
 
     # If the pickle exists at the specified path, load it, otherwise calculate
@@ -440,7 +442,7 @@ def _get_ndjson_line_counts(
 
         save_data(
             ndjson_line_counts,
-            "ndjson_line_counts.pkl",
+            ndjson_line_counts_pickle_filename,
             ndjson_line_counts_pickle_save_dir
         )
 
