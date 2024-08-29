@@ -156,6 +156,39 @@ class SearchWindow(QMainWindow):
         # Evaluating results:
         results: list[dict[str, str]] = searchFunction()
 
+        # Getting VBoxLayout containing all results:
+        overallVBoxLayout: QVBoxLayout = (
+            self._getAllResultsVBoxLayout(results, fieldsToShow)
+        )
+
+        # Creating scroll layout, using a subwidget to be able to add to the
+        # scroll area:
+        scrollArea = QScrollArea()
+        subWidget = QWidget()
+        subWidget.setLayout(overallVBoxLayout)
+        scrollArea.setWidget(subWidget)
+        scrollArea.setWidgetResizable(True)
+
+        # Adding to general stacked widget of class instance. Placing at index
+        # 1:
+        self.generalWidget.insertWidget(1, scrollArea)
+
+        # Switching general stacked widget's index to display results:
+        self.generalWidget.setCurrentIndex(1)
+
+        return {
+            "scrollArea": scrollArea
+        }
+
+    def _getAllResultsVBoxLayout(
+        self,
+        results: list[dict[str, str]],
+        fieldsToShow: tuple[str, ...]
+        ) -> QVBoxLayout:
+        """
+        Returns a QVBoxLayout of the list of results, showing only the
+        specified fields.
+        """
         # Layout and widgets:
         overallVBoxLayout = QVBoxLayout()
         overallVBoxLayout.setSpacing(0)
@@ -189,24 +222,7 @@ class SearchWindow(QMainWindow):
             subWidget.setLayout(thisResultVBoxLayout)
             overallVBoxLayout.addWidget(subWidget)
 
-        # Creating scroll layout, using a subwidget to be able to add to the
-        # scroll area:
-        scrollArea = QScrollArea()
-        subWidget = QWidget()
-        subWidget.setLayout(overallVBoxLayout)
-        scrollArea.setWidget(subWidget)
-        scrollArea.setWidgetResizable(True)
-
-        # Adding to general stacked widget of class instance. Placing at index
-        # 1:
-        self.generalWidget.insertWidget(1, scrollArea)
-
-        # Switching general stacked widget's index to display results:
-        self.generalWidget.setCurrentIndex(1)
-
-        return {
-            "scrollArea": scrollArea
-        }
+        return overallVBoxLayout
 
     def _getSingleResultVBoxLayout(
         self,
