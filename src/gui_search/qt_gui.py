@@ -324,12 +324,14 @@ class SearchController:
         # relies on the search box on the home page being cleared after use:
         searchPageQuery: str = self._view.searchWidgets["searchBox"].text()
         if  searchPageQuery != "":
+            self._view.rpSearchBox.setText(searchPageQuery)
             searchQueryUsed: str = self._view.searchWidgets["searchBox"].text()
         
         else:
             searchQueryUsed: str = self._view.rpSearchBox.text()
 
-        # Setting home page search box text blank after use:
+        # Setting results page search box text to that of the home page search
+        # bar, then setting home page search box text blank after use:
         self._view.searchWidgets["searchBox"].setText("")
 
         # Passing given modelArgs to model along with search query present in
