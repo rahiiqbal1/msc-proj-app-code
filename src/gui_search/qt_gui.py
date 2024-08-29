@@ -196,7 +196,6 @@ class SearchWindow(QMainWindow):
         subWidget.setLayout(overallVBoxLayout)
         scrollArea.setWidget(subWidget)
         scrollArea.setWidgetResizable(True)
-        scrollArea.setFixedHeight(RESULTS_SCROLL_AREA_HEIGHT)
 
         # Adding to general stacked widget of class instance. Placing at index
         # 1:
