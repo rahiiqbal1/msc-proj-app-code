@@ -29,7 +29,7 @@ SEARCH_BOX_WIDTH = 1024
 SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 SEARCH_BOX_FONT_SIZE = 18
 # Search button:
-SEARCH_BUTTON_TEXT = "&Search"
+SEARCH_BUTTON_TEXT = "Search"
 SEARCH_BUTTON_FONT_SIZE = 18
 # Search again button:
 SEARCH_AGAIN_BUTTON_TEXT = "&Search again"
@@ -78,7 +78,7 @@ class SearchWindow(QMainWindow):
         # Getting layout for search page and adding to the generalWidget, 
         # retrieving search button widget for use in controller. The search 
         # page should always be at index 0 within the stacked widget:
-        self.searchWidgets: dict[str, Any] = self.showSearchPage() 
+        self.searchWidgets: dict[str, Any] = self._showSearchPage() 
         # Adding search again button to widgets for class:
         self.searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
 
@@ -114,6 +114,7 @@ class SearchWindow(QMainWindow):
         searchButton.setFixedWidth(SEARCH_BOX_WIDTH)
         searchButton.setFixedHeight(SEARCH_BOX_HEIGHT)
         searchButton.setFont((QFont(FONT_TO_USE, SEARCH_BUTTON_FONT_SIZE)))
+        searchButton.setShortcut("Return")
 
         overallLayout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
