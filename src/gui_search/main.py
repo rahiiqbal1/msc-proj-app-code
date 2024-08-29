@@ -16,7 +16,9 @@ def main() -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-    txtaiClassicalSearch(wikidataDir, "tfidf")
+    # txtaiClassicalSearch(wikidataDir, "tfidf")
+    # txtaiClassicalSearch(wikidataDir, "bm25")
+    transformerSearch(wikidataDir)
 
     sys.exit(0)
 
