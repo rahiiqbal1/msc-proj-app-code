@@ -34,7 +34,6 @@ def transformerGetResultsSF(
     if ndjsonLineCountsPickleSaveDir is None:
         ndjsonLineCountsPickleSaveDir = os.path.dirname(ndjsonsDir)
 
-
     # Getting results in readable format:
     numResult: tuple[int, float]
     for numResult in numResults:

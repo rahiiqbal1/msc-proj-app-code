@@ -441,7 +441,6 @@ def _get_ndjson_line_counts(
     ndjson_line_counts_pickle_fullpath: str = os.path.join(
         ndjson_line_counts_pickle_save_dir, ndjson_line_counts_pickle_filename
     )
-    print(ndjson_line_counts_pickle_fullpath)
 
     # If the pickle exists at the specified path, load it, otherwise calculate
     # and save:
