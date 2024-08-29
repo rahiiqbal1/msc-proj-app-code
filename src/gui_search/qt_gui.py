@@ -153,7 +153,10 @@ class SearchWindow(QMainWindow):
         # List of keys within the results which we want to see:
         fieldsToShow: tuple[str, ...] = ("name", "url")
 
-        # Evaluating results:
+        # Evaluating results. The searchFunction here takes no arguments as
+        # this method is connected to the searchFunction within the 
+        # SearchController, which searches using the text present in the 
+        # search box on the search page:
         results: list[dict[str, str]] = searchFunction()
 
         # Getting VBoxLayout containing all results:
