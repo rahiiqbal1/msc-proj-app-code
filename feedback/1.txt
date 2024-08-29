@@ -1,8 +1,8 @@
-Bigger font in search bar done
-Bigger title font done
-Bigger title font for search results done
-Search bar at top of results page done
-Show what the search is in the results page 
+Bigger font in search bar DONE
+Bigger title font DONE
+Bigger title font for search results DONE
+Search bar at top of results page DONE
+Show what the search is in the results page DONE
 Add first bit of abstract in search results
 Boxes around results
 Loading page
