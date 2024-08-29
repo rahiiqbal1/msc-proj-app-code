@@ -199,7 +199,7 @@ class SearchWindow(QMainWindow):
         """
         # Layout and widgets:
         overallVBoxLayout = QVBoxLayout()
-        overallVBoxLayout.setSpacing(0)
+        # overallVBoxLayout.setSpacing(0)
         self.searchAgainButton.setFont(
             QFont(FONT_TO_USE, SEARCH_AGAIN_BUTTON_FONT_SIZE)
         )
