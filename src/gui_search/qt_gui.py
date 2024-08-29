@@ -82,6 +82,10 @@ class SearchWindow(QMainWindow):
         # Adding search again button to widgets for class:
         self.searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
         self.searchAgainButton.setShortcut("Return")
+        # Adding results page search box to widgets for class:
+        self.rpSearchBox = QLineEdit()
+        self.rpSearchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
+        self.rpSearchBox.setFont(QFont(FONT_TO_USE, SEARCH_BOX_FONT_SIZE))
 
         # Basic window formatting:
         self.showMaximized()
@@ -166,10 +170,7 @@ class SearchWindow(QMainWindow):
             self._getAllResultsVBoxLayout(results, fieldsToShow)
         )
         # Adding search box to top of layout:
-        rpSearchBox = QLineEdit()
-        rpSearchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
-        rpSearchBox.setFont(QFont(FONT_TO_USE, SEARCH_BOX_FONT_SIZE))
-        overallVBoxLayout.insertWidget(0, rpSearchBox)
+        overallVBoxLayout.insertWidget(0, self.rpSearchBox)
 
         # Creating scroll layout, using a subwidget to be able to add to the
         # scroll area:
