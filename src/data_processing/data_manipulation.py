@@ -21,6 +21,8 @@ def main() -> None:
         all_data_dir, "poc-fully-processed-ndjsons"
     )
 
+    _test_find_jsons_given_index_ndjsons()
+
     sys.exit(0)
 
 def save_data(data: Any, data_save_name: str, save_dir: str) -> None:
@@ -75,7 +77,7 @@ def stringify_dictionaries(
 
     return strings_to_return
 
-def cut_single_dict(
+def _cut_single_dict(
     dict_to_cut: dict[str, Any],
     fields_to_use: tuple[str, ...]
     ) -> dict[str, Any]:
@@ -115,7 +117,7 @@ def cut_list_of_dicts(
 
     single_dict: dict[str, Any]
     for single_dict in list_of_dicts_to_cut:
-        single_cut_dict: dict[str, str] = cut_single_dict(
+        single_cut_dict: dict[str, str] = _cut_single_dict(
             single_dict, fields_to_use
         )
 
@@ -123,7 +125,7 @@ def cut_list_of_dicts(
 
     return list_of_cut_dicts
 
-def save_ndjsons_as_single_pickle(
+def _save_ndjsons_as_single_pickle(
     ndjsons_dir: str,
     pickle_save_name: str,
     pickle_save_dir: str
@@ -141,7 +143,7 @@ def save_ndjsons_as_single_pickle(
 
     save_data(list_of_jsons, pickle_save_name, pickle_save_dir)
 
-def combine_indexes(
+def _combine_indexes(
     indexes_to_combine: list[dict[str, dict[int, int]]]
     ) -> dict[str, dict[int, int]]:
     """
@@ -167,7 +169,7 @@ def combine_indexes(
 
     return combined_index
 
-def test_combine_indexes() -> None:
+def _test_combine_indexes() -> None:
     print("Testing combine_indexes:\n")
 
     idx1 = {"this": {1: 12}}
@@ -175,7 +177,7 @@ def test_combine_indexes() -> None:
 
     # 1 + 2:
     print("Expected value: {'this': {1: 12, 2: 12}}")
-    print(f"Actual value: {combine_indexes([idx1, idx2])}")
+    print(f"Actual value: {_combine_indexes([idx1, idx2])}")
     print("----------")
 
     idx3 = {"this": {1: 12, 2: 4}, "that": {1: 2, 2: 8}}
@@ -184,7 +186,7 @@ def test_combine_indexes() -> None:
     # 3 + 4:
     print("Expected value: {'this': {1: 12, 2: 4}, 'there': {3: 3, 4: 5}, " +
                            "'that': {1: 2, 2: 8, 3: 2, 4: 6}}")
-    print(f"Actual value: {combine_indexes([idx3, idx4])}")
+    print(f"Actual value: {_combine_indexes([idx3, idx4])}")
     print("----------")
 
 def load_jsons_from_ndjson(ndjson_file_path: str) -> list[dict[str, Any]]:
@@ -216,7 +218,7 @@ def generate_jsons_from_ndjsons(
     '''
     # Get all filenames in ndjsons_dir to read through them, and sorting them
     # numerically (requires exactly one number in the filename of each ndjson):
-    ndjson_filenames: list[str] = sort_filenames_with_numbers(
+    ndjson_filenames: list[str] = _sort_filenames_with_numbers(
         os.listdir(ndjsons_dir)
     )
 
@@ -275,7 +277,7 @@ def generate_jsons_from_single_ndjson(
         if len(json_batch) != 0:
             yield json_batch
 
-def test_generate_jsons_from_single_ndjson() -> None:
+def _test_generate_jsons_from_single_ndjson() -> None:
     test_ndjson_path: str = os.path.join(
         os.pardir,
         os.pardir,
@@ -341,7 +343,7 @@ def generate_list_of_jsons_from_pickles(
     pickled_data_filenames: list[str] = os.listdir(pickled_data_dir)
 
     # Sorting filenames for known indexing:
-    pickled_data_filenames = sort_filenames_with_numbers(
+    pickled_data_filenames = _sort_filenames_with_numbers(
         pickled_data_filenames
     )    
 
@@ -357,7 +359,7 @@ def generate_list_of_jsons_from_pickles(
         with open(pickled_data_fullpath, "rb") as file_to_read:
             yield pickle.load(file_to_read)
 
-def get_num_from_string(str_to_parse: str) -> int:
+def _get_num_from_string(str_to_parse: str) -> int:
     """
     Takes a string with at most 1 number within and returns that number as an
     int. 
@@ -374,14 +376,14 @@ def get_num_from_string(str_to_parse: str) -> int:
 
     return int(num_in_str)
 
-def test_get_num_from_string() -> None:
+def _test_get_num_from_string() -> None:
     strings_to_parse: tuple[str, ...] = ("this1", "that24", "those0", "the100")
 
     string: str
     for string in strings_to_parse:
-        print(get_num_from_string(string))
+        print(_get_num_from_string(string))
 
-def sort_filenames_with_numbers(filenames: list[str]) -> list[str]:
+def _sort_filenames_with_numbers(filenames: list[str]) -> list[str]:
     """
     Takes a list of filenames with exactly one number within them and sorts the
     list numerically.
@@ -391,18 +393,63 @@ def sort_filenames_with_numbers(filenames: list[str]) -> list[str]:
     # Copying list of filenames to prevent mutation:
     sorted_filenames: list[str] = filenames.copy()
 
-    sorted_filenames.sort(key = get_num_from_string)
+    sorted_filenames.sort(key = _get_num_from_string)
 
     return sorted_filenames
 
-def test_sort_filenames_with_numbers() -> None:
+def _test_sort_filenames_with_numbers() -> None:
     test_names: list[str] = ["a3", "b5", "c1", "d100", "b10"]
 
-    print(sort_filenames_with_numbers(test_names))
+    print(_sort_filenames_with_numbers(test_names))
+
+def _get_ndjson_line_counts(
+    sorted_ndjson_filenames: list[str],
+    ndjsons_dir: str, 
+    ndjson_line_counts_pickle_save_dir: str
+    ) -> list[int]:
+    """
+    Checks if a file exists named "ndjson_line_counts.pkl" in the given
+    directory. If it does then it is loaded and returned. If not, then this 
+    function calculates the line count of each .ndjson file in the given 
+    directory, saves the list in the given directory, and returns.
+    """
+    # Full path to pickled file of line counts (list[int]):
+    ndjson_line_counts_pickle_fullpath: str = os.path.join(
+        ndjson_line_counts_pickle_save_dir, "ndjson_line_counts.pkl"
+    )
+
+    # If the pickle exists at the specified path, load it, otherwise calculate
+    # and save:
+    if os.path.exists(ndjson_line_counts_pickle_fullpath) == True:
+        return load_data(ndjson_line_counts_pickle_fullpath)
+
+    else:
+        # Getting lengths of files by line number, i.e. the number of jsons:
+        ndjson_line_counts: list[int] = []
+        single_ndjson_filename: str
+        for single_ndjson_filename in sorted_ndjson_filenames:
+            # Getting full filepath as filename is only the name:
+            full_single_ndjson_filepath: str = os.path.join(
+                ndjsons_dir, single_ndjson_filename
+            )
+
+            # Getting length of file and adding it to the list of lengths:
+            ndjson_line_counts.append(
+                count_lines_in_file(full_single_ndjson_filepath)
+            )
+
+        save_data(
+            ndjson_line_counts,
+            "ndjson_line_counts.pkl",
+            ndjson_line_counts_pickle_save_dir
+        )
+
+        return ndjson_line_counts
 
 def find_json_given_index_ndjsons(
     ndjsons_dir: str,
-    index: int
+    index: int,
+    ndjson_line_counts_pickle_save_dir: str
     ) -> dict[str, str]:
     """
     For a given directory containing numerically-sorted .ndjson files, and a 
@@ -411,23 +458,16 @@ def find_json_given_index_ndjsons(
     """
     # Retrieving filenames within directory and sorting. Requires that each
     # ndjson filename contains exactly one number to sort by:
-    sorted_ndjson_filenames: list[str] = sort_filenames_with_numbers(
+    sorted_ndjson_filenames: list[str] = _sort_filenames_with_numbers(
         os.listdir(ndjsons_dir)
     )
 
-    # Getting lengths of files by line number, i.e. the number of jsons:
-    ndjson_line_counts: list[int] = []
-    single_ndjson_filename: str
-    for single_ndjson_filename in sorted_ndjson_filenames:
-        # Getting full filepath as filename is only the name:
-        full_single_ndjson_filepath: str = os.path.join(
-            ndjsons_dir, single_ndjson_filename
-        )
-
-        # Getting length of file and adding it to the list of lengths:
-        ndjson_line_counts.append(
-            count_lines_in_file(full_single_ndjson_filepath)
-        )
+    # Getting line counts of ndjsons in directory:
+    ndjson_line_counts: list[int] = _get_ndjson_line_counts(
+        sorted_ndjson_filenames, 
+        ndjsons_dir,
+        ndjson_line_counts_pickle_save_dir
+    )
 
     # Initialising variable to keep track of which file within the directory
     # we are in the scope of through the for loop. Starting from 0 as we can 
@@ -465,19 +505,26 @@ def find_json_given_index_ndjsons(
 
     return desired_json
 
-def test_find_jsons_given_index_ndjsons() -> None:
-    test_ndjsons_dir: str = os.path.join(
+def _test_find_jsons_given_index_ndjsons() -> None:
+    this_test_dir: str = os.path.join(
         os.pardir, os.pardir, "data", "testing", "find-index-ndjsons-test"
     )
+    test_ndjsons_dir = os.path.join(this_test_dir, "ndjsons")
 
     print("TEST 1")
     print("Expected: {'this': 'hello'}")
-    print(f"Actual: {find_json_given_index_ndjsons(test_ndjsons_dir, 0)}")
+    test1_result: dict[str, str] = find_json_given_index_ndjsons(
+        test_ndjsons_dir, 0, this_test_dir
+    )
+    print(f"Actual: {test1_result}")
     print('-' * 30)
 
     print("TEST 2")
     print("Expected: {'this': 'cool'}")
-    print(f"Actual: {find_json_given_index_ndjsons(test_ndjsons_dir, 2)}")
+    test2_result: dict[str, str] = find_json_given_index_ndjsons(
+        test_ndjsons_dir, 2, this_test_dir
+    )
+    print(f"Actual: {test2_result}")
     print('-' * 30)
 
 def find_data_given_index_pickles(data_dir: str, index: int) -> dict[str, str]:
@@ -487,7 +534,7 @@ def find_data_given_index_pickles(data_dir: str, index: int) -> dict[str, str]:
     index.
     """
     # Retrieving filenames within directory and sorting:
-    sorted_filenames: list[str] = sort_filenames_with_numbers(
+    sorted_filenames: list[str] = _sort_filenames_with_numbers(
         os.listdir(data_dir)
     )
 
@@ -528,7 +575,7 @@ def find_data_given_index_pickles(data_dir: str, index: int) -> dict[str, str]:
     # Loading correct data in directory and getting json at required index:
     return load_data(containing_file_path)[index]
 
-def test_find_data_given_index_pickles() -> None:
+def _test_find_data_given_index_pickles() -> None:
     test_pickled_lists_dir: str = os.path.join(
         os.pardir, os.pardir, "data", "test-pickled-list-retrieval"
     )
