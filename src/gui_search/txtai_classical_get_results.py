@@ -1,6 +1,5 @@
 import sys
 import os
-from typing import Any
 
 from txtai.scoring import ScoringFactory
 
@@ -14,29 +13,36 @@ def main() -> None:
     sys.exit(0)
 
 # Model:
-def txtaiBM25GetResultsSF(
+def txtaiClassicalGetResultsSF(
     jsonsPickleSavePath: str,
     indexSavePath: str,
-    searchQuery: str
+    searchQuery: str,
+    searchMethod: str
     ) -> list[dict[str, str]]:
     """
     Searches through jsons in given pickle using the txtai implementation of
-    BM25. Returns result jsons with all fields intact, so they should be cut as
-    desired outside of this function.
+    either tf-idf or bm25. Returns result jsons with all fields intact, so they
+    should be cut as desired outside of this function.
+
+    searchMethod must be either "bm25" or "tfidf".
     """
     # Loading json data:
     jsonsIndexed: list[dict[str, str]] = dm.load_data(jsonsPickleSavePath)
 
     # Loading in txtai index:
-    bm25Scoring = ScoringFactory.create({"method": "bm25", "terms": True})
-    bm25Scoring.load(indexSavePath)
+    classicalScoring = ScoringFactory.create(
+        {"method": searchMethod, "terms": True}
+    )
+    classicalScoring.load(indexSavePath)
 
     # Initialising list to store results:
     results: list[dict[str, str]] = []
 
     # Getting search results. This is a list of the form
     # [(id: int, score: float), ...]:
-    allSearchResults = bm25Scoring.search(searchQuery, NUM_RESULTS_TO_SHOW)
+    allSearchResults = classicalScoring.search(
+        searchQuery, NUM_RESULTS_TO_SHOW
+    )
 
     # There may be LSP errors here, but it works:
     for numericalResult in allSearchResults:
