@@ -89,7 +89,7 @@ class SearchWindow(QMainWindow):
         # Set layout:
         self.setCentralWidget(self.generalWidget)
 
-    def showSearchPage(self) -> dict[str, QWidget]:
+    def _showSearchPage(self) -> dict[str, QWidget]:
         """
         Generates the layout for the search page, adds it to a widget instance,
         and adds that widget to the general (stacked) widget. 
@@ -199,7 +199,6 @@ class SearchWindow(QMainWindow):
         """
         # Layout and widgets:
         overallVBoxLayout = QVBoxLayout()
-        # overallVBoxLayout.setSpacing(0)
         self.searchAgainButton.setFont(
             QFont(FONT_TO_USE, SEARCH_AGAIN_BUTTON_FONT_SIZE)
         )
