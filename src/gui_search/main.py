@@ -16,7 +16,7 @@ def main() -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-
+    txtaiClassicalSearch(wikidataDir, "tfidf")
 
     sys.exit(0)
 
@@ -71,7 +71,7 @@ def txtaiClassicalSearch(wikidataDir: str, searchMethod: str) -> None:
     )
     # Path to index:
     txtaiClassicalIndexPath: str = os.path.join(
-        wikidataDir, f"txtai_{searchMethod}_index.pkl"
+        wikidataDir, f"poc_txtai_{searchMethod}_index.pkl"
     )
 
     guiSearch(
