@@ -163,6 +163,11 @@ class SearchWindow(QMainWindow):
         overallVBoxLayout: QVBoxLayout = (
             self._getAllResultsVBoxLayout(results, fieldsToShow)
         )
+        # Adding search box to top of layout:
+        searchBox = QLineEdit()
+        searchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
+        searchBox.setFont(QFont(FONT_TO_USE, SEARCH_BOX_FONT_SIZE))
+        overallVBoxLayout.insertWidget(0, searchBox)
 
         # Creating scroll layout, using a subwidget to be able to add to the
         # scroll area:
