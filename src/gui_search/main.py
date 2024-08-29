@@ -16,8 +16,7 @@ def main() -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-    # txtaiBM25Search(wikidataDir)
-    transformerSearch(wikidataDir)
+
 
     sys.exit(0)
 
@@ -60,21 +59,25 @@ def transformerSearch(wikidataDir: str) -> None:
 
     guiSearch(ts.transformerGetResultsSF, ndjsonsDir, embeddings) 
 
-def txtaiBM25Search(wikidataDir: str) -> None:
+def txtaiClassicalSearch(wikidataDir: str, searchMethod: str) -> None:
     """
-    Gui search using txtai bm25 implementation for results.
+    Gui search using txtai bm25/tf-idf implementation for results.
+
+    searchMethod must be either "bm25" or "tfidf".
     """
     # Path to pickled jsons used for indexing:
     jsonsPickleSavePath: str = os.path.join(
         wikidataDir, "poc-fully-processed-ndjsons.pkl"
     )
     # Path to index:
-    txtaiBM25IndexPath: str = os.path.join(wikidataDir, "txtai_bm25_index.pkl")
+    txtaiClassicalIndexPath: str = os.path.join(
+        wikidataDir, f"txtai_{searchMethod}_index.pkl"
+    )
 
     guiSearch(
         txtaibm25.txtaiBM25GetResultsSF,
         jsonsPickleSavePath,
-        txtaiBM25IndexPath
+        txtaiClassicalIndexPath
     ) 
 
 if __name__ == "__main__":

@@ -43,7 +43,7 @@ RESULT_URL_FONT_SIZE = 18
 # Results scrollbar:
 RESULTS_SCROLL_AREA_HEIGHT = 2500
 # Data and results:
-NUM_RESULTS_TO_SHOW = 20
+NUM_RESULTS_TO_SHOW = 10
 RESULT_TEXT_SPACING = 2
 
 def main() -> None:
