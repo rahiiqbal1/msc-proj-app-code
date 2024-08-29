@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QPushButton,
     QStackedWidget,
-    QScrollArea
+    QScrollArea,
 )
 from PyQt5.QtGui import QFont
 
@@ -228,9 +228,8 @@ def _getResultVBoxLayout(
         currentFieldStringToShow: str = ""
 
         if field == "name":
-            currentFieldStringToShow += (
-                f"<b>{singleResult[field]}</b><br>"
-            )
+            currentFieldStringToShow += singleResult[field]
+
             # For the name (i.e. title) set the font size to the chosen size:
             thisFieldLabelWidget = QLabel(currentFieldStringToShow)
             thisFieldLabelWidget.setFont(
@@ -257,7 +256,7 @@ def _getResultVBoxLayout(
 
         else:
             # Setting string to the text of the field:
-            currentFieldStringToShow += f"{singleResult[field]}"
+            currentFieldStringToShow += singleResult[field]
             # Creating a label with the string as text:
             thisFieldLabelWidget = QLabel(currentFieldStringToShow)
             thisFieldLabelWidget.setFont(
