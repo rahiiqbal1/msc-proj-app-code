@@ -21,7 +21,7 @@ def main() -> None:
         all_data_dir, "poc-fully-processed-ndjsons"
     )
 
-    _test_find_jsons_given_index_ndjsons()
+    _test_get_ndjson_line_counts()
 
     sys.exit(0)
 
@@ -402,6 +402,27 @@ def _test_sort_filenames_with_numbers() -> None:
 
     print(_sort_filenames_with_numbers(test_names))
 
+def _test_get_ndjson_line_counts():
+    # Filenames and relevant directories:
+    sorted_ndjson_filenames: list[str] = ["test1.ndjson", "test2.ndjson"]
+    test_ndjsons_dir: str = os.path.join(
+        os.pardir,
+        os.pardir,
+        "data",
+        "testing",
+        "get-ndjson-line-counts",
+        "ndjsons"
+    )
+    ndjson_line_counts_pickle_save_dir: str = os.path.dirname(test_ndjsons_dir)
+
+    print("Expected: [2, 1]")
+    test_ndjson_line_counts: list[int] = _get_ndjson_line_counts(
+        sorted_ndjson_filenames,
+        test_ndjsons_dir,
+        ndjson_line_counts_pickle_save_dir
+    )
+    print(f"Actual: {test_ndjson_line_counts}")
+
 def _get_ndjson_line_counts(
     sorted_ndjson_filenames: list[str],
     ndjsons_dir: str, 
@@ -415,6 +436,7 @@ def _get_ndjson_line_counts(
     """
     # Filename of (potentially) saved pickle:
     ndjson_line_counts_pickle_filename: str = f"{ndjsons_dir}-line-counts.pkl"
+
     # Full path to pickled file of line counts (list[int]):
     ndjson_line_counts_pickle_fullpath: str = os.path.join(
         ndjson_line_counts_pickle_save_dir, ndjson_line_counts_pickle_filename
