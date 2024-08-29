@@ -21,8 +21,6 @@ def main() -> None:
         all_data_dir, "poc-fully-processed-ndjsons"
     )
 
-    _test_get_ndjson_line_counts()
-
     sys.exit(0)
 
 def save_data(data: Any, data_save_name: str, save_dir: str) -> None:
@@ -435,12 +433,15 @@ def _get_ndjson_line_counts(
     directory, saves the list in the given directory, and returns.
     """
     # Filename of (potentially) saved pickle:
-    ndjson_line_counts_pickle_filename: str = f"{ndjsons_dir}-line-counts.pkl"
+    ndjson_line_counts_pickle_filename: str = (
+        f"{os.path.basename(ndjsons_dir)}-line-counts.pkl"
+    )
 
     # Full path to pickled file of line counts (list[int]):
     ndjson_line_counts_pickle_fullpath: str = os.path.join(
         ndjson_line_counts_pickle_save_dir, ndjson_line_counts_pickle_filename
     )
+    print(ndjson_line_counts_pickle_fullpath)
 
     # If the pickle exists at the specified path, load it, otherwise calculate
     # and save:
