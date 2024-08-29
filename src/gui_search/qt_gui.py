@@ -318,10 +318,23 @@ class SearchController:
         """
         Deals with searching through data with query present in search box.
         """
-        searchQuery: str = self._view.searchWidgets["searchBox"].text()
+        # If there is text in the search box on the home page, use that for the
+        # search. Otherwise, use the text in the box on the results page. This
+        # allows the box on the results page to be used for searches, but 
+        # relies on the search box on the home page being cleared after use:
+        searchPageQuery: str = self._view.searchWidgets["searchBox"].text()
+        if  searchPageQuery != "":
+            searchQueryUsed: str = self._view.searchWidgets["searchBox"].text()
+        
+        else:
+            searchQueryUsed: str = self._view.rpSearchBox.text()
+
+        # Setting home page search box text blank after use:
+        self._view.searchWidgets["searchBox"].setText("")
+
         # Passing given modelArgs to model along with search query present in
         # text box:
-        return self._model(*(self._modelArgs + (searchQuery, )))
+        return self._model(*(self._modelArgs + (searchQueryUsed, )))
 
     def _connectSignalsAndSlots(self) -> None:
         """
@@ -339,7 +352,10 @@ class SearchController:
         # Connecting search again button to a lambda function that switches 
         # back to the search page by it's index in the general(stacked) widget:
         self._view.searchAgainButton.clicked.connect(
-            self._view.switchToSearchPage
+            partial(
+                self._view.showResultsPage, 
+                self._searchFunction
+            )
         )
 
 if __name__ == "__main__":
