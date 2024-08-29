@@ -13,7 +13,7 @@ def transformerGetResultsSF(
     ndjsonsDir: str,
     embeddings: Embeddings,
     searchQuery: str,
-    ndjsonLineCountPickleSaveDir = None
+    ndjsonLineCountsPickleSaveDir = None
     ) -> list[dict[str, str]]:
     """
     Searches through given data using given transformer-model-derived
@@ -31,15 +31,15 @@ def transformerGetResultsSF(
 
     # Getting name of directory in which to store the line count data for 
     # faster loading:
-    if ndjsonLineCountPickleSaveDir is None:
-        ndjsonLineCountPickleSaveDir = os.path.dirname(ndjsonsDir)
+    if ndjsonLineCountsPickleSaveDir is None:
+        ndjsonLineCountsPickleSaveDir = os.path.dirname(ndjsonsDir)
 
 
     # Getting results in readable format:
     numResult: tuple[int, float]
     for numResult in numResults:
         readableResult: dict[str, str] = dm.find_json_given_index_ndjsons(
-            ndjsonsDir, numResult[0], ndjsonLineCountPickleSaveDir
+            ndjsonsDir, numResult[0], ndjsonLineCountsPickleSaveDir
         )
         results.append(readableResult)
 
