@@ -32,7 +32,7 @@ SEARCH_BOX_FONT_SIZE = 18
 SEARCH_BUTTON_TEXT = "Search"
 SEARCH_BUTTON_FONT_SIZE = 18
 # Search again button:
-SEARCH_AGAIN_BUTTON_TEXT = "&Search again"
+SEARCH_AGAIN_BUTTON_TEXT = "Search"
 SEARCH_AGAIN_BUTTON_FONT_SIZE = 18
 # General font size for results text:
 RESULT_GENERAL_FONT_SIZE = 18
@@ -81,6 +81,7 @@ class SearchWindow(QMainWindow):
         self.searchWidgets: dict[str, Any] = self._showSearchPage() 
         # Adding search again button to widgets for class:
         self.searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
+        self.searchAgainButton.setShortcut("Return")
 
         # Basic window formatting:
         self.showMaximized()
