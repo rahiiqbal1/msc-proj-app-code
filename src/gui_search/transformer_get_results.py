@@ -12,14 +12,13 @@ from data_processing import data_manipulation as dm
 def transformerGetResultsSF(
     ndjsonsDir: str,
     embeddings: Embeddings,
-    searchQuery: str
+    searchQuery: str,
+    ndjsonLineCountPickleSaveDir = None
     ) -> list[dict[str, str]]:
     """
     Searches through given data using given transformer-model-derived
     embeddings. Returns results with all fields intact, so they should be cut
     as desired outside of this function.
-
-    Assumes the data is stored within a single deserialised json object.
     """
     # This is a list of tuples containing the index of the result in the
     # data and it's score:
@@ -30,11 +29,17 @@ def transformerGetResultsSF(
     # Initialising list to store readable results:
     results: list[dict[str, str]] = []
 
+    # Getting name of directory in which to store the line count data for 
+    # faster loading:
+    if ndjsonLineCountPickleSaveDir is None:
+        ndjsonLineCountPickleSaveDir = os.path.dirname(ndjsonsDir)
+
+
     # Getting results in readable format:
     numResult: tuple[int, float]
     for numResult in numResults:
         readableResult: dict[str, str] = dm.find_json_given_index_ndjsons(
-            ndjsonsDir, numResult[0]
+            ndjsonsDir, numResult[0], ndjsonLineCountPickleSaveDir
         )
         results.append(readableResult)
 
