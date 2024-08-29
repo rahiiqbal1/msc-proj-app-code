@@ -233,7 +233,7 @@ def _getResultVBoxLayout(
             # For the name (i.e. title) set the font size to the chosen size:
             thisFieldLabelWidget = QLabel(currentFieldStringToShow)
             thisFieldLabelWidget.setFont(
-                QFont(FONT_TO_USE, RESULT_NAME_FONT_SIZE)
+                QFont(FONT_TO_USE, RESULT_NAME_FONT_SIZE, weight = QFont.Bold)
             )
 
         elif field == "url":
