@@ -245,6 +245,17 @@ class SearchWindow(QMainWindow):
                 self._getSingleResultVBoxLayout(singleResult, fieldsToShow)
             )
 
+            # If the resultIdx is even, colour the background of the result's 
+            # layout (every other result):
+            if resultIdx % 2 == 0:
+                # Getting the number of widgets in the layout in order to be
+                # able to colour them all:
+                numWidgetsInLayout: int = thisResultVBoxLayout.count()
+
+                # Setting colour for each widget:
+                for i in range(numWidgetsInLayout):
+                    thisResultVBoxLayout.itemAt(i).widget().setStyleSheet("background-color: orange;")
+
             # Adding result layout to the overall layout. Uses a sub-widget to
             # make this possible:
             subWidget = QWidget()
@@ -329,7 +340,17 @@ class SearchWindow(QMainWindow):
             # Adding the current field's label to the result's layout:
             thisResultVBoxLayout.addWidget(thisFieldLabelWidget)
 
-        return thisResultVBoxLayout
+        # Creating a new VBoxLayout and a single subWidget. Then setting the 
+        # subwidgets layout to that of the results found, and adding that 
+        # subwidget to the new VBoxLayout. This means that the new layout, 
+        # which is to be returned, will have only one widget and thus can be 
+        # coloured uniformly:
+        thisResultVBoxLayoutToReturn = QVBoxLayout()
+        subWidget = QWidget()
+        subWidget.setLayout(thisResultVBoxLayout)
+        thisResultVBoxLayoutToReturn.addWidget(subWidget)
+
+        return thisResultVBoxLayoutToReturn
 
 class SearchController:
     """
