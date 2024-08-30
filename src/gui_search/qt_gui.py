@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (
     QWidget,
     QLabel,
     QVBoxLayout,
+    QHBoxLayout,
     QLineEdit,
     QPushButton,
     QStackedWidget,
@@ -34,6 +35,9 @@ SEARCH_BUTTON_FONT_SIZE = 18
 # Search again button:
 SEARCH_AGAIN_BUTTON_TEXT = "Search"
 SEARCH_AGAIN_BUTTON_FONT_SIZE = 18
+# Home button:
+HOME_BUTTON_TEXT = "Home"
+HOME_BUTTON_FONT_SIZE = 18
 # General font size for results text:
 RESULT_GENERAL_FONT_SIZE = 18
 # Results name:
@@ -79,12 +83,18 @@ class SearchWindow(QMainWindow):
         # retrieving search button widget for use in controller. The search 
         # page should always be at index 0 within the stacked widget:
         self.searchWidgets: dict[str, Any] = self._showSearchPage() 
+
         # Adding search again button to widgets for class:
         self.searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
         self.searchAgainButton.setShortcut("Return")
         self.searchAgainButton.setFont(
             QFont(FONT_TO_USE, SEARCH_AGAIN_BUTTON_FONT_SIZE)
         )
+
+        # Adding home button to widgets for class:
+        self.homeButton = QPushButton(HOME_BUTTON_TEXT)
+        self.homeButton.setFont(QFont(FONT_TO_USE, HOME_BUTTON_FONT_SIZE))
+
         # Adding results page search box to widgets for class:
         self.rpSearchBox = QLineEdit()
         self.rpSearchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
@@ -172,10 +182,20 @@ class SearchWindow(QMainWindow):
         overallVBoxLayout: QVBoxLayout = (
             self._getAllResultsVBoxLayout(results, fieldsToShow)
         )
+
         # Adding search box to top of layout:
         overallVBoxLayout.insertWidget(0, self.rpSearchBox)
-        # Adding search again button beneath search box:
-        overallVBoxLayout.insertWidget(1, self.searchAgainButton)
+
+        # Creating HBoxLayout to store search again button and home button:
+        rpSearchAndHomeHBox = QHBoxLayout()
+        rpSearchAndHomeHBox.addWidget(self.searchAgainButton)
+        rpSearchAndHomeHBox.addWidget(self.homeButton)
+
+        # Adding search again button and home button below search box:
+        subWidget = QWidget()
+        subWidget.setLayout(rpSearchAndHomeHBox)
+        overallVBoxLayout.insertWidget(1, subWidget)
+
 
         # Creating scroll layout, using a subwidget to be able to add to the
         # scroll area:
@@ -355,8 +375,8 @@ class SearchController:
         """
         Connects search button to given search function.
         """
-        # Connecting search button to search function. showResultsPage takes
-        # the results of the search function as it's argument:
+        # Connecting search button to show results function. showResultsPage
+        # takes the results of the search function as it's argument:
         self._view.searchWidgets["searchButton"].clicked.connect(
             partial(
                 self._view.showResultsPage, 
@@ -364,14 +384,16 @@ class SearchController:
             )
         )
 
-        # Connecting search again button to a lambda function that switches 
-        # back to the search page by it's index in the general(stacked) widget:
+        # Connecting search again button to show results function also:
         self._view.searchAgainButton.clicked.connect(
             partial(
                 self._view.showResultsPage, 
                 self._searchFunction
             )
         )
+
+        # Connecting home button on results page to switch back to search page:
+        self._view.homeButton.clicked.connect(self._view.switchToSearchPage)
 
 if __name__ == "__main__":
     main()
