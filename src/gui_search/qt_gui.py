@@ -285,8 +285,12 @@ class SearchWindow(QMainWindow):
                 )
 
             else:
+                # Showing only a fixed amount of the text in the field:
+                field_len_to_show: int = 100
                 # Setting string to the text of the field:
-                currentFieldStringToShow += singleResult[field]
+                currentFieldStringToShow += (
+                    singleResult[field][: field_len_to_show] + "..."
+                )
                 # Creating a label with the string as text:
                 thisFieldLabelWidget = QLabel(currentFieldStringToShow)
                 thisFieldLabelWidget.setFont(
