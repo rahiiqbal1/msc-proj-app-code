@@ -243,9 +243,6 @@ class SearchWindow(QMainWindow):
         as a QVBoxLayout object with each field it's own QLabel within the
         layout.
         """
-        print('-' * 50)
-        print(singleResult)
-        print('-' * 50)
         # Initialising VBoxLayout which will be returned:
         thisResultVBoxLayout = QVBoxLayout()
         thisResultVBoxLayout.setSpacing(INTRA_RESULT_SPACING)
