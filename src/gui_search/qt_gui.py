@@ -229,6 +229,11 @@ class SearchWindow(QMainWindow):
         # Layout and widgets:
         overallVBoxLayout = QVBoxLayout()
 
+        # Initialising list to store results which we have seen. This will be
+        # used to prevent duplicate results, as txtai's result retrieval
+        # sometimes provides duplicates:
+        resultsSeen: list[dict[str, str]] = []
+
         # Adding results to widget, only showing a maximum of
         # NUM_RESULTS_TO_SHOW results, although there may be less than this for
         # some queries:
@@ -239,6 +244,13 @@ class SearchWindow(QMainWindow):
             # to show (in the previous iteration):
             if resultIdx == NUM_RESULTS_TO_SHOW:
                 break
+
+            elif singleResult in resultsSeen:
+                continue
+
+            # If both checks have passed, then we may continue. Else is not 
+            # needed as both checks disrupt the loop:
+            resultsSeen.append(singleResult)
 
             # Getting QVBoxLayout for this result containing QLabels with each
             # desired field as text:
