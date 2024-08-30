@@ -16,8 +16,8 @@ def main() -> None:
 def txtaiClassicalGetResultsSF(
     jsonsPickleSavePath: str,
     indexSavePath: str,
-    searchQuery: str,
-    searchMethod: str
+    searchMethod: str,
+    searchQuery: str
     ) -> list[dict[str, str]]:
     """
     Searches through jsons in given pickle using the txtai implementation of
