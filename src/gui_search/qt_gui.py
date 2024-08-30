@@ -82,6 +82,9 @@ class SearchWindow(QMainWindow):
         # Adding search again button to widgets for class:
         self.searchAgainButton = QPushButton(SEARCH_AGAIN_BUTTON_TEXT)
         self.searchAgainButton.setShortcut("Return")
+        self.searchAgainButton.setFont(
+            QFont(FONT_TO_USE, SEARCH_AGAIN_BUTTON_FONT_SIZE)
+        )
         # Adding results page search box to widgets for class:
         self.rpSearchBox = QLineEdit()
         self.rpSearchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
@@ -204,9 +207,6 @@ class SearchWindow(QMainWindow):
         """
         # Layout and widgets:
         overallVBoxLayout = QVBoxLayout()
-        self.searchAgainButton.setFont(
-            QFont(FONT_TO_USE, SEARCH_AGAIN_BUTTON_FONT_SIZE)
-        )
 
         # Adding results to widget, only showing a maximum of
         # NUM_RESULTS_TO_SHOW results, although there may be less than this for
