@@ -3,8 +3,8 @@ Bigger title font DONE
 Bigger title font for search results DONE
 Search bar at top of results page DONE
 Show what the search is in the results page DONE
-Add first bit of abstract in search results
-Boxes around results
+Add first bit of abstract in search results DONE
+Boxes around results DONE
 Loading page
 Night mode
-Rebrand 'search again' to a home button
+Rebrand 'search again' to a home button DONE
