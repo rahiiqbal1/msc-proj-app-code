@@ -49,6 +49,7 @@ RESULTS_SCROLL_AREA_HEIGHT = 2500
 # Data and results:
 NUM_RESULTS_TO_SHOW = 10
 INTRA_RESULT_SPACING = 25
+RESULT_BG_COLOUR = "orange"
 
 def main() -> None:
     # Initialise app:
@@ -254,7 +255,12 @@ class SearchWindow(QMainWindow):
 
                 # Setting colour for each widget:
                 for i in range(numWidgetsInLayout):
-                    thisResultVBoxLayout.itemAt(i).widget().setStyleSheet("background-color: orange;")
+                    (
+                        thisResultVBoxLayout.
+                        itemAt(i).
+                        widget().
+                        setStyleSheet(f"background-color: {RESULT_BG_COLOUR};")
+                    )
 
             # Adding result layout to the overall layout. Uses a sub-widget to
             # make this possible:
