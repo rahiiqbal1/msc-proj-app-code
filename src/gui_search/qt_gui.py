@@ -44,7 +44,7 @@ RESULT_URL_FONT_SIZE = 18
 RESULTS_SCROLL_AREA_HEIGHT = 2500
 # Data and results:
 NUM_RESULTS_TO_SHOW = 10
-RESULT_TEXT_SPACING = 2
+INTRA_RESULT_SPACING = 25
 
 def main() -> None:
     # Initialise app:
@@ -243,9 +243,12 @@ class SearchWindow(QMainWindow):
         as a QVBoxLayout object with each field it's own QLabel within the
         layout.
         """
+        print('-' * 50)
+        print(singleResult)
+        print('-' * 50)
         # Initialising VBoxLayout which will be returned:
         thisResultVBoxLayout = QVBoxLayout()
-        thisResultVBoxLayout.setSpacing(0)
+        thisResultVBoxLayout.setSpacing(INTRA_RESULT_SPACING)
 
         # Only showing desired fields:
         field: str
@@ -255,7 +258,10 @@ class SearchWindow(QMainWindow):
             currentFieldStringToShow: str = ""
 
             if field == "name":
-                currentFieldStringToShow += singleResult[field]
+                try: 
+                    currentFieldStringToShow += singleResult[field]
+                except KeyError:
+                    currentFieldStringToShow += (f"No '{field}' found.")
 
                 # For the name (i.e. title) set the font size to the chosen
                 # size:
@@ -267,11 +273,14 @@ class SearchWindow(QMainWindow):
                 )
 
             elif field == "url":
-                # Inserting url as hyperlink:
-                currentFieldStringToShow += (
-                    f"<a href='{singleResult[field]}'>" + 
-                    f"{singleResult[field]}</a>"
-                )
+                try:
+                    # Inserting url as hyperlink:
+                    currentFieldStringToShow += (
+                        f"<a href='{singleResult[field]}'>" + 
+                        f"{singleResult[field]}</a>"
+                    )
+                except KeyError:
+                    currentFieldStringToShow += (f"No '{field}' found.")
 
                 # Creating Qlabel widget with the string for the current field
                 # as the text:
@@ -288,9 +297,13 @@ class SearchWindow(QMainWindow):
                 # Showing only a fixed amount of the text in the field:
                 field_len_to_show: int = 100
                 # Setting string to the text of the field:
-                currentFieldStringToShow += (
-                    singleResult[field][: field_len_to_show] + "..."
-                )
+                try:
+                    currentFieldStringToShow += (
+                        singleResult[field][: field_len_to_show] + "..."
+                    )
+                except KeyError:
+                    currentFieldStringToShow += (f"No '{field}' found.")
+
                 # Creating a label with the string as text:
                 thisFieldLabelWidget = QLabel(currentFieldStringToShow)
                 thisFieldLabelWidget.setFont(
