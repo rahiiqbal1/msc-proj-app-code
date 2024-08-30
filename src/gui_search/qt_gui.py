@@ -157,7 +157,7 @@ class SearchWindow(QMainWindow):
         Shows results page using given search function and query.
         """
         # List of keys within the results which we want to see:
-        fieldsToShow: tuple[str, ...] = ("name", "url")
+        fieldsToShow: tuple[str, ...] = ("name", "abstract", "url")
 
         # Evaluating results. The searchFunction here takes no arguments as
         # this method is connected to the searchFunction within the 
