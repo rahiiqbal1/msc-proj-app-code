@@ -41,15 +41,15 @@ def load_data(file_path: str) -> Any:
     with open(file_path, "rb") as file_to_read:
         return pickle.load(file_to_read)
 
-def load_embeddings(embeddings_path: str) -> Embeddings:
+def load_embeddings(embeddings_path: str, mmap = True) -> Embeddings:
     """
     Loads in the txtai embeddings at the given path.
     """
     # Getting embeddings:
     embeddings = Embeddings(
-        {"path": "sentence-transformers/all-MiniLM-L6-v2"}
+        path = "sentence-transformers/all-MiniLM-L6-v2",
     )
-    embeddings.load(embeddings_path)
+    embeddings.load(embeddings_path, config = {"mmap": mmap})
 
     return embeddings
 
