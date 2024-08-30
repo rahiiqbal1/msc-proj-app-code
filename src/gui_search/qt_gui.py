@@ -49,7 +49,7 @@ RESULTS_SCROLL_AREA_HEIGHT = 2500
 # Data and results:
 NUM_RESULTS_TO_SHOW = 10
 INTRA_RESULT_SPACING = 25
-RESULT_BG_COLOUR = "orange"
+RESULT_BG_COLOUR = "rgb(250, 250, 250)"
 
 def main() -> None:
     # Initialise app:
