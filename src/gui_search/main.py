@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QApplication
 
 from qt_gui import SearchWindow, SearchController
 import transformer_get_results as ts
-import txtai_classical_get_results as txtaiclassical
+import classical_get_results as classical
 # Bodge:
 sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
@@ -16,8 +16,8 @@ def main() -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-    # txtaiClassicalSearch(wikidataDir, "tfidf")
-    # txtaiClassicalSearch(wikidataDir, "bm25")
+    # ClassicalSearch(wikidataDir, "tfidf")
+    # ClassicalSearch(wikidataDir, "bm25")
     transformerSearch(wikidataDir)
 
     sys.exit(0)
@@ -61,7 +61,7 @@ def transformerSearch(wikidataDir: str) -> None:
 
     guiSearch(ts.transformerGetResultsSF, ndjsonsDir, embeddings) 
 
-def txtaiClassicalSearch(wikidataDir: str, searchMethod: str) -> None:
+def ClassicalSearch(wikidataDir: str, searchMethod: str) -> None:
     """
     Gui search using txtai bm25/tf-idf implementation for results.
 
@@ -75,14 +75,14 @@ def txtaiClassicalSearch(wikidataDir: str, searchMethod: str) -> None:
         wikidataDir, "poc-reduced-ndjsons.pkl"
     )
     # Path to index:
-    txtaiClassicalIndexPath: str = os.path.join(
+    classicalIndexPath: str = os.path.join(
         wikidataDir, f"poc_txtai_{searchMethod}_index.pkl"
     )
     
     guiSearch(
-        txtaiclassical.txtaiClassicalGetResultsSF,
+        classical.classicalGetResultsSF,
         jsonsPickleSavePath,
-        txtaiClassicalIndexPath,
+        classicalIndexPath,
         searchMethod
     ) 
 

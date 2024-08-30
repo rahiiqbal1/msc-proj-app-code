@@ -13,7 +13,7 @@ def main() -> None:
     sys.exit(0)
 
 # Model:
-def txtaiClassicalGetResultsSF(
+def classicalGetResultsSF(
     jsonsPickleSavePath: str,
     indexSavePath: str,
     searchMethod: str,
