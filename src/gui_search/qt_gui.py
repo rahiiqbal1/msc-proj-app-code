@@ -197,7 +197,6 @@ class SearchWindow(QMainWindow):
         subWidget.setLayout(rpSearchAndHomeHBox)
         overallVBoxLayout.insertWidget(1, subWidget)
 
-
         # Creating scroll layout, using a subwidget to be able to add to the
         # scroll area:
         scrollArea = QScrollArea()
