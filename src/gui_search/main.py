@@ -67,9 +67,12 @@ def txtaiClassicalSearch(wikidataDir: str, searchMethod: str) -> None:
 
     searchMethod must be either "bm25" or "tfidf".
     """
-    # Path to pickled jsons used for indexing:
+    # Path to pickled jsons. Not using the exact pickled data which was used
+    # for indexing, as that is lemmatised and has stopwords removed, as well
+    # as is made lower case. This pickle provides better readable results. Use
+    # of this pickle relies on the data indices being completely identical:
     jsonsPickleSavePath: str = os.path.join(
-        wikidataDir, "poc-fully-processed-ndjsons.pkl"
+        wikidataDir, "poc-reduced-ndjsons.pkl"
     )
     # Path to index:
     txtaiClassicalIndexPath: str = os.path.join(
