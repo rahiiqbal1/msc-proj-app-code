@@ -366,7 +366,7 @@ class SearchWindow(QMainWindow):
                     currentFieldStringToShow += "..."
 
                 except KeyError:
-                    currentFieldStringToShow += (f"No '{field}' found.")
+                    currentFieldStringToShow += (f"No {field} found.")
 
                 # Creating a label with the string as text:
                 thisFieldLabelWidget = QLabel(currentFieldStringToShow)
