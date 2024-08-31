@@ -184,8 +184,9 @@ class SearchWindow(QMainWindow):
             self._getAllResultsVBoxLayout(results, fieldsToShow)
         )
 
-        # Adding search box to top of layout:
-        overallVBoxLayout.insertWidget(0, self.rpSearchBox)
+        # Adding stretch search box to top of layout:
+        overallVBoxLayout.insertStretch(0)
+        overallVBoxLayout.insertWidget(1, self.rpSearchBox)
 
         # Creating HBoxLayout to store search again button and home button:
         rpSearchAndHomeHBox = QHBoxLayout()
@@ -195,7 +196,8 @@ class SearchWindow(QMainWindow):
         # Adding search again button and home button below search box:
         subWidget = QWidget()
         subWidget.setLayout(rpSearchAndHomeHBox)
-        overallVBoxLayout.insertWidget(1, subWidget)
+        overallVBoxLayout.insertWidget(2, subWidget)
+        overallVBoxLayout.addStretch(3)
 
         # Creating scroll layout, using a subwidget to be able to add to the
         # scroll area:
