@@ -339,12 +339,32 @@ class SearchWindow(QMainWindow):
 
             else:
                 # Showing only a fixed amount of the text in the field:
-                field_len_to_show: int = 100
+                fieldLenToShow: int = 100
                 # Setting string to the text of the field:
                 try:
-                    currentFieldStringToShow += (
-                        singleResult[field][: field_len_to_show] + "..."
-                    )
+                    # Initialising list of characters at which we want to stop
+                    # adding to the result label:
+                    charsToStopAt: list[str] = ['\n', ':']
+
+                    # Looping to be able to check for characters which we do 
+                    # not want to show:
+                    char: str
+                    for idx, char in enumerate(singleResult[field]):
+                        if (char in charsToStopAt) or (idx == fieldLenToShow):
+                            break
+                        
+                        else:
+                            currentFieldStringToShow += char
+
+                    # Checking if there is a space at the end of the string
+                    # and removing it if so:
+                    if currentFieldStringToShow[-1] == ' ':
+                        currentFieldStringToShow = (
+                            currentFieldStringToShow[: -2]
+                        )
+
+                    currentFieldStringToShow += "..."
+
                 except KeyError:
                     currentFieldStringToShow += (f"No '{field}' found.")
 
