@@ -20,6 +20,9 @@ def main() -> None:
     ndjsons_dir: str = os.path.join(
         all_data_dir, "poc-fully-processed-ndjsons"
     )
+    d = {"this": "is", "that": "great"}
+
+    print(stringify_dictionary(d))
 
     sys.exit(0)
 
@@ -52,6 +55,23 @@ def load_embeddings(embeddings_path: str, mmap = True) -> Embeddings:
     embeddings.load(embeddings_path, config = {"mmap": mmap})
 
     return embeddings
+
+def stringify_dictionary(dict_to_stringify: dict[str, str]) -> str:
+    """
+    Returns a string combining all fields in the given dictionary. 
+    """
+    # return "".join(
+    #     [dict_to_stringify[dict_key] for dict_key in dict_to_stringify]
+    # )
+
+    string_for_return: str = ""
+
+    dict_key: str
+    for dict_key in dict_to_stringify:
+        string_for_return += dict_to_stringify[dict_key]
+
+    return string_for_return
+
 
 def stringify_dictionaries(
     dicts_to_stringify: list[dict[str, str]]
