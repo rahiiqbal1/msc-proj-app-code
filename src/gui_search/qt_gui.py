@@ -297,15 +297,15 @@ class SearchWindow(QMainWindow):
         # Only showing desired fields:
         field: str
         for field in fieldsToShow:
-            # Initialising string which will be added to a QLabel object and
-            # then to the layout for the current result:
-            currentFieldStringToShow: str = ""
+            # Declaring string which will be added to a QLabel object and then
+            # to the layout for the current result:
+            currentFieldStringToShow: str
 
             if field == "name":
                 try: 
-                    currentFieldStringToShow += singleResult[field]
+                    currentFieldStringToShow = singleResult[field]
                 except KeyError:
-                    currentFieldStringToShow += (f"No '{field}' found.")
+                    currentFieldStringToShow = (f"No '{field}' found.")
 
                 # For the name (i.e. title) set the font size to the chosen
                 # size:
@@ -319,12 +319,12 @@ class SearchWindow(QMainWindow):
             elif field == "url":
                 try:
                     # Inserting url as hyperlink:
-                    currentFieldStringToShow += (
+                    currentFieldStringToShow = (
                         f"<a href='{singleResult[field]}'>" + 
                         f"{singleResult[field]}</a>"
                     )
                 except KeyError:
-                    currentFieldStringToShow += (f"No '{field}' found.")
+                    currentFieldStringToShow = (f"No '{field}' found.")
 
                 # Creating Qlabel widget with the string for the current field
                 # as the text:
@@ -346,6 +346,9 @@ class SearchWindow(QMainWindow):
                     # adding to the result label:
                     charsToStopAt: list[str] = ['\n', ':']
 
+                    # Initialising string to show:
+                    currentFieldStringToShow = ""
+
                     # Looping to be able to check for characters which we do 
                     # not want to show:
                     char: str
@@ -366,7 +369,7 @@ class SearchWindow(QMainWindow):
                     currentFieldStringToShow += "..."
 
                 except KeyError:
-                    currentFieldStringToShow += (f"No {field} found.")
+                    currentFieldStringToShow = (f"No {field} found.")
 
                 # Creating a label with the string as text:
                 thisFieldLabelWidget = QLabel(currentFieldStringToShow)
