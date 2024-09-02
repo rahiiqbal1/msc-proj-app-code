@@ -338,10 +338,10 @@ class SearchWindow(QMainWindow):
                 )
 
             else:
-                # Showing only a fixed amount of the text in the field:
-                fieldLenToShow: int = 100
-                # Setting string to the text of the field:
                 try:
+                    # Showing only a fixed amount of the text in the field:
+                    fieldLenToShow: int = 100
+
                     # Initialising list of characters at which we want to stop
                     # adding to the result label:
                     charsToStopAt: list[str] = ['\n', ':']
