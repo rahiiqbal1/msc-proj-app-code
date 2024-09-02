@@ -60,18 +60,9 @@ def stringify_dictionary(dict_to_stringify: dict[str, str]) -> str:
     """
     Returns a string combining all fields in the given dictionary. 
     """
-    # return "".join(
-    #     [dict_to_stringify[dict_key] for dict_key in dict_to_stringify]
-    # )
-
-    string_for_return: str = ""
-
-    dict_key: str
-    for dict_key in dict_to_stringify:
-        string_for_return += dict_to_stringify[dict_key]
-
-    return string_for_return
-
+    return "".join(
+        [dict_to_stringify[dict_key] for dict_key in dict_to_stringify]
+    )
 
 def stringify_dictionaries(
     dicts_to_stringify: list[dict[str, str]]
@@ -81,19 +72,9 @@ def stringify_dictionaries(
     and returns a list of each field in the dictionary as a single combined
     string.
     '''
-    strings_to_return: list[str] = []
-
-    single_dict: dict[str, str]
-    for single_dict in dicts_to_stringify:
-        # Initialising string to add to return list:
-        string_for_return: str = ""
-        dict_key: str 
-        for dict_key in single_dict:
-            string_for_return += single_dict[dict_key]
-
-        strings_to_return.append(string_for_return)
-
-    return strings_to_return
+    return [
+        stringify_dictionary(single_dict) for single_dict in dicts_to_stringify
+    ]
 
 def _cut_single_dict(
     dict_to_cut: dict[str, Any],
