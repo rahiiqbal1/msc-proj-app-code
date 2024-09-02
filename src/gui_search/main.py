@@ -17,7 +17,7 @@ def main() -> None:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
     # ClassicalSearch(wikidataDir, "tfidf")
-    ClassicalSearch(wikidataDir, "bm25")
+    classicalSearch(wikidataDir, "bm25")
     # transformerSearch(wikidataDir)
 
     sys.exit(0)
@@ -61,7 +61,7 @@ def transformerSearch(wikidataDir: str) -> None:
 
     guiSearch(ts.transformerGetResultsSF, ndjsonsDir, embeddings) 
 
-def ClassicalSearch(wikidataDir: str, searchMethod: str) -> None:
+def classicalSearch(wikidataDir: str, searchMethod: str) -> None:
     """
     Gui search using txtai bm25/tf-idf implementation for results.
 
