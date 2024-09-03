@@ -29,9 +29,6 @@ SEARCH_BOX_HEIGHT = 64
 SEARCH_BOX_WIDTH = 1024
 SEARCH_BOX_LABEL = "<h1>Wikipedia Search</h1>"
 SEARCH_BOX_FONT_SIZE = 18
-# Loading gif:
-LOADING_GIF_PATH = "../../data/loading_spinner_large.gif"
-LOADING_GIF_SIDE_LENGTH = 200
 # Search button:
 SEARCH_BUTTON_TEXT = "Search"
 SEARCH_BUTTON_FONT_SIZE = 18
@@ -120,8 +117,6 @@ class SearchWindow(QMainWindow):
         overallLayout = QVBoxLayout()
         searchBoxLabel = QLabel()
         searchBox = QLineEdit()
-        loadingLabel = QLabel()
-        loadingMovie = QMovie(LOADING_GIF_PATH)
         searchButton = QPushButton(SEARCH_BUTTON_TEXT)
 
         # Formatting for widgets:
@@ -132,11 +127,6 @@ class SearchWindow(QMainWindow):
         searchBox.setFixedWidth(SEARCH_BOX_WIDTH)
         searchBox.setFixedHeight(SEARCH_BOX_HEIGHT)
         searchBox.setFont(QFont(FONT_TO_USE, SEARCH_BOX_FONT_SIZE))
-
-        loadingLabel.setFixedWidth(LOADING_GIF_SIDE_LENGTH)
-        loadingLabel.setFixedHeight(LOADING_GIF_SIDE_LENGTH)
-        loadingLabel.setMovie(loadingMovie)
-        loadingLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         searchButton.setFixedWidth(SEARCH_BOX_WIDTH)
         searchButton.setFixedHeight(SEARCH_BOX_HEIGHT)
@@ -150,9 +140,7 @@ class SearchWindow(QMainWindow):
         overallLayout.addWidget(searchBoxLabel)
         overallLayout.addWidget(searchBox)
         overallLayout.addWidget(searchButton)
-        overallLayout.addWidget(loadingLabel)
         overallLayout.addStretch()
-        loadingMovie.start()
 
         centralWidget = QWidget()
         centralWidget.setLayout(overallLayout)
