@@ -56,6 +56,5 @@ def calc_single_json_length(json_str: str) -> int:
 
     return len(words_in_json)
 
-
 if __name__ == "__main__":
     main()

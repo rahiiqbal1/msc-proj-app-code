@@ -14,9 +14,8 @@ import data_manipulation as dm
 
 def main() -> None:
     # Directory in which all data is stored:
-    wikidata_dir: str = os.path.join(
-        os.pardir, os.pardir, "data"
-    )
+    wikidata_dir: str = os.path.join(os.pardir, os.pardir, "data")
+
     # Directory in which the .ndjson files to be processed are stored. Here we
     # use the files which have already had their unrelated fields and html 
     # removed:

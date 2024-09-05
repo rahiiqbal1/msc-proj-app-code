@@ -17,12 +17,10 @@ NUM_ENTRIES = 6947320
 
 def main() -> None:
     all_data_dir: str = os.path.join(os.pardir, os.pardir, "data")
+
     ndjsons_dir: str = os.path.join(
         all_data_dir, "poc-fully-processed-ndjsons"
     )
-    d = {"this": "is", "that": "great"}
-
-    print(stringify_dictionary(d))
 
     sys.exit(0)
 

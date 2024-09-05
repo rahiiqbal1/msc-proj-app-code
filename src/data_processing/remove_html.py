@@ -8,7 +8,7 @@ import data_manipulation as dm
 
 def main() -> int:
     # Directory where relevant data is stored:
-    wikidata_dir: str = os.getcwd()
+    wikidata_dir: str = os.path.join(os.pardir, os.pardir, "data")
 
     clean_html_from_wikitext(
         os.path.join(wikidata_dir, "poc-reduced-ndjsons"),
