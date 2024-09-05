@@ -1,15 +1,12 @@
 import os
 import sys
 import subprocess
-from typing import Any
 
 from txtai import Embeddings
 
 # Bodge:
 sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
-
-
 
 def main() -> None:
     # Directory where relevant data is stored:
