@@ -352,7 +352,7 @@ class SearchWindow(QMainWindow):
                     # Looping to be able to check for characters which we do 
                     # not want to show:
                     char: str
-                    for idx, char in enumerate(singleResult[field]):
+                    for idx, char in enumerate(singleResult[field].strip()):
                         if (char in charsToStopAt) or (idx == fieldLenToShow):
                             break
                         
@@ -370,6 +370,8 @@ class SearchWindow(QMainWindow):
 
                 except KeyError:
                     currentFieldStringToShow = (f"No {field} found.")
+                except IndexError:
+                    currentFieldStringToShow = (f"Error in parsing {field}.")
 
                 # Creating a label with the string as text:
                 thisFieldLabelWidget = QLabel(currentFieldStringToShow)
