@@ -12,13 +12,16 @@ import classical_get_results as classical
 sys.path.append(os.path.abspath(".."))
 from data_processing import data_manipulation as dm
 
-def main() -> None:
+def main(term_args: list[str]) -> None:
     # Directory where relevant data is stored:
     wikidataDir: str = os.path.join(os.pardir, os.pardir, "data")
 
-    # classicalSearch(wikidataDir, "tfidf")
-    # classicalSearch(wikidataDir, "bm25")
-    transformerSearch(wikidataDir)
+    # If an argument is given in the terminal, try to use it in the 
+    # classical search:
+    try:
+        classicalSearch(wikidataDir, term_args[1])
+    except IndexError:
+        transformerSearch(wikidataDir)
 
     sys.exit(0)
 
@@ -87,4 +90,4 @@ def classicalSearch(wikidataDir: str, searchMethod: str) -> None:
     ) 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
