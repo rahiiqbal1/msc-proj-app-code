@@ -104,17 +104,33 @@ def reduce_all_ndjsons(
     desired_fields: tuple[str, ...] | list[str]
     ) -> None:
     '''
-    Reduces all .ndjson files in the given directory.
+    Reduces all .ndjson files in the given directory, then writes them into
+    the specified directory.
     '''
-    # Getting list of file names in given directory:
-    file_names: list[str] = os.listdir(dir_to_read)
+    # Getting list of filepaths of .ndjsons:
+    full_file_paths: list[str] = [
+        os.path.join(dir_to_read, single_ndjson_file_name) for
+        single_ndjson_file_name in os.listdir(dir_to_read)
+    ]
 
-    # Iterating over each file name and reducing:
-    for ndjson_file_name in tqdm(file_names, "Reducing NDJSONs"):
-        # Getting full (relative) path of file:
-        file_path: str = os.path.join(dir_to_read, ndjson_file_name)
-        reduce_all_jsons_in_ndjson(file_path, dir_to_store, desired_fields)
-    
+    # Getting generator of reduced ndjsons:
+    reduced_ndjsons = map(
+        partial(reduce_all_jsons_in_ndjson, desired_fields = desired_fields),
+        full_file_paths
+    )
+
+    # Iterating over each .ndjson in the generator and saving it to a file:
+    reduced_ndjson: str
+    for idx, reduced_ndjson in enumerate(reduced_ndjsons):
+        # Name of .ndjson file to save ndjson data as:
+        ndjson_file_save_path: str = os.path.join(
+            dir_to_store, f"reduced{idx}"
+        )
+
+        # Saving:
+        with open(ndjson_file_save_path, 'w') as reduced_ndjson_file:
+            reduced_ndjson_file.write(reduced_ndjson)
+
     print("NDJSON files in directory successfully reduced.\n" +
           "--------------------")
     
