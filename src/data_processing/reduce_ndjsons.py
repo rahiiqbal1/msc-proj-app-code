@@ -34,40 +34,41 @@ def main() -> None:
 
 def reduce_single_json(
     single_json: dict[str, Any],
-    list_of_str_jsons: list[str],
     desired_fields: tuple[str, ...] | list[str]
-    ) -> None:
+    ) -> str | None:
     '''
     Reduces a single JSON as python dictionary to only the chosen fields. 
-    Appends string JSON to given list.
+    Returns reduced JSON as a string.
     '''
     # Initialising dictionary to store reduced json object:
     reduced_json: dict[str, Any] = {}
     field: str
     for field in single_json:
         if field in desired_fields:
-            # If categories, get each category name:
-            if field == "categories":
-                cat_info_dict: dict
-                # single_json["categories"] is an array of json objects.
-                # Each of these will be cat_info_dict:
-                for idx, cat_info_dict in enumerate(
-                        single_json["categories"]):
-                    # Writing "name" subfield to our reduced_json:
-                    reduced_json[f"cat{idx}"] = cat_info_dict["name"]
+            try:
+                # If categories, get each category name:
+                if field == "categories":
+                    cat_info_dict: dict
+                    # single_json["categories"] is an array of json objects.
+                    # Each of these will be cat_info_dict:
+                    for idx, cat_info_dict in enumerate(
+                            single_json["categories"]):
+                        # Writing "name" subfield to our reduced_json:
+                        reduced_json[f"cat{idx}"] = cat_info_dict["name"]
 
-            # If article body, want only wikitext subfield:
-            elif field == "article_body":
-                reduced_json["wikitext"] = (
-                        single_json["article_body"]["wikitext"])
-            
-            # Otherwise, store field as-is:
-            else:
-                reduced_json[field] = single_json[field]
+                # If article body, want only wikitext subfield:
+                elif field == "article_body":
+                    reduced_json["wikitext"] = (
+                            single_json["article_body"]["wikitext"])
+                
+                # Otherwise, store field as-is:
+                else:
+                    reduced_json[field] = single_json[field]
+            except KeyError:
+                return None
 
-    # Once all fields have been checked, serialise reduced_json and add to
-    # ndjson_to_write:
-    list_of_str_jsons.append(json.dumps(reduced_json))
+    # Once all fields have been checked, serialise reduced_json and return:
+    return json.dumps(reduced_json)
 
 def reduce_all_jsons_in_ndjson(
     ndjson_file_path: str,
