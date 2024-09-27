@@ -1,6 +1,6 @@
 import os
 import json
-from typing import Any, Generator
+from typing import Any
 from multiprocessing import Pool
 from functools import partial
 
@@ -30,11 +30,14 @@ def main() -> None:
 
     # Fields which we want to keep within the ndjsons:
     desired_fields: tuple[str, ...] = (
-        "name", "abstract", "url", "article_body"
+        "name", "abstract", "url"#, "article_body"
     )
 
     reduce_all_ndjsons(
-        full_ndjson_load_dir, reduced_ndjson_save_dir, desired_fields
+        full_ndjson_load_dir,
+        reduced_ndjson_save_dir,
+        desired_fields,
+        n_processes = 4
     )
 
 def reduce_single_json(
