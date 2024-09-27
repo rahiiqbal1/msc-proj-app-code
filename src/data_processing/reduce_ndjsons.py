@@ -3,6 +3,7 @@ import json
 from typing import Any
 from multiprocessing import Pool
 from functools import partial
+from collections.abc import Iterable
 
 from tqdm import tqdm
 
@@ -115,6 +116,23 @@ def reduce_all_ndjsons(
     Reduces all .ndjson files in the given directory, then writes them into
     the specified directory.
     '''
+    # Function to save all reduced ndjsons. Takes iterable of strings.
+    def save_reduced_ndjsons(
+        reduced_ndjsons: Iterable[str],
+        dir_to_store: str
+        ) -> None:
+        # Iterating over each .ndjson in the generator and saving it to a file:
+        reduced_ndjson: str
+        for idx, reduced_ndjson in enumerate(reduced_ndjsons):
+            # Name of .ndjson file to save ndjson data as:
+            ndjson_file_save_path: str = os.path.join(
+                dir_to_store, f"reduced{idx}.ndjson"
+            )
+
+            # Saving:
+            with open(ndjson_file_save_path, 'w') as reduced_ndjson_file:
+                reduced_ndjson_file.write(reduced_ndjson)
+                    
     # Getting list of filepaths of .ndjsons:
     full_file_paths: list[str] = [
         os.path.join(dir_to_read, single_ndjson_file_name) for
@@ -128,30 +146,25 @@ def reduce_all_ndjsons(
             tqdm(full_file_paths)
         )
 
+        save_reduced_ndjsons(reduced_ndjsons, dir_to_store)
+
     else:
         # Pool for multiprocessing:
         pool = Pool(n_processes)
 
         # Getting generator of reduced ndjsons:
-        reduced_ndjsons = pool.imap(
-            partial(reduce_single_ndjson, desired_fields = desired_fields),
-            full_file_paths
+        reduced_ndjsons = tqdm(
+            pool.imap(
+                partial(reduce_single_ndjson, desired_fields = desired_fields),
+                full_file_paths
+            ),
+            total = len(full_file_paths)
         )
+
+        save_reduced_ndjsons(reduced_ndjsons, dir_to_store)
 
         pool.close()
         pool.join()
-
-    # Iterating over each .ndjson in the generator and saving it to a file:
-    reduced_ndjson: str
-    for idx, reduced_ndjson in enumerate(reduced_ndjsons):
-        # Name of .ndjson file to save ndjson data as:
-        ndjson_file_save_path: str = os.path.join(
-            dir_to_store, f"reduced{idx}.ndjson"
-        )
-
-        # Saving:
-        with open(ndjson_file_save_path, 'w') as reduced_ndjson_file:
-            reduced_ndjson_file.write(reduced_ndjson)
 
     print("NDJSON files in directory successfully reduced.\n" +
           "--------------------")
