@@ -76,7 +76,7 @@ def reduce_single_json(
 def reduce_all_jsons_in_ndjson(
     ndjson_file_path: str,
     desired_fields: tuple[str, ...] | list[str]
-    ) -> list[str]:
+    ) -> str:
     '''
     Reduces all json objects in a .ndjson file to the desired fields, then
     returns a generator of jsons as string each ending in newlines, to be
@@ -93,24 +93,11 @@ def reduce_all_jsons_in_ndjson(
         json_list
     )
 
-    # Returning generator of reduced jsons with no None values:
-    return [
-        str_json + "\n" 
-        for str_json in str_jsons_iterator 
-        if str_json is not None
-    ]
-
-    # # Name of .ndjson file to append to full storage path for reduced version:
-    # ndjson_file_name: str = os.path.basename(ndjson_file_path)
-    # # Path to store file:
-    # reduced_ndjson_store_path: str = os.path.join(
-    #     storage_dir, f"reduced_{ndjson_file_name}"
-    # )
-    # # Joining string jsons in list_of_str_jsons into single string and writing
-    # # to file:
-    # ndjson_to_write: str = "\n".join(list_of_str_jsons)
-    # with open(reduced_ndjson_store_path, 'a') as reduced_ndjson_file:
-    #     reduced_ndjson_file.write(ndjson_to_write)
+    # Getting list of string jsons without None values, then joining on 
+    # newline chars and returning. This represents a string .ndjson:
+    return "\n".join(
+        [str_json for str_json in str_jsons_iterator if str_json is not None]
+    )
 
 def reduce_all_ndjsons(
     dir_to_read: str,
