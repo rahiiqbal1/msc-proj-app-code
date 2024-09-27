@@ -1,6 +1,9 @@
-from typing import Any
 import os
 import json
+from typing import Any, Generator
+from multiprocessing import Pool
+from functools import partial
+
 from tqdm import tqdm
 
 import data_manipulation as dm
@@ -72,37 +75,43 @@ def reduce_single_json(
 
 def reduce_all_jsons_in_ndjson(
     ndjson_file_path: str,
-    storage_dir: str,
     desired_fields: tuple[str, ...] | list[str]
-    ) -> None:
+    ) -> Generator[str, None, None]:
     '''
-    Reduces all json objects in a .ndjson file to the desired fields.
+    Reduces all json objects in a .ndjson file to the desired fields, then
+    returns a generator of jsons as string each ending in newlines, to be
+    written as a .ndjson.
     '''
     # Getting list of json dictionaries:
     json_list: list[dict[str, Any]] = dm.load_jsons_from_ndjson(
         ndjson_file_path
     )
-    # Initialising list to store json strings:
-    list_of_str_jsons: list[str] = []
 
-    # Getting only desired fields:
-    for single_json in json_list:
-        try:
-            reduce_single_json(single_json, list_of_str_jsons, desired_fields)
-        except KeyError:
-            pass
+    # Getting generator of reduced jsons:
+    with Pool() as pool:
+        str_jsons_iterator = pool.imap(
+            partial(reduce_single_json, desired_fields = desired_fields),
+            json_list
+        )
 
-    # Name of .ndjson file to append to full storage path for reduced version:
-    ndjson_file_name: str = os.path.basename(ndjson_file_path)
-    # Path to store file:
-    reduced_ndjson_store_path: str = os.path.join(
-        storage_dir, f"reduced_{ndjson_file_name}"
+    # Returning generator of reduced jsons with no None values:
+    return (
+        str_json + "\n" 
+        for str_json in str_jsons_iterator 
+        if str_json is not None
     )
-    # Joining string jsons in list_of_str_jsons into single string and writing
-    # to file:
-    ndjson_to_write: str = "\n".join(list_of_str_jsons)
-    with open(reduced_ndjson_store_path, 'a') as reduced_ndjson_file:
-        reduced_ndjson_file.write(ndjson_to_write)
+
+    # # Name of .ndjson file to append to full storage path for reduced version:
+    # ndjson_file_name: str = os.path.basename(ndjson_file_path)
+    # # Path to store file:
+    # reduced_ndjson_store_path: str = os.path.join(
+    #     storage_dir, f"reduced_{ndjson_file_name}"
+    # )
+    # # Joining string jsons in list_of_str_jsons into single string and writing
+    # # to file:
+    # ndjson_to_write: str = "\n".join(list_of_str_jsons)
+    # with open(reduced_ndjson_store_path, 'a') as reduced_ndjson_file:
+    #     reduced_ndjson_file.write(ndjson_to_write)
 
 def reduce_all_ndjsons(
     dir_to_read: str,
