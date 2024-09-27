@@ -5,7 +5,6 @@ from multiprocessing import Pool
 from functools import partial
 
 from tqdm import tqdm
-from parallelbar import progress_imap
 
 import data_manipulation as dm
 
@@ -134,10 +133,9 @@ def reduce_all_ndjsons(
         pool = Pool(n_processes)
 
         # Getting generator of reduced ndjsons:
-        reduced_ndjsons = progress_imap(
+        reduced_ndjsons = pool.imap(
             partial(reduce_single_ndjson, desired_fields = desired_fields),
-            full_file_paths,
-            n_cpu = n_processes
+            full_file_paths
         )
 
         pool.close()
