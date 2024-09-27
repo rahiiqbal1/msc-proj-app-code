@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 import data_manipulation as dm
 
-N_PROCESSES = 8
+N_PROCESSES = 16
 
 def main() -> None:
     # Directory in which all data is stored:
@@ -122,6 +122,16 @@ def reduce_all_ndjsons(
     ]
 
     if n_processes == 1:
+        # Getting generator of reduced ndjsons:
+        reduced_ndjsons = tqdm(
+            map(
+                partial(reduce_single_ndjson, desired_fields = desired_fields),
+                tqdm(full_file_paths)
+            ),
+            total = len(full_file_paths)
+        )
+
+    else:
         # Pool for multiprocessing:
         pool = Pool(n_processes)
 
@@ -136,16 +146,6 @@ def reduce_all_ndjsons(
 
         pool.close()
         pool.join()
-
-    else:
-        # Getting generator of reduced ndjsons:
-        reduced_ndjsons = tqdm(
-            map(
-                partial(reduce_single_ndjson, desired_fields = desired_fields),
-                tqdm(full_file_paths)
-            ),
-            total = len(full_file_paths)
-        )
 
     # Iterating over each .ndjson in the generator and saving it to a file:
     reduced_ndjson: str
