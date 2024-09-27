@@ -76,7 +76,7 @@ def reduce_single_json(
 def reduce_all_jsons_in_ndjson(
     ndjson_file_path: str,
     desired_fields: tuple[str, ...] | list[str]
-    ) -> Generator[str, None, None]:
+    ) -> list[str]:
     '''
     Reduces all json objects in a .ndjson file to the desired fields, then
     returns a generator of jsons as string each ending in newlines, to be
@@ -88,18 +88,17 @@ def reduce_all_jsons_in_ndjson(
     )
 
     # Getting generator of reduced jsons:
-    with Pool() as pool:
-        str_jsons_iterator = pool.imap(
-            partial(reduce_single_json, desired_fields = desired_fields),
-            json_list
-        )
+    str_jsons_iterator = map(
+        partial(reduce_single_json, desired_fields = desired_fields),
+        json_list
+    )
 
     # Returning generator of reduced jsons with no None values:
-    return (
+    return [
         str_json + "\n" 
         for str_json in str_jsons_iterator 
         if str_json is not None
-    )
+    ]
 
     # # Name of .ndjson file to append to full storage path for reduced version:
     # ndjson_file_name: str = os.path.basename(ndjson_file_path)
