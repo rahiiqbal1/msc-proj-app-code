@@ -79,8 +79,7 @@ def reduce_all_jsons_in_ndjson(
     ) -> str:
     '''
     Reduces all json objects in a .ndjson file to the desired fields, then
-    returns a generator of jsons as string each ending in newlines, to be
-    written as a .ndjson.
+    return a string representation of the reduced ndjson.
     '''
     # Getting list of json dictionaries:
     json_list: list[dict[str, Any]] = dm.load_jsons_from_ndjson(
