@@ -8,6 +8,8 @@ from tqdm import tqdm
 
 import data_manipulation as dm
 
+N_PROCESSES = 8
+
 def main() -> None:
     # Directory in which all data is stored:
     all_data_dir: str = os.path.join(os.pardir, os.pardir, "data")
@@ -37,7 +39,7 @@ def main() -> None:
         full_ndjson_load_dir,
         reduced_ndjson_save_dir,
         desired_fields,
-        n_processes = 4
+        n_processes = N_PROCESSES
     )
 
 def reduce_single_json(
@@ -78,7 +80,7 @@ def reduce_single_json(
     # Once all fields have been checked, serialise reduced_json and return:
     return json.dumps(reduced_json)
 
-def reduce_all_jsons_in_ndjson(
+def reduce_single_ndjson(
     ndjson_file_path: str,
     desired_fields: tuple[str, ...] | list[str]
     ) -> str:
@@ -106,7 +108,8 @@ def reduce_all_jsons_in_ndjson(
 def reduce_all_ndjsons(
     dir_to_read: str,
     dir_to_store: str,
-    desired_fields: tuple[str, ...] | list[str]
+    desired_fields: tuple[str, ...] | list[str],
+    n_processes = 1
     ) -> None:
     '''
     Reduces all .ndjson files in the given directory, then writes them into
