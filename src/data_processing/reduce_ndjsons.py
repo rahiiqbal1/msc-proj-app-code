@@ -118,18 +118,38 @@ def reduce_all_ndjsons(
         single_ndjson_file_name in os.listdir(dir_to_read)
     ]
 
-    # Getting generator of reduced ndjsons:
-    reduced_ndjsons = map(
-        partial(reduce_all_jsons_in_ndjson, desired_fields = desired_fields),
-        full_file_paths
-    )
+    if n_processes == 1:
+        # Pool for multiprocessing:
+        pool = Pool(n_processes)
+
+        # Getting generator of reduced ndjsons:
+        reduced_ndjsons = tqdm(
+            pool.imap(
+                partial(reduce_single_ndjson, desired_fields = desired_fields),
+                full_file_paths
+            ),
+            total = len(full_file_paths)
+        )
+
+        pool.close()
+        pool.join()
+
+    else:
+        # Getting generator of reduced ndjsons:
+        reduced_ndjsons = tqdm(
+            map(
+                partial(reduce_single_ndjson, desired_fields = desired_fields),
+                tqdm(full_file_paths)
+            ),
+            total = len(full_file_paths)
+        )
 
     # Iterating over each .ndjson in the generator and saving it to a file:
     reduced_ndjson: str
     for idx, reduced_ndjson in enumerate(reduced_ndjsons):
         # Name of .ndjson file to save ndjson data as:
         ndjson_file_save_path: str = os.path.join(
-            dir_to_store, f"reduced{idx}"
+            dir_to_store, f"reduced{idx}.ndjson"
         )
 
         # Saving:
