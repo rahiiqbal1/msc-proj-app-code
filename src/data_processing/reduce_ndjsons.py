@@ -16,7 +16,7 @@ def main() -> None:
 
     # Name of directory in which to store reduced ndjson files:
     reduced_ndjson_save_dir: str = os.path.join(
-        all_data_dir, "poc-reduced-ndjsons"
+        all_data_dir, "poc-reduced-ndjsons2"
     )
 
     # Creating directory to store reduced .ndjson files: 
@@ -26,7 +26,7 @@ def main() -> None:
         pass
 
     # Fields which we want to keep within the ndjsons:
-    desired_fields: tuple[str, ...] = ("name", "abstract", "url")
+    desired_fields: tuple[str, ...] = ("name", "abstract", "url", "wikitext")
 
     reduce_all_ndjsons(
         full_ndjson_load_dir, reduced_ndjson_save_dir, desired_fields
