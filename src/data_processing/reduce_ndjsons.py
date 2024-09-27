@@ -5,10 +5,11 @@ from multiprocessing import Pool
 from functools import partial
 
 from tqdm import tqdm
+from parallelbar import progress_imap
 
 import data_manipulation as dm
 
-N_PROCESSES = 16
+N_PROCESSES = 5
 
 def main() -> None:
     # Directory in which all data is stored:
@@ -32,7 +33,7 @@ def main() -> None:
 
     # Fields which we want to keep within the ndjsons:
     desired_fields: tuple[str, ...] = (
-        "name", "abstract", "url"#, "article_body"
+        "name", "abstract", "url", "article_body"
     )
 
     reduce_all_ndjsons(
@@ -123,12 +124,9 @@ def reduce_all_ndjsons(
 
     if n_processes == 1:
         # Getting generator of reduced ndjsons:
-        reduced_ndjsons = tqdm(
-            map(
-                partial(reduce_single_ndjson, desired_fields = desired_fields),
-                tqdm(full_file_paths)
-            ),
-            total = len(full_file_paths)
+        reduced_ndjsons = map(
+            partial(reduce_single_ndjson, desired_fields = desired_fields),
+            tqdm(full_file_paths)
         )
 
     else:
@@ -136,12 +134,10 @@ def reduce_all_ndjsons(
         pool = Pool(n_processes)
 
         # Getting generator of reduced ndjsons:
-        reduced_ndjsons = tqdm(
-            pool.imap(
-                partial(reduce_single_ndjson, desired_fields = desired_fields),
-                full_file_paths
-            ),
-            total = len(full_file_paths)
+        reduced_ndjsons = progress_imap(
+            partial(reduce_single_ndjson, desired_fields = desired_fields),
+            full_file_paths,
+            n_cpu = n_processes
         )
 
         pool.close()
