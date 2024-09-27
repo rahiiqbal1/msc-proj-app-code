@@ -29,7 +29,9 @@ def main() -> None:
         pass
 
     # Fields which we want to keep within the ndjsons:
-    desired_fields: tuple[str, ...] = ("name", "abstract", "url", "wikitext")
+    desired_fields: tuple[str, ...] = (
+        "name", "abstract", "url", "article_body"
+    )
 
     reduce_all_ndjsons(
         full_ndjson_load_dir, reduced_ndjson_save_dir, desired_fields
