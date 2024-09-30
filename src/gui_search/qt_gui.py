@@ -257,6 +257,12 @@ class SearchWindow(QMainWindow):
                 self._getSingleResultVBoxLayout(singleResult, fieldsToShow)
             )
 
+            # Label of result index to add as number:
+            result_num = QLabel(str(resultIdx + 1))
+
+            # Adding result num to each result:
+            thisResultVBoxLayout.addWidget(result_num)
+
             # If the resultIdx is even, colour the background of the result's 
             # layout (every other result):
             if resultIdx % 2 == 0:
